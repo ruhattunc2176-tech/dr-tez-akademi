@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=37"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=38"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -568,7 +568,7 @@ function gIsler(){
         <select id="sirala" aria-label="Sırala"><option value="teslim" ${sirala==="teslim"?"selected":""}>Teslime göre</option><option value="kalan" ${sirala==="kalan"?"selected":""}>Alacağa göre</option><option value="yeni" ${sirala==="yeni"?"selected":""}>En yeni</option></select>
       </div>
       <div class="cipler" style="margin-bottom:0">${["Aktif","Tümü","Makale",...DURUMLAR].map(s=>{const n=s==="Tümü"?isler.length:s==="Aktif"?isler.filter(aktif).length:s==="Makale"?isler.filter(i=>i.makale).length:isler.filter(i=>i.durum===s).length;
-        return`<button type="button" class="cip" data-f="${s}" aria-pressed="${s===filtre}" ${DURUM[s]?`style="${renk(s)}"`:s==="Makale"?`style="background:#fde4f2;color:#a3266f"`:""}>${s} · ${n}</button>`}).join("")}</div>
+        return`<button type="button" class="cip" data-f="${s}" aria-pressed="${s===filtre}" ${DURUM[s]?`style="${renk(s)}"`:s==="Makale"?`style="--cs:#fde4f2;--c:#a3266f;--cb:#a3266f"`:""}>${s} · ${n}</button>`}).join("")}</div>
       <div class="isler" style="gap:10px">${l.length?l.map(kartIs).join(""):bos()}</div>
     </section>
   </div>`;
