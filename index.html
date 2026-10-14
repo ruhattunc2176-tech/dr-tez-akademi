@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=39"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=40"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -901,19 +901,13 @@ function formAc(eski){setTimeout(navIt,0);
         <div class="eylem tam" id="fo-duzAraclar" hidden><button type="button" class="btn" data-fvaz>Vazgeç</button><button type="button" class="btn sil" data-fsil>Bu ödemeyi sil</button></div>
       </div></div>
     </section>
-    <section class="kart blok" style="display:flex;flex-direction:column;gap:14px">
-      <label>Telefon / iletişim<input id="f-iletisim" name="iletisim" type="tel" value="${esc(i.iletisim)}" placeholder="05xx xxx xx xx"></label>
-      <label>Üniversite / bölüm<input id="f-uni" name="universite" value="${esc(i.universite)}"></label>
-      <label>Notlar<textarea id="f-not" name="notlar" placeholder="Danışman, şablon, özel istekler…">${esc(i.notlar)}</textarea></label>
-    </section>
-    <button class="btn ana" type="submit">Kaydet</button>
   </form>`);
   FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null};
   ucretOn();fOdemeCiz();
   $("#isForm").onsubmit=async ev=>{
     ev.preventDefault();if(sayi($("#fo-tutar").value)&&fOdemeEkle(true)===false)return;else if(FORM.duz!==null)fGirisTemizle();
     const f=new FormData(ev.target),n={...i};
-    ["musteri","konu","durum","baslangic","teslim","tur","iletisim","universite","notlar","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");
+    ["musteri","konu","durum","baslangic","teslim","tur","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");
     n.ucret=sayi(f.get("ucret"));if(yeni)n.olusturma=new Date().toISOString();
     const yeniOd=FORM.odm.filter(o=>o._yeni),silinen=FORM.silinen;
     const duzeltilen=FORM.duzeltilen.filter(([,y])=>FORM.odm.includes(y)&&!y._yeni);
