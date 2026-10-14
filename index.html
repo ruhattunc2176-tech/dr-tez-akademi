@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=4"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=5"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -292,7 +292,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <h1>Dr Tez Akademi</h1>
   <p>Devam etmek için şifreyi gir. Bu cihaz şifreyi hatırlar.</p>
   <input id="kilitSifre" name="sifre" type="password" autocomplete="current-password" placeholder="Şifre" required>
-  <p id="kilitHata" class="kilit-hata" hidden>Şifre yanlış, tekrar dene.</p>
+  <p id="kilitHata" class="kilit-hata" hidden>Şifre yanlış, tekrar dene. (Büyük/küçük harf fark etmez.)</p>
   <button type="submit" class="kilit-btn">Aç</button>
 </form></div>
 <script>
@@ -845,7 +845,7 @@ function yenile(){
     $("#depo").textContent="Kayıtlar Google E-Tablonda · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})+" itibarıyla güncel";
   }).catch(e=>{$("#depo").textContent="Sunucuya ulaşılamadı"+(API?" (…"+API.slice(-14,-5)+")":"")+": "+(e&&e.message||e)});
 }
-document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim();if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
+document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim().toLocaleLowerCase("tr").replace(/ı/g,"i");if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
 if(!sifreAl())sifreEkrani(false);else yenile();
 setInterval(()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()},60000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()});
