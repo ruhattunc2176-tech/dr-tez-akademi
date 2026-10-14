@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=36"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=37"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -112,7 +112,7 @@ html,body{margin:0}body{font:14px system-ui,sans-serif}[hidden]{display:none!imp
 .satir-is .ch span{font-size:13px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--card);color:var(--ink)}
 .satir-is .ch .d{background:var(--cs);color:var(--c)}.satir-is .ch .gec{background:var(--gec-s);color:var(--gec)}.satir-is .ch .yakin{background:var(--yakin-s);color:var(--yakin)}
 .satir-is .sag{text-align:right;flex:none;display:flex;flex-direction:column;gap:2px}
-.satir-is .sag b{font-size:20px;color:var(--yakin)}.satir-is .sag b.ok{color:var(--teslim)}.satir-is .sag small{font-size:14px;color:var(--muted);font-weight:700}
+.satir-is .sag b{white-space:nowrap;font-size:20px;color:var(--yakin)}.satir-is .sag b.ok{color:var(--teslim)}.satir-is .sag small{font-size:14px;color:var(--muted);font-weight:700}
 .hareket{display:flex;gap:12px;align-items:center}
 .hareket .ik{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-weight:800;flex:none;font-size:20px}
 .hareket .m{flex:1;min-width:0;display:flex;flex-direction:column}.hareket .m b{font-size:16px;font-weight:700}.hareket .m small{font-size:14px;color:var(--muted)}
@@ -588,7 +588,7 @@ function kartIs(i){
   return`<button type="button" class="satir-is" data-ac="${i.id}" style="${renk(i.durum)}">
     <span class="av" aria-hidden="true">${esc(bas)}</span>
     <span class="orta"><span class="ad">${esc(i.musteri||"—")}</span><span class="kn">${esc(i.konu)}</span>
-      <span class="ch"><span class="d">${i.durum}</span><span class="${s.c}">${s.t}</span>${i.pb==="USD"?`<span>$</span>`:""}${i.makale?`<span class="mk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Makale</span>`:""}</span></span>
+      <span class="ch"><span class="d">${i.durum}</span><span class="${s.c}">${s.t}</span>${i.makale?`<span class="mk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Makale</span>`:""}</span></span>
     <span class="sag">${k?`<b>${para(k,i.pb)}</b><small>kalan · %${p} ödendi</small>`:(+i.ucret?`<b class="ok">Ödendi</b><small>%100</small>`:`<small>Ücret yok</small>`)}</span>
   </button>`;
 }
