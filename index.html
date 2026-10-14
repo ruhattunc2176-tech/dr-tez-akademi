@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=53"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=54"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -247,7 +247,8 @@ textarea{resize:vertical;min-height:84px}
 .bos b{display:block;color:var(--ink);font-family:var(--f-head);font-size:1.05rem;margin-bottom:4px}
 
 /* alt gezinme */
-.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(3,1fr);gap:4px;z-index:4;box-shadow:0 -4px 16px rgba(20,40,80,.06)}
+.nav button{position:relative}.nav-say{position:absolute;top:2px;left:calc(50% + 6px);background:#d6336c;color:#fff;border-radius:999px;font-size:.68rem;min-width:18px;height:18px;padding:0 5px;display:grid;place-items:center;font-weight:800}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(4,1fr);gap:4px;z-index:4;box-shadow:0 -4px 16px rgba(20,40,80,.06)}
 .nav button{border:0;background:none;color:var(--muted);font:inherit;font-size:.72rem;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;border-radius:12px}
 .nav button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 .nav svg{width:22px;height:22px}
@@ -435,6 +436,7 @@ window.addEventListener("error",function(e){try{var g=document.getElementById("g
 <nav class="nav" id="nav">
   <button type="button" data-v="isler" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>İşler</button>
   <button type="button" data-v="odemeler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h4"/></svg>Ödemeler</button>
+  <button type="button" data-v="ozet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2v.3"/></svg>Özet<span class="nav-say" id="navOzet" hidden></span></button>
   <button type="button" data-v="takvim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Takvim</button>
 </nav>
 <div class="ekran" id="ekran" hidden></div>
@@ -476,12 +478,12 @@ function uyariHesapla(i,bugun,A,kalanMetin){
 }
 function isUyari(i){return uyariHesapla(i,bugun(),asamaT(i),kalan(i)>0.5?para(kalan(i),i.pb):"")}
 let ozetAcik=false;
-function gOzet(){const l=isler.flatMap(i=>isUyari(i).map(u=>({...u,i}))).sort((a,b)=>b.d-a.d||(a.i.teslim||"9").localeCompare(b.i.teslim||"9"));
+function gOzet(tam){const l=isler.flatMap(i=>isUyari(i).map(u=>({...u,i}))).sort((a,b)=>b.d-a.d||(a.i.teslim||"9").localeCompare(b.i.teslim||"9"));
   if(!l.length)return`<section class="kart ozet-kart tamam"><span class="oz-ik">✓</span><div><b>İş özeti</b><small>Her şey yolunda, dikkat gerektiren iş yok.</small></div></section>`;
-  const g=ozetAcik?l:l.slice(0,4),k=l.filter(x=>x.d===3).length;
+  const g=ozetAcik||tam?l:l.slice(0,4),k=l.filter(x=>x.d===3).length;
   return`<section class="kart ozet-kart"><div class="oz-bas"><b>İş özeti</b><small>${k?`<span class="oz-say d3">${k} acil</span>`:""}${l.length} uyarı</small></div>
     ${g.map(x=>`<button type="button" class="oz-satir d${x.d}" data-ac="${x.i.id}"><i></i><span><b>${esc(x.i.musteri||"—")}</b><small>${esc(x.m)}</small></span><em>›</em></button>`).join("")}
-    ${l.length>4?`<button type="button" class="oz-tum" data-ozettum>${ozetAcik?"Daha az göster":`Tümünü göster (${l.length})`}</button>`:""}</section>`}
+    ${l.length>4&&!tam?`<button type="button" class="oz-tum" data-ozettum>${ozetAcik?"Daha az göster":`Tümünü göster (${l.length})`}</button>`:""}</section>`}
 const kilitUyari=()=>toast("İş beklemede · önce beklemeden çıkar");
 function asamaT(i){if(i.asamaT)return i.asamaT;const L=DURUMLAR,ci=L.indexOf(ESKI_DURUM[i.durum]||i.durum),o={};if(ci<1)return o;
   const son=d=>[...(i.gecmis||[])].reverse().find(e=>e.d===d);
@@ -621,9 +623,10 @@ const hata=()=>{};/* uyarıyı kuyruk gösterir */
 /* ===== ana çizim ===== */
 function ciz(){
   document.querySelectorAll("#nav button").forEach(b=>b.dataset.v===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+  {const n=isler.reduce((a,i)=>a+isUyari(i).filter(u=>u.d===3).length,0),e=document.getElementById("navOzet");if(e){e.hidden=!n;e.textContent=n}}
   $("#ekleBtn").hidden=true;
   const g=$("#gorunum"),a=document.activeElement?.id,p=document.activeElement?.selectionStart;
-  g.innerHTML=hero()+(v==="isler"?gIsler():v==="takvim"?gTakvim():v==="odemeler"?gOdemeler():gGecmis());
+  g.innerHTML=hero()+(v==="isler"?gIsler():v==="takvim"?gTakvim():v==="ozet"?gOzet(true):v==="odemeler"?gOdemeler():gGecmis());
   if(a){const x=document.getElementById(a);if(x&&g.contains(x)){x.focus();try{x.setSelectionRange(p,p)}catch(_){}}}
   sayaclariOynat();
   if(ekranTur==="detay")detayCiz();
@@ -650,7 +653,6 @@ function gIsler(){
   l.sort(sirala==="kalan"?(a,b)=>kalanTL(b)-kalanTL(a):sirala==="yeni"?(a,b)=>(b.olusturma||b.baslangic||"").localeCompare(a.olusturma||a.baslangic||""):(a,b)=>(a.teslim||"9999").localeCompare(b.teslim||"9999"));
   const yf=yak?fark(yak.teslim):null;
   return`
-  ${gOzet()}
   <div class="satir2">
     <section class="bakiye" aria-label="Alacak özeti">
       <div style="display:flex;flex-direction:column;gap:6px"><span class="e">TOPLAM ALACAK</span><b class="b num" data-sayac="alacak" data-deger="${kal}">${tl(kal)}</b><div class="kirilim">${kalUSD?`<span><small>Dolar alacak</small><b>${usd(kalUSD)}</b><em>× ${nf(KUR.usd,2)}</em></span>`:""}${kalTRY?`<span><small>TL alacak</small><b>${tl(kalTRY)}</b></span>`:""}</div></div>
