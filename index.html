@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=54"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=55"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -1088,7 +1088,10 @@ function ucretOn(){const el=$("#ucretTL");if(!el)return;const u=$("#f-pb-1")?.ch
 /* ===== olaylar ===== */
 document.addEventListener("click",async e=>{
   const t=e.target.closest("button,[data-ac],a");if(!t)return;const ds=t.dataset;
-  if(ds.v){if(ds.v===v)return;v=ds.v;secGun=null;kurDuzen=false;ciz();window.scrollTo(0,0);navIt();return}
+  if(ds.v){if(ds.v===v)return;const ev=v;
+    if(ds.v==="isler"&&gecmisDerin>0){try{history.back();return}catch(_){}}
+    v=ds.v;secGun=null;kurDuzen=false;ciz();window.scrollTo(0,0);
+    if(ev==="isler"&&gecmisDerin===0)navIt();else navDegistir();return}
   if(ds.osekme){odemeSekme=ds.osekme;ciz();navDegistir();return}
   if(ds.kur!==undefined){kurDuzen=!kurDuzen;ciz();if(kurDuzen)$("#kur-deger")?.focus();return}
   if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
