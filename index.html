@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=8"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=9"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -581,7 +581,7 @@ function detayCiz(){
       ${U?`<div class="tablo-aciklama">
         ${(i.odemeler||[]).length?`<div><span>Alınan</span><b>${(i.odemeler||[]).map(o=>o.pb==="USD"?usd(o.tutar):`${tl(o.tutar)} ÷ ${nf(oKur(o),2)} = ${usd(oUSD(o))}`).join("<br>")}</b></div>`:""}
         <div><span>Kalan alacak</span><b style="color:var(--yakin)">${usd(k)} × ${nf(KUR.usd,2)} = ${tl(kTL)}</b></div>
-        <p>Alınan her ödeme kendi gününün TCMB kuruyla dolara çevrilip sabitlenir. Kalan dolar her iş günü güncel TCMB kuruyla (şu an ${nf(KUR.usd,4)}, ${tarih(KUR.tarih,1)}) TL'ye çevrilir; kur değiştikçe alacağın TL tutarı da değişir.</p>
+        <p>Alınan her ödeme kendi gününün piyasa kuruyla dolara çevrilip sabitlenir. Kalan dolar güncel kurla (${esc(KUR.kaynak||"")}: ${nf(KUR.usd,4)}, ${tarih(KUR.tarih,1)}) TL'ye çevrilir; kur değiştikçe alacağın TL tutarı da değişir.</p>
       </div>`:""}
       ${(i.odemeler||[]).length?`<div class="odeme-liste">${i.odemeler.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${U&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}${!U&&o.pb==="USD"?` <small style="display:inline">= ${tl(oTL(o))}</small>`:""}</b><small>${tarih(o.tarih)}${U||o.pb==="USD"?" · kur "+nf(oKur(o),4):""}${o.not?" · "+esc(o.not):""}</small></div><button type="button" class="mini-btn" data-oduz="${n}">${ODZ===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`:""}
       <form id="odemeForm" class="izgara">
@@ -590,7 +590,7 @@ function detayCiz(){
           <label><input type="radio" id="o-pb-usd" name="pb" value="USD"><span>$ Dolar aldım</span></label></div>
         <input id="o-tutar" name="tutar" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Tutar" required>
         <div class="tam">${tarihSec("o-tarih","tarih",bugun(),true)}</div>
-        <label class="tam" id="kurAlan" ${U?"":"hidden"}>O günün TCMB kuru (1 $ kaç ₺)<input id="o-kur" name="kur" type="number" inputmode="decimal" step="0.0001" min="1" value="${kurBul(bugun())?.v||KUR.usd}" required><small class="ipucu" id="kurNot">${kurNotu(bugun())}</small></label>
+        <label class="tam" id="kurAlan" ${U?"":"hidden"}>O günün kuru (1 $ kaç ₺)<input id="o-kur" name="kur" type="number" inputmode="decimal" step="0.0001" min="1" value="${kurBul(bugun())?.v||KUR.usd}" required><small class="ipucu" id="kurNot">${kurNotu(bugun())}</small></label>
         <div class="onizle tam" id="onizle" hidden></div>
         ${k?`<div class="hizli tam"><button type="button" class="mini-btn" data-hizli="${Math.round(kTL)}">Kalanın tamamı · ${tl(kTL)}</button>${kTL>1?`<button type="button" class="mini-btn" data-hizli="${Math.round(kTL/2)}">Yarısı · ${tl(kTL/2)}</button>`:""}</div>`:""}
         <div class="hizli tam">${["Kapora","Ara ödeme","Son ödeme"].map(x=>`<button type="button" class="mini-btn" data-onot="${x}">${x}</button>`).join("")}</div>
@@ -638,7 +638,23 @@ function kurNotu(t){const k=kurBul(t);if(!t)return"";if(!k)return"Bu tarih için
 function kurTarihten(){
   const t=$("#o-tarih")?.value,k=kurBul(t);if(!t)return;
   if(k)$("#o-kur").value=k.v;$("#kurNot").textContent=kurNotu(t);onizle();
+  if(t===bugun())tazeKurDoldur("o");
 }
+/* Bugünün tarihiyle ödeme girilirken en son Google Finans kurunu sunucudan çeker */
+let tazeKurSon=0;
+async function tazeKur(){
+  if(Date.now()-tazeKurSon<30000)return true;
+  try{const b=await sr("canliKur");if(b&&b.usd){KUR={usd:b.usd,tarih:bugun(),kaynak:b.kaynak,zaman:new Date().toISOString()};tazeKurSon=Date.now();
+    try{localStorage.setItem("tez-defteri-kur",JSON.stringify(KUR))}catch(_){}return true}}catch(_){}return false}
+function tazeKurDoldur(on){
+  const tid=on==="o"?"o-tarih":"fo-tarih",kid=on==="o"?"o-kur":"fo-kur",nid=on==="o"?"kurNot":"fo-kurNot";
+  if(on==="o"&&ODZ!==null)return;if(on==="fo"&&FORM&&FORM.duz!=null)return;
+  tazeKur().then(ok=>{if(!ok)return;const t=$("#"+tid)?.value;if(t!==bugun())return;const el=$("#"+kid);if(!el)return;
+    el.value=KUR.usd;const n=$("#"+nid);if(n)n.textContent=kurNotu(t);on==="o"?onizle():fOnizle();
+    const kb=$(".kur2");if(kb)kb.innerHTML=`<small>${esc(KUR.kaynak||"Kur")} · ${tarih(KUR.tarih,1)} ${new Date(KUR.zaman).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}</small><b>1 $ = ${nf(KUR.usd,2)} ₺</b>`})}
+document.addEventListener("focusin",e=>{const id=e.target&&e.target.id;
+  if(id==="o-tutar"&&$("#o-tarih")?.value===bugun())tazeKurDoldur("o");
+  if(id==="fo-tutar"&&$("#fo-tarih")?.value===bugun())tazeKurDoldur("fo")});
 function onizle(){
   const el=$("#onizle");if(!el)return;const i=isler.find(x=>x.id===acikId);if(!i)return;
   const t=sayi($("#o-tutar").value),pb=$("#o-pb-usd").checked?"USD":"TRY",kr=+$("#o-kur").value||KUR.usd;
@@ -682,7 +698,7 @@ function formAc(eski){
           <label><input type="radio" id="fo-pb-usd" name="fo_pb" value="USD"><span>$ Dolar aldım</span></label></div>
         <input id="fo-tutar" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Tutar" aria-label="Ödeme tutarı">
         <div class="tam">${tarihSec("fo-tarih","",bugun(),true)}</div>
-        <label class="tam" id="fo-kurAlan" hidden>O günün TCMB kuru (1 $ kaç ₺)<input id="fo-kur" type="number" inputmode="decimal" step="0.0001" min="1" value="${kurBul(bugun())?.v||KUR.usd}"><small class="ipucu" id="fo-kurNot">${kurNotu(bugun())}</small></label>
+        <label class="tam" id="fo-kurAlan" hidden>O günün kuru (1 $ kaç ₺)<input id="fo-kur" type="number" inputmode="decimal" step="0.0001" min="1" value="${kurBul(bugun())?.v||KUR.usd}"><small class="ipucu" id="fo-kurNot">${kurNotu(bugun())}</small></label>
         <div class="hizli tam">${["Kapora","Ara ödeme","Son ödeme"].map(x=>`<button type="button" class="mini-btn" data-fnot="${x}">${x}</button>`).join("")}</div>
         <input id="fo-not" class="tam" placeholder="Açıklama" aria-label="Ödeme açıklaması">
         <div class="onizle tam" id="fo-onizle" hidden></div>
@@ -743,7 +759,7 @@ function fOnizle(){
   if(!t||(jp!=="USD"&&pb!=="USD")){el.hidden=true;return}
   el.hidden=false;el.textContent=jp==="USD"?(pb==="USD"?`Borçtan ${usd(t)} düşülecek`:`${tl(t)} ÷ ${nf(kr,4)} = borçtan ${usd(t/kr)} düşülecek`):`${usd(t)} × ${nf(kr,4)} = ${tl(t*kr)} olarak işlenecek`;
 }
-function fGirisTemizle(){FORM.duz=null;$("#fo-tutar").value="";$("#fo-not").value="";tarihYaz("fo-tarih",bugun());const k=kurBul(bugun());if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(bugun());$("#fo-pb-try").checked=true;
+function fGirisTemizle(){FORM.duz=null;$("#fo-tutar").value="";$("#fo-not").value="";tarihYaz("fo-tarih",bugun());const k=kurBul(bugun());if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(bugun());tazeKurDoldur("fo");$("#fo-pb-try").checked=true;
   $("#fo-ekle").textContent="+ Ödemeyi ekle";$("#fo-duzAraclar").hidden=true;const s=$("[data-fsil]");s.classList.remove("emin");s.textContent="Bu ödemeyi sil"}
 function fOdemeEkle(sessiz){
   const t=sayi($("#fo-tutar").value);if(!t){$("#fo-tutar").focus();return}
@@ -809,12 +825,12 @@ document.addEventListener("input",e=>{
   if(["o-tutar","o-kur","o-pb-try","o-pb-usd"].includes(e.target.id))onizle();
   if(e.target.id==="o-tarih")kurTarihten();
   if(e.target.id==="f-ucret"||e.target.name==="pb"&&e.target.id.startsWith("f-")){ucretOn();fOdemeCiz()}
-  if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value)}
+  if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value);if(e.target.value===bugun())tazeKurDoldur("fo")}
   if(e.target.id?.startsWith("fo-"))fOnizle();
 });
 document.addEventListener("change",e=>{if(e.target.id==="sirala"){sirala=e.target.value;uiSakla();ciz()}
   if(e.target.id==="o-pb-try"||e.target.id==="o-pb-usd")onizle();if(e.target.id==="o-tarih")kurTarihten();
-  if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value)}
+  if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value);if(e.target.value===bugun())tazeKurDoldur("fo")}
   if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
 document.addEventListener("submit",async e=>{
   if(e.target.id==="kurForm"){e.preventDefault();const u=+new FormData(e.target).get("usd");if(!u)return;const eski=KUR.usd;kurDuzen=false;
