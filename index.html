@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=41"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=42"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -132,6 +132,7 @@ html,body{margin:0}body{font:14px system-ui,sans-serif}[hidden]{display:none!imp
   --gorusme:#6741d9; --gorusme-s:#ebe4ff; --gorusme-b:#7048e8;
   --devam:#1864ab;   --devam-s:#d9ecfc;   --devam-b:#1c7ed6;
   --revizyon:#c2410c; --revizyon-s:#ffe6d5; --revizyon-b:#e8590c;
+  --makale:#a3266f; --makale-s:#fde4f2; --makale-b:#c2307f;
   --teslim:#237a3c;  --teslim-s:#d3f2dc;  --teslim-b:#2b9a4a;
   --iptal:#555d66;   --iptal-s:#e4e7eb;   --iptal-b:#6c757d;
   --gec:#c92a2a; --gec-s:#ffe0e0; --gec-b:#e03131;
@@ -147,6 +148,7 @@ html,body{margin:0}body{font:14px system-ui,sans-serif}[hidden]{display:none!imp
   --gorusme:#b9a3ff; --gorusme-s:#2b2350; --gorusme-b:#7351ec;
   --devam:#7cc0ff; --devam-s:#142f4d; --devam-b:#2580dc;
   --revizyon:#ffa76a; --revizyon-s:#43230f; --revizyon-b:#e0611a;
+  --makale:#ff8cc6; --makale-s:#42162e; --makale-b:#c2307f;
   --teslim:#6fdc92; --teslim-s:#123522; --teslim-b:#2c9a4d;
   --iptal:#a9b1bc; --iptal-s:#272d36; --iptal-b:#5d656f;
   --gec:#ff8a8a; --gec-s:#451a1d; --gec-b:#dc3a3a;
@@ -159,6 +161,7 @@ html,body{margin:0}body{font:14px system-ui,sans-serif}[hidden]{display:none!imp
   --gorusme:#b9a3ff; --gorusme-s:#2b2350; --gorusme-b:#7351ec;
   --devam:#7cc0ff; --devam-s:#142f4d; --devam-b:#2580dc;
   --revizyon:#ffa76a; --revizyon-s:#43230f; --revizyon-b:#e0611a;
+  --makale:#ff8cc6; --makale-s:#42162e; --makale-b:#c2307f;
   --teslim:#6fdc92; --teslim-s:#123522; --teslim-b:#2c9a4d;
   --iptal:#a9b1bc; --iptal-s:#272d36; --iptal-b:#5d656f;
   --gec:#ff8a8a; --gec-s:#451a1d; --gec-b:#dc3a3a;
@@ -276,6 +279,22 @@ textarea{resize:vertical;min-height:84px}
 .bilgi span{color:var(--muted);flex:none;font-weight:600}
 .bilgi b{font-weight:700;text-align:right;min-width:0;overflow-wrap:anywhere}
 .mini-btn{border:0;background:var(--accent-soft);color:var(--accent);border-radius:9px;padding:6px 11px;font:inherit;font-size:.8rem;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap}
+.satir-is .ch .bk{background:#fff1cc;color:#8a5a00}
+.su-durum{background:#fff;color:var(--cb);border-radius:999px;padding:7px 12px;font-size:.82rem;font-weight:800}
+.durum-sec button[data-bekle][aria-pressed="true"]{background:#ffd75e;color:#5a3c00}
+.zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
+.zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
+.zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
+.zc-s.ok:not(:last-child)::before{background:var(--cb)}
+.zc-s .nk{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--card);flex:none;display:grid;place-items:center;font-size:14px;font-weight:800;color:#fff;position:relative;z-index:1}
+.zc-s.ok .nk{background:var(--cb);border-color:var(--cb)}
+.zc-s.su .nk{border:7px solid var(--cb);background:#fff}
+.zc-s .m{display:flex;flex-direction:column;padding-top:3px;min-width:0}
+.zc-s .m b{font-weight:700;color:var(--muted)}
+.zc-s.ok .m b{color:var(--ink)}
+.zc-s.su .m b{color:var(--cb);font-weight:800;font-size:1.05em}
+.zc-s .m small{font-size:.82rem;color:var(--muted);font-weight:600}
+.zc-s.ip{margin-top:4px}
 .asamalar{display:flex;flex-direction:column;gap:6px}
 .asama{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;background:var(--soft);border:0;font:inherit;color:inherit;text-align:left;cursor:pointer;font-weight:600}
 .asama .kutu{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;flex:none;color:transparent}
@@ -388,8 +407,14 @@ window.addEventListener("error",function(e){try{var g=document.getElementById("g
 
 <script>
 /* ===== sabitler ===== */
-const DURUM={"Görüşme":"gorusme","Devam ediyor":"devam","Revizyonda":"revizyon","Teslim edildi":"teslim","İptal":"iptal"};
+const MAKALE_ASAMA="Makale yazımına başlandı";
+const DURUM={"Görüşme":"gorusme","Teze başlandı":"devam","Etik kurula sunuldu":"devam","Etik onay alındı":"devam","Veri seti tamamlandı":"devam","İstatistiğe başlandı":"devam","Tez yazımına başlandı":"devam","Revizyonda":"revizyon",[MAKALE_ASAMA]:"makale","Teslim edildi":"teslim","İptal":"iptal"};
 const DURUMLAR=Object.keys(DURUM);
+const durumlar=i=>DURUMLAR.filter(d=>d!==MAKALE_ASAMA||i.makale);
+const ESKI_DURUM={"Devam ediyor":"Teze başlandı"};
+function durumAta(i,yeni){const g=[...(i.gecmis||[])];if(!g.length&&i.durum)g.push({d:i.durum,t:(i.baslangic||bugun())+"T00:00:00"});g.push({d:yeni,t:new Date().toISOString()});return{...i,durum:yeni,gecmis:g}}
+let gocYapildi=false;
+function gocEt(){if(gocYapildi)return;gocYapildi=true;isler.filter(i=>ESKI_DURUM[i.durum]).forEach(i=>{const y=ESKI_DURUM[i.durum];arkada(isYaz({...i,durum:y,gecmis:i.gecmis&&i.gecmis.length?i.gecmis:[{d:y,t:(i.baslangic||bugun())+"T00:00:00"}]}))})}
 const TURLER=["Yüksek lisans","Doktora","Uzmanlık tezi","Lisans bitirme","Proje / Ödev","Diğer"];
 const ASAMALAR=["Konu ve plan","Literatür taraması","Yöntem","Etik kurul / izinler","Veri toplama","İstatistik / analiz","Bulgular ve tartışma","Son okuma ve format"];
 const renkAd=k=>`--c:var(--${k});--cs:var(--${k}-s);--cb:var(--${k}-b)`;
@@ -543,7 +568,7 @@ function gIsler(){
   const carp=i=>i.pb==="USD"?KUR.usd:1,ucTop=hesap.reduce((a,i)=>a+(+i.ucret||0)*carp(i),0),odTop=hesap.reduce((a,i)=>a+Math.min(odenen(i),+i.ucret||0)*carp(i),0),p=ucTop?Math.round(odTop/ucTop*100):0;
   const kalUSD=hesap.filter(i=>i.pb==="USD").reduce((a,i)=>a+kalan(i),0),kalTRY=hesap.filter(i=>i.pb!=="USD").reduce((a,i)=>a+kalan(i),0);
   const ak=isler.filter(aktif),yak=ak.filter(i=>i.teslim).sort((a,b)=>a.teslim.localeCompare(b.teslim))[0];
-  let l=isler.filter(i=>filtre==="Tümü"||(filtre==="Aktif"?aktif(i):filtre==="Makale"?i.makale:i.durum===filtre));
+  let l=isler.filter(i=>filtre==="Tümü"||(filtre==="Aktif"?aktif(i):filtre==="Makale"?i.makale:filtre==="Beklemede"?i.beklemede:i.durum===filtre));
   const k=q.toLocaleLowerCase("tr");if(k)l=l.filter(i=>[i.musteri,i.konu,i.universite,i.iletisim].join(" ").toLocaleLowerCase("tr").includes(k));
   l.sort(sirala==="kalan"?(a,b)=>kalanTL(b)-kalanTL(a):sirala==="yeni"?(a,b)=>(b.olusturma||b.baslangic||"").localeCompare(a.olusturma||a.baslangic||""):(a,b)=>(a.teslim||"9999").localeCompare(b.teslim||"9999"));
   const yf=yak?fark(yak.teslim):null;
@@ -568,8 +593,8 @@ function gIsler(){
           <input id="ara" type="search" placeholder="Müşteri, konu, üniversite" value="${esc(q)}" aria-label="Ara"></div>
         <select id="sirala" aria-label="Sırala"><option value="teslim" ${sirala==="teslim"?"selected":""}>Teslime göre</option><option value="kalan" ${sirala==="kalan"?"selected":""}>Alacağa göre</option><option value="yeni" ${sirala==="yeni"?"selected":""}>En yeni</option></select>
       </div>
-      <div class="cipler" style="margin-bottom:0">${["Aktif","Tümü","Makale",...DURUMLAR].map(s=>{const n=s==="Tümü"?isler.length:s==="Aktif"?isler.filter(aktif).length:s==="Makale"?isler.filter(i=>i.makale).length:isler.filter(i=>i.durum===s).length;
-        return`<button type="button" class="cip" data-f="${s}" aria-pressed="${s===filtre}" ${DURUM[s]?`style="${renk(s)}"`:s==="Makale"?`style="--cs:#fde4f2;--c:#a3266f;--cb:#a3266f"`:""}>${s} · ${n}</button>`}).join("")}</div>
+      <div class="cipler" style="margin-bottom:0">${["Aktif","Tümü","Makale","Beklemede",...DURUMLAR.filter(s=>s===filtre||isler.some(i=>i.durum===s))].map(s=>{const n=s==="Tümü"?isler.length:s==="Aktif"?isler.filter(aktif).length:s==="Makale"?isler.filter(i=>i.makale).length:s==="Beklemede"?isler.filter(i=>i.beklemede).length:isler.filter(i=>i.durum===s).length;
+        return`<button type="button" class="cip" data-f="${s}" aria-pressed="${s===filtre}" ${DURUM[s]?`style="${renk(s)}"`:s==="Makale"?`style="--cs:#fde4f2;--c:#a3266f;--cb:#a3266f"`:s==="Beklemede"?`style="--cs:#fff1cc;--c:#8a5a00;--cb:#b37400"`:""}>${s} · ${n}</button>`}).join("")}</div>
       <div class="isler" style="gap:10px">${l.length?l.map(kartIs).join(""):bos()}</div>
     </section>
   </div>`;
@@ -589,7 +614,7 @@ function kartIs(i){
   return`<button type="button" class="satir-is" data-ac="${i.id}" style="${renk(i.durum)}">
     <span class="av" aria-hidden="true">${esc(bas)}</span>
     <span class="orta"><span class="ad">${esc(i.musteri||"—")}</span><span class="kn">${esc(i.konu)}</span>
-      <span class="ch"><span class="d">${i.durum}</span><span class="${s.c}">${s.t}</span>${i.makale?`<span class="mk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Makale</span>`:""}</span></span>
+      <span class="ch"><span class="d">${i.durum}</span>${i.beklemede?`<span class="bk">Beklemede</span>`:""}<span class="${s.c}">${s.t}</span>${i.makale?`<span class="mk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Makale</span>`:""}</span></span>
     <span class="sag">${k?`<b>${para(k,i.pb)}</b><small>kalan · %${p} ödendi</small>`:(+i.ucret?`<b class="ok">Ödendi</b><small>%100</small>`:`<small>Ücret yok</small>`)}</span>
   </button>`;
 }
@@ -717,7 +742,7 @@ function detayCiz(){
       <span class="tur">${esc(i.tur||"")}${U?" · Dolar":""}${i.makale?" · Makale":""}</span>
       <div class="ad">${esc(i.musteri)}</div><p class="konu">${esc(i.konu)}</p>
       <div class="geri-sayim">${aktif(i)&&f!==null?`<b class="num">${Math.abs(f)}</b><span>${f<0?"gün gecikti":f===0?"bugün teslim":"gün kaldı"}</span>`:`<span>${s.t}</span>`}<small>Teslim ${tarih(i.teslim)}</small></div>
-      <div class="durum-sec" role="group" aria-label="Durum">${DURUMLAR.map(x=>`<button type="button" data-durum="${x}" aria-pressed="${x===i.durum}">${x}</button>`).join("")}</div>
+      <div class="durum-sec"><span class="su-durum">${esc(i.durum)}</span><button type="button" data-bekle aria-pressed="${!!i.beklemede}">${i.beklemede?"Beklemede (müşteriden) ✓":"Beklemeye al"}</button></div>
     </section>
 
     <section class="kart blok"><h3>Ödemeler <small>${(i.odemeler||[]).length} ödeme</small></h3>
@@ -752,9 +777,10 @@ function detayCiz(){
       </form></div>`}
     </section>
 
-    <section class="kart blok"><h3>Tez aşamaları <small>${d.size}/${ASAMALAR.length}</small></h3>
-      <div class="cubuk" style="margin:0 0 12px;height:8px"><i style="width:${d.size/ASAMALAR.length*100}%;background:var(--accent)"></i></div>
-      <div class="asamalar">${ASAMALAR.map((a,n)=>`<button type="button" class="asama ${d.has(a)?"d":""}" data-asama="${a}" aria-pressed="${d.has(a)}"><span class="kutu">${ok}</span><span class="t">${a}</span><span class="no">${n+1}</span></button>`).join("")}</div>
+    <section class="kart blok"><h3>Aşamalar <small>dokunarak değiştir</small></h3>
+      <div class="zc">${(()=>{const L=durumlar(i),ci=L.indexOf(i.durum),son=d=>[...(i.gecmis||[])].reverse().find(e=>e.d===d);
+        return L.map((d,n)=>{const e=son(d),su=d===i.durum,ok=!su&&(e&&d!=="İptal"||(ci>=0&&n<ci&&i.durum!=="İptal"&&d!=="İptal"));
+          return`<button type="button" class="zc-s ${su?"su":ok?"ok":""} ${d==="İptal"?"ip":""}" data-durum="${d}" style="${renk(d)}"><span class="nk">${ok?"✓":""}</span><span class="m"><b>${d}</b>${e?`<small>${tarih(e.t.slice(0,10))}${/T00:00:00$/.test(e.t)?"":" · "+saat(e.t)}</small>`:su?`<small>şu anki aşama</small>`:""}</span></button>`}).join("")})()}</div>
     </section>
 
     <section class="kart blok"><h3>Bilgiler</h3><div class="bilgi">
@@ -859,7 +885,7 @@ function onizle(){
 
 /* ===== form ===== */
 function formAc(eski){setTimeout(navIt,0);
-  const yeni=!eski,i=eski?{...eski}:{id:yeniId("t"),durum:"Devam ediyor",tur:"Yüksek lisans",pb:"TRY",baslangic:bugun(),odemeler:[],asamalar:[]};
+  const yeni=!eski,i=eski?{...eski}:{id:yeniId("t"),durum:"Teze başlandı",tur:"Yüksek lisans",pb:"TRY",baslangic:bugun(),odemeler:[],asamalar:[]};
   const radyo=(ad,liste,sec,stil,etiket)=>`<div class="secim">${liste.map((x,n)=>`<label ${stil?`style="${stil(x)}"`:""}><input type="radio" id="f-${ad}-${n}" name="${ad}" value="${x}" ${x===sec?"checked":""}><span>${etiket?etiket(x):x}</span></label>`).join("")}</div>`;
   ekranAc("form",`
   <div class="ekran-ust"><button type="button" data-vazgec>Vazgeç</button><span class="ort">${yeni?"Yeni iş":"İşi düzenle"}</span><button type="submit" form="isForm">Kaydet</button></div>
@@ -880,7 +906,7 @@ function formAc(eski){setTimeout(navIt,0);
         <div class="alan tam"><span>Tahmini teslim</span>${tarihSec("f-teslim","teslim",i.teslim,false,true)}</div>
       </div>
       <div class="hizli"><span class="ipucu" style="align-self:center">Teslim:</span>${[[30,"1 ay"],[60,"2 ay"],[90,"3 ay"],[180,"6 ay"]].map(([g,t])=>`<button type="button" class="mini-btn" data-sure="${g}">${t}</button>`).join("")}</div>
-      <div class="alan"><span>Durum</span>${radyo("durum",DURUMLAR,i.durum,renk)}</div>
+      <div class="alan"><span>Aşama</span>${radyo("durum",DURUMLAR,ESKI_DURUM[i.durum]||i.durum,renk)}</div>
     </section>
     <section class="kart blok"><h3>Ödemeler <small id="fo-ozet"></small></h3>
       <div id="fo-liste"></div>
@@ -906,18 +932,18 @@ function formAc(eski){setTimeout(navIt,0);
       </div></div>
     </section>
   </form>`);
-  FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null};
+  FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null};mkAsama();
   ucretOn();fOdemeCiz();
   $("#isForm").onsubmit=async ev=>{
     ev.preventDefault();if(sayi($("#fo-tutar").value)&&fOdemeEkle(true)===false)return;else if(FORM.duz!==null)fGirisTemizle();
     const f=new FormData(ev.target),n={...i};
-    ["musteri","konu","durum","baslangic","teslim","tur","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");
+    ["musteri","konu","durum","baslangic","teslim","tur","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");if(!n.makale&&n.durum===MAKALE_ASAMA)n.durum="Tez yazımına başlandı";if(yeni)n.gecmis=[{d:n.durum,t:new Date().toISOString()}];else if(eski.durum!==n.durum)n.gecmis=durumAta(eski,n.durum).gecmis;
     n.ucret=sayi(f.get("ucret"));if(yeni)n.olusturma=new Date().toISOString();
     const yeniOd=FORM.odm.filter(o=>o._yeni),silinen=FORM.silinen;
     const duzeltilen=FORM.duzeltilen.filter(([,y])=>FORM.odm.includes(y)&&!y._yeni);
     n.odemeler=FORM.odm.map(({_yeni,_orijinal,...o})=>o).sort((a,b)=>a.tarih.localeCompare(b.tarih));
     const dg=[];
-    if(!yeni){if(eski.durum!==n.durum)dg.push(`Durum: ${eski.durum} → ${n.durum}`);
+    if(!yeni){if(eski.durum!==n.durum)dg.push(`Aşama: ${eski.durum} → ${n.durum}`);
       if((eski.teslim||"")!==n.teslim)dg.push(`Teslim tarihi: ${tarih(eski.teslim)} → ${tarih(n.teslim)}`);
       if((+eski.ucret||0)!==n.ucret||(eski.pb||"TRY")!==n.pb)dg.push(`Ücret: ${para(eski.ucret,eski.pb)} → ${para(n.ucret,n.pb)}`);
       if((eski.konu||"")!==n.konu)dg.push("Tez konusu güncellendi");if(!!eski.makale!==n.makale)dg.push(n.makale?"Makale eklendi":"Makale kaldırıldı");
@@ -956,6 +982,7 @@ function fOnizle(){
   if(!t||pb==="USD"||jp!=="USD"){el.hidden=true;return}
   el.hidden=false;el.textContent=`${tl(t)} = ${usd(t/kr)}`;
 }
+function mkAsama(){const x=$("#f-durum-"+DURUMLAR.indexOf(MAKALE_ASAMA));if(!x)return;const m=$("#f-makale-0")?.checked;x.closest("label").hidden=!m;if(!m&&x.checked){const t=$("#f-durum-"+DURUMLAR.indexOf("Tez yazımına başlandı"));if(t)t.checked=true}}
 function fKutu(ac,duz){const k=$("#fo-kutu"),b=$("#fo-ac");if(!k)return;k.hidden=!ac;b.hidden=!!ac;k.classList.toggle("duzen",!!duz);$("#fo-baslik").textContent=duz?"Ödemeyi düzenle":"Yeni ödeme"}
 function fGirisTemizle(){fKutu(false);FORM.duz=null;kurElle.fo=false;$("#fo-tutar").value="";$("#fo-not").value="";$("#fo-alinan").value="";$("#fo-ek").value="";$("#fo-ek").hidden=true;tarihYaz("fo-tarih",bugun());const k=kurBul(bugun());if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(bugun());tazeKurDoldur("fo");$("#fo-pb-try").checked=true;
   $("#fo-ekle").textContent="Ödeme ekle";$("#fo-duzAraclar").hidden=true;const s=$("[data-fsil]");s.classList.remove("emin");s.textContent="Bu ödemeyi sil"}
@@ -1014,7 +1041,8 @@ document.addEventListener("click",async e=>{
   const i=isler.find(x=>x.id===acikId);if(!i)return;
   if(ds.duzen!==undefined){formAc(i);return}
   if(ds.hizli){HIZLI={oran:ds.horan,deger:+ds.hizli};$("#o-pb-"+(ds.hpb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(+ds.hizli);$("#o-tutar").focus();onizle();return}
-  if(ds.durum&&ds.durum!==i.durum){arkada(isYaz({...i,durum:ds.durum}),log(i,`Durum: ${i.durum} → ${ds.durum}`));toast(ds.durum);return}
+  if(ds.bekle!==undefined){const b=!i.beklemede;arkada(isYaz({...i,beklemede:b}),log(i,b?"Beklemeye alındı (müşteriden)":"Beklemeden çıkarıldı"));toast(b?"Beklemede":"Beklemeden çıkarıldı");return}
+  if(ds.durum&&ds.durum!==i.durum){arkada(isYaz(durumAta(i,ds.durum)),log(i,`Aşama: ${i.durum} → ${ds.durum}`));toast(ds.durum);return}
   if(ds.asama){const s=new Set(i.asamalar||[]),v2=!s.has(ds.asama);v2?s.add(ds.asama):s.delete(ds.asama);
     arkada(isYaz({...i,asamalar:ASAMALAR.filter(a=>s.has(a))}),log(i,`Aşama ${v2?"tamamlandı":"geri alındı"}: ${ds.asama}`));if(v2&&s.size===ASAMALAR.length)toast("Tüm aşamalar tamamlandı");return}
   if(ds.oduz!==undefined){const n=+ds.oduz,o=i.odemeler[n];if(!o)return;ODZ=n;detayCiz();
@@ -1038,7 +1066,7 @@ document.addEventListener("input",e=>{
 document.addEventListener("change",e=>{if(e.target.id==="sirala"){sirala=e.target.value;uiSakla();ciz()}
   if(e.target.id==="o-pb-try"||e.target.id==="o-pb-usd")onizle();if(e.target.id==="o-tarih")kurTarihten();
   if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value);if(e.target.value===bugun())tazeKurDoldur("fo")}
-  if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
+  if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-makale"))mkAsama();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
 document.addEventListener("submit",async e=>{
   if(e.target.id==="kurForm"){e.preventDefault();const u=kurSayi(new FormData(e.target).get("usd"));if(!u)return;const eski=KUR.usd;kurDuzen=false;
     arkada(kurYaz({usd:u,tarih:bugun(),kaynak:"Elle girildi",zaman:new Date().toISOString()}),log(null,`Kur güncellendi: ${nf(eski,4)} → ${nf(u,4)} ₺`));toast("Kur kaydedildi");return}
@@ -1070,7 +1098,7 @@ function yenile(zorla){
     if(d.surum)SON_SURUM=d.surum;
     isler=d.isler||[];loglar=d.loglar||[];KURLAR=d.kurlar||{};
     if(d.kur&&d.kur.usd){KUR=d.kur;try{localStorage.setItem("tez-defteri-kur",JSON.stringify(KUR))}catch(_){}}
-    lsYaz();if(ekranTur!=="form")ciz();
+    lsYaz();if(ekranTur!=="form")ciz();gocEt();
     $("#depo").textContent="Kayıtlar Google E-Tablonda · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})+" itibarıyla güncel";
   }).catch(e=>{$("#depo").textContent="Sunucuya ulaşılamadı"+(API?" (…"+API.slice(-14,-5)+")":"")+": "+(e&&e.message||e)});
 }
