@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=51"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=52"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -302,6 +302,8 @@ textarea{resize:vertical;min-height:84px}
 .gb .c b{font-size:11.5px;font-weight:800;margin-bottom:4px;white-space:nowrap;letter-spacing:-.02em}.gb .c.sifir b{color:var(--muted);font-weight:600}
 .gb-ay{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:6px;text-align:center;font-size:13px;font-weight:700;color:var(--muted)}.gb-ay .bu{color:#0b6e4c}
 .tk-od{border:0!important;padding:0!important;margin:0;text-align:left}
+.kay-s{animation:kayS .25s ease-out}.kay-g{animation:kayG .25s ease-out}
+@keyframes kayS{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}@keyframes kayG{from{transform:translateX(-24px);opacity:.4}to{transform:none;opacity:1}}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -648,6 +650,12 @@ function kartIs(i){
   </button>`;
 }
 
+function ayKaydir(n){ayGor.m+=n;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}secGun=null;ciz();
+  const k=document.querySelector(".takvim-kart");if(k){k.classList.remove("kay-s","kay-g");void k.offsetWidth;k.classList.add(n>0?"kay-s":"kay-g")}}
+let kayBas=null;
+document.addEventListener("touchstart",e=>{const k=e.target.closest(".takvim-kart");kayBas=k&&e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()}:null},{passive:true});
+document.addEventListener("touchend",e=>{if(!kayBas)return;const t=e.changedTouches[0],dx=t.clientX-kayBas.x,dy=t.clientY-kayBas.y,sure=Date.now()-kayBas.t;kayBas=null;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5&&sure<800){e.preventDefault();ayKaydir(dx<0?1:-1)}},{passive:false});
 function gTakvim(){
   const {y,m}=ayGor,ilk=new Date(y,m,1),bas=(ilk.getDay()+6)%7,gs=new Date(y,m+1,0).getDate(),ay=`${y}-${String(m+1).padStart(2,"0")}`;
   const olay={};const ekle=(t,o)=>(olay[t]=olay[t]||[]).push(o);
@@ -661,7 +669,7 @@ function gTakvim(){
   const liste=(arr,baslik)=>`<div class="bolum-baslik"><h2>${baslik}</h2></div><div class="isler">${arr.length?arr.map(x=>x.tur==="odeme"
       ?`<button type="button" class="kart is" data-ac="${x.i.id}" style="${renkAd("para")}"><div class="sekme"><span class="ad">${esc(x.i.musteri)}</span><span class="sure">Ödeme</span></div><div class="govde" style="grid-template-columns:1fr"><div class="odeme tk-od"><span class="ik ${x.o.pb==="USD"?"usd":""}">${x.o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${anaTutar(x.o)}${x.i.pb==="USD"&&x.o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(x.o))}</small>`:""}</b>${odemeEk(x.o)}<small>${x.o.not?esc(x.o.not):"Ödeme"}${x.o.pb==="USD"||x.i.pb==="USD"?` · kur ${nf(oKur(x.o),2)}`:""}</small>${x.o.ekNot?`<span class="eknot">${esc(x.o.ekNot)}</span>`:""}</div></div></div></button>`
       :kartIs(x.i)).join(""):`<div class="kart bos">Bu ${secGun?"gün":"ay"} için kayıt yok.</div>`}</div>`;
-  return`<div class="satir2"><div style="flex:3 1 420px;min-width:0"><section class="kart" style="overflow:hidden"><div class="ay-ust"><button type="button" data-ay="-1" aria-label="Önceki ay">‹</button><h2>${ilk.toLocaleDateString("tr-TR",{month:"long",year:"numeric"})}</h2><button type="button" data-ay="1" aria-label="Sonraki ay">›</button></div>
+  return`<div class="satir2"><div style="flex:3 1 420px;min-width:0"><section class="kart takvim-kart" style="overflow:hidden;touch-action:pan-y"><div class="ay-ust"><button type="button" data-ay="-1" aria-label="Önceki ay">‹</button><h2>${ilk.toLocaleDateString("tr-TR",{month:"long",year:"numeric"})}</h2><button type="button" data-ay="1" aria-label="Sonraki ay">›</button></div>
   <div class="gunler">${h}</div></section>
   <p class="ipucu" style="margin:10px 4px 0;display:flex;gap:14px;flex-wrap:wrap"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--devam-b)"></i> Teslim (durum rengiyle)</span><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--para-b)"></i> Ödeme</span></p>
   </div><div style="flex:2 1 300px;min-width:0">${sec?liste(sec,tarih(secGun)):liste(buAy,"Bu ayki teslimler")}</div></div>`;
@@ -1035,7 +1043,7 @@ document.addEventListener("click",async e=>{
   if(ds.kur!==undefined){kurDuzen=!kurDuzen;ciz();if(kurDuzen)$("#kur-deger")?.focus();return}
   if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
   if(ds.f){filtre=ds.f;uiSakla();ciz();return}
-  if(ds.ay){ayGor.m+=+ds.ay;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}secGun=null;ciz();return}
+  if(ds.ay){ayKaydir(+ds.ay);return}
   if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
   if(ds.logsil){arkada(logSil(ds.logsil));toast("Not silindi");return}
   if(t.id==="ekleBtn"){formAc();return}
