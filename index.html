@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=26"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=27"></script><base target="_top">
 <style>.tur-sec{display:flex;flex-direction:column;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px 10px}
 .tur-bas{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .tur-dugmeler{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
@@ -817,9 +817,9 @@ function turDoldur(p,o){const n=(o.not||"").trim();let tur="",kalanMetin=n;
   $("#"+p+"-not").value=tur;const ek=[kalanMetin,o.ekNot||""].filter(Boolean).join(" · ");$("#"+p+"-ek").value=ek;$("#"+p+"-ek").hidden=!ek;turGoster(p)}
 /* Dolar ödemenin TL karşılığı: elle yazılan "alındı", yoksa o günün kuruyla tahmini */
 /* Ana tutar: elime geçen TL varsa o (TL ödemelerle aynı vurgu), yoksa ödemenin kendisi */
-const anaTutar=o=>o.pb==="USD"&&+o.alinanTL>0?tl(o.alinanTL):para(o.tutar,o.pb);
+const anaTutar=o=>o.pb==="USD"&&+o.alinanTL>0?`${usd(o.tutar)} · ${tl(o.alinanTL)}`:para(o.tutar,o.pb);
 function odemeEk(o){if(o.pb!=="USD")return"";const d=(+o.tutar||0)*oKur(o),al=+o.alinanTL||0,f=al-d;
-  return`<span class="kurla">${al?`<strong>${usd(o.tutar)}</strong> · `:""}O günün kuruyla <strong>${tl(d)}</strong>${al&&Math.abs(f)>=1?` · <strong class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</strong>`:""}</span>`}
+  return`<span class="kurla">O günün kuruyla <strong>${tl(d)}</strong>${al&&Math.abs(f)>=1?` · <strong class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</strong>`:""}</span>`}
 /* Dolar ödemede: elime geçen TL ile o günün kuru karşılaştırması */
 function alinanGoster(p,t,pb,kr){const a=$("#"+p+"-alinanAlan");if(!a)return;a.hidden=pb!=="USD";if(pb!=="USD")return;
   const al=sayi($("#"+p+"-alinan").value),deger=t*kr,tr=$("#"+p+"-tarih")?.value,ne=tr===bugun()?"Bugünkü kurla":"O günün kuruyla";
