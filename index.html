@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=13"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=14"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -467,8 +467,10 @@ function hero(){
 
 function gIsler(){
   const hesap=isler.filter(i=>i.durum!=="İptal");
-  const tah=hesap.reduce((a,i)=>a+odenenTL(i),0),kal=hesap.reduce((a,i)=>a+kalanTL(i),0),top=tah+kal,p=top?Math.round(tah/top*100):0;
-  const kalUSD=hesap.filter(i=>i.pb==="USD").reduce((a,i)=>a+kalan(i),0);
+  const tah=hesap.reduce((a,i)=>a+odenenTL(i),0),kal=hesap.reduce((a,i)=>a+kalanTL(i),0);
+  /* ilerleme: her iş kendi para biriminde (ödenen/ücret), bugünkü değerine göre ağırlıklı */
+  const carp=i=>i.pb==="USD"?KUR.usd:1,ucTop=hesap.reduce((a,i)=>a+(+i.ucret||0)*carp(i),0),odTop=hesap.reduce((a,i)=>a+Math.min(odenen(i),+i.ucret||0)*carp(i),0),p=ucTop?Math.round(odTop/ucTop*100):0;
+  const kalUSD=hesap.filter(i=>i.pb==="USD").reduce((a,i)=>a+kalan(i),0),kalTRY=hesap.filter(i=>i.pb!=="USD").reduce((a,i)=>a+kalan(i),0);
   const ak=isler.filter(aktif),yak=ak.filter(i=>i.teslim).sort((a,b)=>a.teslim.localeCompare(b.teslim))[0];
   let l=isler.filter(i=>filtre==="Tümü"||(filtre==="Aktif"?aktif(i):i.durum===filtre));
   const k=q.toLocaleLowerCase("tr");if(k)l=l.filter(i=>[i.musteri,i.konu,i.universite,i.iletisim].join(" ").toLocaleLowerCase("tr").includes(k));
@@ -477,7 +479,7 @@ function gIsler(){
   return`
   <div class="satir2">
     <section class="bakiye" aria-label="Alacak özeti">
-      <div style="display:flex;flex-direction:column;gap:6px"><span class="e">TOPLAM ALACAK</span><b class="b num">${tl(kal)}</b>${kalUSD?`<span class="u">${usd(kalUSD)} · güncel kurla</span>`:""}</div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span class="e">TOPLAM ALACAK</span><b class="b num">${tl(kal)}</b>${kalUSD?`<span class="u">${kalTRY?`Dolar işlerden ${usd(kalUSD)} (× ${nf(KUR.usd,2)}) + TL işlerden ${tl(kalTRY)}`:`${usd(kalUSD)} kalan × bugünkü kur ${nf(KUR.usd,2)}`}</span>`:""}</div>
       <div class="cb" role="img" aria-label="Tahsilat yüzde ${p}"><i style="width:${p}%"></i></div>
       <div class="uc"><div><span>Tahsil edilen</span><b>${tl(tah)}</b></div><div><span>Aktif iş</span><b>${ak.length}</b></div><div><span>En yakın teslim</span><b>${yf===null?"—":yf<0?`${-yf} gün gecikti`:yf===0?"Bugün":yf+" gün"}</b></div></div>
     </section>
