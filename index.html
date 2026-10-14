@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script>window.TEZ_API="https://script.google.com/macros/s/AKfycbz-NUp6RUUl8RTb662o3mM2fIdTAHVQfrmlilgS8VXPyT3c0Q1dI_3jcpZEx6lo3SNM/exec"</script><base target="_top">
+<style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+.kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
+.kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
+.kilit-kart h1{margin:4px 0 0;font-size:26px;font-weight:800}.kilit-kart p{margin:0;color:#4f5f57;font-size:16px}
+.kilit-kart input{font:inherit;font-size:18px;padding:14px 16px;border:2px solid #d5e2db;border-radius:14px;outline:0}.kilit-kart input:focus{border-color:#0b6e4c}
+.kilit-hata{color:#b3261e!important;font-weight:700}
+.kilit-btn{font:inherit;font-size:18px;font-weight:800;border:0;border-radius:14px;padding:14px;background:#0b6e4c;color:#fff;cursor:pointer}
+@media (prefers-color-scheme:dark){#kilit{background:#0f1714}.kilit-kart{background:#18231e;color:#e8f1ec}.kilit-kart p{color:#a9bab1}.kilit-kart input{background:#0f1714;color:#e8f1ec;border-color:#2b3b33}}
+html,body{margin:0}body{font:14px system-ui,sans-serif}[hidden]{display:none!important}img{max-width:100%}*{box-sizing:border-box}
+.ust-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:22px 0 4px}
+.ust-bar p{margin:0;color:var(--muted);font-weight:700;font-size:15px;letter-spacing:.02em}
+.ust-bar h1{margin:2px 0 0;font-size:30px;font-weight:800;letter-spacing:-.01em}
+.kur2{border:0;background:#ffe6e6;color:#b04f00;border-radius:16px;padding:8px 14px;font:inherit;text-align:right;cursor:pointer;display:flex;flex-direction:column;line-height:1.3}
+.kur2 small{font-size:13px;color:#8a4a1c;font-weight:700}.kur2 b{font-size:21px;font-weight:800}
+.kur-form2{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;background:var(--card);padding:12px;border-radius:16px;box-shadow:var(--shadow)}
+.kur-form2 input{flex:1 1 140px}.kur-form2 small{flex-basis:100%;font-size:14px;color:var(--muted)}
+.satir2{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px}
+.bakiye{flex:3 1 380px;min-width:0;background:#0b6e4c;color:#fff;border-radius:26px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.bakiye .e{font-size:14px;font-weight:800;letter-spacing:.06em;color:#c9f2dd}
+.bakiye .b{font-size:48px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
+.bakiye .u{font-size:17px;font-weight:700;color:#c9f2dd}
+.bakiye .cb{height:10px;background:#0a5a3f;border-radius:6px;overflow:hidden}.bakiye .cb i{display:block;height:100%;background:#8ef0be;border-radius:6px}
+.bakiye .uc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bakiye .uc span{display:block;font-size:14px;color:#c9f2dd;font-weight:700}.bakiye .uc b{font-size:22px}
+.kutular{flex:2 1 280px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.kutu{border:0;background:var(--card);border-radius:20px;padding:16px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;color:var(--ink);font:inherit;cursor:pointer;box-shadow:var(--shadow)}
+.kutu .ik{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;font-weight:800}
+.kutu b{font-size:19px}
+.panel{flex:3 1 420px;min-width:0;background:var(--card);border-radius:26px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.panel.dar{flex:2 1 300px}
+.panel .bas2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.panel h2{margin:0;font-size:23px;font-weight:800}
+.panel .bas2 small{font-size:15px;color:var(--muted);font-weight:700}
+.satir-is{display:flex;gap:14px;align-items:center;padding:14px;border-radius:18px;background:var(--soft);border:0;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.av{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-weight:800;font-size:18px;flex:none;background:var(--cs);color:var(--c)}
+.satir-is .orta{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.satir-is .ad{font-size:19px;font-weight:800}
+.satir-is .kn{font-size:15px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.satir-is .ch{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.satir-is .ch span{font-size:13px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--card);color:var(--ink)}
+.satir-is .ch .d{background:var(--cs);color:var(--c)}.satir-is .ch .gec{background:var(--gec-s);color:var(--gec)}.satir-is .ch .yakin{background:var(--yakin-s);color:var(--yakin)}
+.satir-is .sag{text-align:right;flex:none;display:flex;flex-direction:column;gap:2px}
+.satir-is .sag b{font-size:20px;color:var(--yakin)}.satir-is .sag b.ok{color:var(--teslim)}.satir-is .sag small{font-size:14px;color:var(--muted);font-weight:700}
+.hareket{display:flex;gap:12px;align-items:center}
+.hareket .ik{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-weight:800;flex:none;font-size:20px}
+.hareket .m{flex:1;min-width:0;display:flex;flex-direction:column}.hareket .m b{font-size:16px;font-weight:700}.hareket .m small{font-size:14px;color:var(--muted)}
+@media (max-width:520px){.bakiye .b{font-size:38px}.satir-is{flex-wrap:wrap}.satir-is .sag{text-align:left;flex-direction:row;gap:8px;align-items:baseline;width:100%;padding-left:68px}.ust-bar h1{font-size:26px}}
+.panel .cipler{flex-wrap:wrap;overflow:visible;padding-bottom:0}
+.panel .cip{font-size:.82rem;padding:6px 12px}
+.satir2 .bolum-baslik{margin-top:0}
+</style>
+<title>Dr Tez Akademi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: telefon öncelikli; üstte tam genişlik renkli başlık (selam, kur, alacak); iş kartları renkli dosya sekmesi gibi; altta 4 sekmeli gezinme */
+:root{
+  --bg:#f2f5f3; --card:#ffffff; --ink:#1a2233; --muted:#5b6578; --line:#dbe2ee; --soft:#eef2f8;
+  --accent:#0b6e4c; --accent2:#0b6e4c; --accent-soft:#dcf5e8; --accent-ink:#ffffff; --on:#ffffff;
+  --gorusme:#6741d9; --gorusme-s:#ebe4ff; --gorusme-b:#7048e8;
+  --devam:#1864ab;   --devam-s:#d9ecfc;   --devam-b:#1c7ed6;
+  --revizyon:#c2410c; --revizyon-s:#ffe6d5; --revizyon-b:#e8590c;
+  --teslim:#237a3c;  --teslim-s:#d3f2dc;  --teslim-b:#2b9a4a;
+  --iptal:#555d66;   --iptal-s:#e4e7eb;   --iptal-b:#6c757d;
+  --gec:#c92a2a; --gec-s:#ffe0e0; --gec-b:#e03131;
+  --yakin:#b35c00; --yakin-s:#ffe8c2; --yakin-b:#e67700;
+  --para:#087f5b; --para-s:#d0f4e6; --para-b:#0ca678;
+  --usd:#2b7a2f; --usd-s:#dff3dc;
+  --f-head:"Plus Jakarta Sans",system-ui,sans-serif; --f-body:"Plus Jakarta Sans",system-ui,sans-serif;
+  --r:18px; --shadow:0 1px 2px rgba(20,40,80,.06),0 6px 18px rgba(20,40,80,.08);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10141c; --card:#1b2029; --ink:#eef2f8; --muted:#a4adbd; --line:#2b3242; --soft:#232a36;
+  --accent:#4fd39a; --accent2:#4fd39a; --accent-soft:#143a2b; --accent-ink:#ffffff;
+  --gorusme:#b9a3ff; --gorusme-s:#2b2350; --gorusme-b:#7351ec;
+  --devam:#7cc0ff; --devam-s:#142f4d; --devam-b:#2580dc;
+  --revizyon:#ffa76a; --revizyon-s:#43230f; --revizyon-b:#e0611a;
+  --teslim:#6fdc92; --teslim-s:#123522; --teslim-b:#2c9a4d;
+  --iptal:#a9b1bc; --iptal-s:#272d36; --iptal-b:#5d656f;
+  --gec:#ff8a8a; --gec-s:#451a1d; --gec-b:#dc3a3a;
+  --yakin:#ffbe5c; --yakin-s:#422b0a; --yakin-b:#d97400;
+  --para:#55e0b3; --para-s:#0f3a2e; --para-b:#0c9a70; --usd:#8fe08f; --usd-s:#173418;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10141c; --card:#1b2029; --ink:#eef2f8; --muted:#a4adbd; --line:#2b3242; --soft:#232a36;
+  --accent:#4fd39a; --accent2:#4fd39a; --accent-soft:#143a2b; --accent-ink:#ffffff;
+  --gorusme:#b9a3ff; --gorusme-s:#2b2350; --gorusme-b:#7351ec;
+  --devam:#7cc0ff; --devam-s:#142f4d; --devam-b:#2580dc;
+  --revizyon:#ffa76a; --revizyon-s:#43230f; --revizyon-b:#e0611a;
+  --teslim:#6fdc92; --teslim-s:#123522; --teslim-b:#2c9a4d;
+  --iptal:#a9b1bc; --iptal-s:#272d36; --iptal-b:#5d656f;
+  --gec:#ff8a8a; --gec-s:#451a1d; --gec-b:#dc3a3a;
+  --yakin:#ffbe5c; --yakin-s:#422b0a; --yakin-b:#d97400;
+  --para:#55e0b3; --para-s:#0f3a2e; --para-b:#0c9a70; --usd:#8fe08f; --usd-s:#173418;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.5}
+h1,h2,h3,.num{font-family:var(--f-head);font-weight:600;letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:0 calc(110px + env(safe-area-inset-bottom,0px))}
+
+/* üst renkli başlık */
+.hero{margin-inline:-16px;padding:18px 18px 24px;background:linear-gradient(140deg,var(--accent) 0%,#2d6fe0 45%,var(--accent2) 100%);color:var(--on);border-radius:0 0 28px 28px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero>*{position:relative;z-index:1}
+.hero .sat{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hero p{margin:0;opacity:.85;font-size:.88rem;font-weight:600}
+.hero h1{margin:0;font-size:1.5rem}
+.kur{border:0;background:rgba(255,255,255,.18);color:var(--on);border-radius:14px;padding:7px 12px;font:inherit;font-size:.85rem;font-weight:800;cursor:pointer;text-align:right;line-height:1.25;flex:none}
+.kur small{display:block;font-weight:600;opacity:.85;font-size:.7rem}
+.hero .etiket{margin-top:20px;opacity:.85;font-size:.88rem;font-weight:700}
+.hero .buyuk{font-size:2.3rem;line-height:1.1}
+.hero .usdalt{font-size:.88rem;opacity:.9;font-weight:700}
+.hero .cubuk{background:rgba(255,255,255,.25);margin:14px 0 8px} .hero .cubuk i{background:#fff}
+.hero .alt{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;flex-wrap:wrap;font-weight:600}
+.hero .alt b{font-family:var(--f-head);font-weight:600}
+.kur-form{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;background:rgba(255,255,255,.15);padding:10px;border-radius:14px}
+.kur-form input{flex:1 1 120px;background:rgba(255,255,255,.95);color:#1a2233;border:0}
+.kur-form button{border:0;background:#fff;color:var(--accent);border-radius:10px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer}
+.kur-form small{flex-basis:100%;font-size:.78rem;opacity:.9}
+
+.cubuk{height:10px;border-radius:6px;background:var(--soft);overflow:hidden;display:flex}
+.cubuk i{display:block;height:100%;background:var(--para-b);border-radius:6px}
+.kart{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);border:1px solid var(--line)}
+.bolum-baslik{display:flex;justify-content:space-between;align-items:baseline;margin:24px 2px 10px}
+.bolum-baslik h2{margin:0;font-size:1.05rem}
+.bolum-baslik small{color:var(--muted);font-weight:700}
+
+/* yaklaşanlar */
+.yatay{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;margin-inline:-2px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.yatay::-webkit-scrollbar{display:none}
+.yak{flex:0 0 148px;scroll-snap-align:start;padding:13px;border-radius:18px;border:0;text-align:left;font:inherit;color:var(--on);background:var(--cb);cursor:pointer;display:flex;flex-direction:column;gap:2px;box-shadow:0 6px 14px color-mix(in srgb,var(--cb) 30%,transparent)}
+.yak .g{font-family:var(--f-head);font-size:1.9rem;font-weight:700;line-height:1}
+.yak .gl{font-size:.76rem;font-weight:800;opacity:.9}
+.yak .ad{font-weight:800;font-size:.92rem;margin-top:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yak .tr{font-size:.78rem;opacity:.85;font-weight:600}
+
+/* araç çubuğu */
+.arac{display:flex;gap:8px;margin-bottom:10px}
+.arama{flex:1;min-width:0;position:relative}
+.arama input{padding-left:38px}
+.arama svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+input,select,textarea{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 13px;font:inherit;font-size:16px}
+select{width:auto}
+textarea{resize:vertical;min-height:84px}
+.cipler{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none;padding-bottom:2px}
+.cipler::-webkit-scrollbar{display:none}
+.cip{flex:none;border:0;background:var(--cs,var(--card));color:var(--c,var(--ink));border-radius:999px;padding:7px 14px;font:inherit;font-size:.86rem;font-weight:800;cursor:pointer}
+.cip[aria-pressed="true"]{background:var(--cb,var(--ink));color:var(--on)}
+.cip:not([style]){box-shadow:inset 0 0 0 1px var(--line)}
+.cip[aria-pressed="true"]:not([style]){background:var(--ink);color:var(--card);box-shadow:none}
+
+/* iş kartı: dosya sekmesi */
+.isler{display:flex;flex-direction:column;gap:12px}
+.is{display:block;padding:0;overflow:hidden;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%;border:0}
+.is .sekme{background:var(--cb);color:var(--on);padding:11px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.is .sekme .ad{font-family:var(--f-head);font-weight:600;font-size:1.02rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.is .sekme .sure{font-size:.8rem;font-weight:800;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.is .sekme .sure.gec{background:#fff;color:var(--gec-b)}
+.is .govde{display:grid;grid-template-columns:minmax(0,1fr) 56px;gap:10px 14px;padding:12px 16px 14px}
+.is .konu{color:var(--ink);font-size:.93rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.is .bilgi-s{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.etk{font-size:.78rem;font-weight:800;padding:4px 10px;border-radius:8px;background:var(--cs);color:var(--c)}
+.pil{font-size:.8rem;font-weight:800;padding:4px 10px;border-radius:8px;background:var(--soft);color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.pil.gec{background:var(--gec-s);color:var(--gec)} .pil.yakin{background:var(--yakin-s);color:var(--yakin)} .pil.ok{background:var(--teslim-s);color:var(--teslim)} .pil.para{background:var(--para-s);color:var(--para)} .pil.usd{background:var(--usd-s);color:var(--usd)}
+.halka{width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--para-b) calc(var(--p)*1%),var(--soft) 0);display:grid;place-items:center;align-self:start}
+.halka span{width:44px;height:44px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-family:var(--f-head);font-size:.78rem;font-weight:700;color:var(--para)}
+.asama-mini{display:flex;gap:3px;align-items:center;margin-left:auto}
+.asama-mini i{width:11px;height:7px;border-radius:2px;background:var(--line)}
+.asama-mini i.d{background:var(--accent)}
+.bos{padding:36px 20px;text-align:center;color:var(--muted)}
+.bos b{display:block;color:var(--ink);font-family:var(--f-head);font-size:1.05rem;margin-bottom:4px}
+
+/* alt gezinme */
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(4,1fr);gap:4px;z-index:4;box-shadow:0 -4px 16px rgba(20,40,80,.06)}
+.nav button{border:0;background:none;color:var(--muted);font:inherit;font-size:.72rem;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;border-radius:12px}
+.nav button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
+.nav svg{width:22px;height:22px}
+.ekle{position:fixed;right:16px;bottom:calc(78px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:20px;border:0;background:linear-gradient(140deg,var(--accent),var(--accent2));color:#fff;font-size:2rem;line-height:1;cursor:pointer;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 40%,transparent);z-index:4}
+
+/* tam ekran */
+.ekran{position:fixed;inset:0;background:var(--bg);overflow:auto;z-index:6;padding-top:env(safe-area-inset-top,0px)}
+.ekran-ust{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:var(--bg)}
+.ekran-ust button,.lnk{border:0;background:none;color:var(--accent);font:inherit;font-weight:800;cursor:pointer;padding:8px 6px;border-radius:8px}
+.ekran-ust .ort{font-weight:800;flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ic{max-width:640px;margin:0 auto;padding:4px 16px calc(40px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.kahraman{padding:18px;background:var(--cb);color:var(--on);border:0;box-shadow:0 8px 22px color-mix(in srgb,var(--cb) 30%,transparent)}
+.kahraman .tur{font-size:.78rem;font-weight:800;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:999px}
+.kahraman .ad{font-family:var(--f-head);font-size:1.4rem;font-weight:600;margin:10px 0 4px}
+.kahraman .konu{margin:0;opacity:.95;overflow-wrap:anywhere}
+.geri-sayim{display:flex;align-items:baseline;gap:6px;margin-top:16px;flex-wrap:wrap}
+.geri-sayim b{font-family:var(--f-head);font-size:2.6rem;line-height:1}
+.geri-sayim span{font-weight:800}
+.geri-sayim small{margin-left:auto;opacity:.9;font-weight:700}
+.durum-sec{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.durum-sec button{border:0;background:rgba(255,255,255,.2);color:var(--on);border-radius:999px;padding:7px 12px;font:inherit;font-size:.82rem;font-weight:800;cursor:pointer}
+.durum-sec button[aria-pressed="true"]{background:#fff;color:var(--cb)}
+.blok{padding:16px}
+.blok h3{margin:0 0 12px;font-size:1rem;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.blok h3 small{font-family:var(--f-body);color:var(--muted);font-weight:700;font-size:.82rem}
+.bilgi{display:flex;flex-direction:column}
+.bilgi div{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
+.bilgi div:first-child{border-top:0;padding-top:0}
+.bilgi span{color:var(--muted);flex:none;font-weight:600}
+.bilgi b{font-weight:700;text-align:right;min-width:0;overflow-wrap:anywhere}
+.mini-btn{border:0;background:var(--accent-soft);color:var(--accent);border-radius:9px;padding:6px 11px;font:inherit;font-size:.8rem;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap}
+.asamalar{display:flex;flex-direction:column;gap:6px}
+.asama{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;background:var(--soft);border:0;font:inherit;color:inherit;text-align:left;cursor:pointer;font-weight:600}
+.asama .kutu{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;flex:none;color:transparent}
+.asama.d{background:var(--accent-soft)}
+.asama.d .kutu{background:var(--accent);border-color:var(--accent);color:#fff}
+.asama.d .t{color:var(--accent)}
+.asama .no{margin-left:auto;font-size:.78rem;color:var(--muted)}
+.para-ust{display:flex;gap:16px;align-items:center}
+.para-ust .halka{width:80px;height:80px}
+.para-ust .halka span{width:64px;height:64px;font-size:1.05rem}
+.para-ust dl{margin:0;display:grid;grid-template-columns:auto auto;gap:3px 14px;flex:1}
+.para-ust dt{color:var(--muted);font-size:.88rem;font-weight:600} .para-ust dd{margin:0;text-align:right;font-family:var(--f-head);font-weight:600}
+.para-ust dd small{display:block;font-family:var(--f-body);font-size:.75rem;color:var(--muted);font-weight:700}
+.tablo-aciklama{margin-top:14px;background:var(--usd-s);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.tablo-aciklama div{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.tablo-aciklama span{color:var(--usd);font-weight:800;font-size:.85rem;flex:none}
+.tablo-aciklama b{font-family:var(--f-head);font-weight:600;text-align:right;font-variant-numeric:tabular-nums;min-width:0}
+.tablo-aciklama p{margin:0;font-size:.8rem;color:var(--muted);font-weight:600}
+.odeme-liste{display:flex;flex-direction:column;margin-top:14px}
+.odeme{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.odeme .ik{width:36px;height:36px;border-radius:11px;background:var(--para-b);color:#fff;display:grid;place-items:center;flex:none;font-weight:800}
+.odeme .ik.usd{background:var(--usd);color:var(--card)}
+.odeme .o{flex:1;min-width:0}
+.odeme .o b{display:block;font-family:var(--f-head);font-weight:600}
+.odeme .o small{color:var(--muted);font-weight:600}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:8px;font-size:1.2rem;line-height:1}
+.izgara{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.tam{grid-column:1/-1}
+.tsec{display:flex;gap:6px}
+.tsec select{flex:1 1 0;min-width:0;width:auto;padding:11px 8px}
+.tsec select:first-child{flex:0.7 1 0}
+.hizli{display:flex;gap:6px;flex-wrap:wrap}
+.onizle{font-size:.86rem;font-weight:800;color:var(--usd);background:var(--usd-s);border-radius:10px;padding:8px 12px}
+.btn{border:0;background:var(--soft);color:var(--ink);border-radius:12px;padding:13px 16px;font:inherit;font-weight:800;cursor:pointer}
+.btn.ana{background:linear-gradient(140deg,var(--accent),var(--accent2));color:#fff}
+.btn.para{background:var(--para-b);color:#fff}
+.btn.sil{background:var(--gec-s);color:var(--gec)} .btn.sil.emin{background:var(--gec-b);color:#fff}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:2px 12px;padding:8px 0;position:relative}
+.log li::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--line)}
+.log .nk{width:14px;height:14px;border-radius:50%;background:var(--k,var(--muted));border:3px solid var(--card);box-shadow:0 0 0 2px var(--k,var(--muted));margin-top:4px;position:relative;z-index:1}
+.log .m{min-width:0;overflow-wrap:anywhere;font-weight:600}
+.log .m small{display:block;color:var(--muted);font-size:.8rem}
+.log time{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px;font-weight:700}
+.log .gun{display:block;padding:14px 0 4px;font-family:var(--f-head);font-size:.86rem;color:var(--accent);font-weight:600}
+.log .gun::before{display:none}
+.not-form{display:flex;gap:8px;margin-bottom:12px}
+.not-form input{flex:1;min-width:0}
+/* takvim */
+.ay-ust{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:linear-gradient(140deg,var(--accent),var(--accent2));color:#fff;border-radius:var(--r) var(--r) 0 0}
+.ay-ust h2{margin:0;font-size:1.1rem}
+.ay-ust button{border:0;background:rgba(255,255,255,.2);color:#fff;width:38px;height:38px;border-radius:12px;font-size:1.3rem;cursor:pointer}
+.gunler{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:10px 10px 14px}
+.gunler .bh{font-size:.72rem;color:var(--muted);text-align:center;font-weight:800;padding:4px 0}
+.gunler button{height:clamp(44px,7vw,62px);max-width:100%;border:0;background:none;border-radius:12px;font:inherit;font-size:.95rem;font-weight:700;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0}
+.gunler button.var{background:var(--soft)}
+.gunler button.bugun{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.gunler button.sec{background:var(--accent);color:#fff}
+.noktalar{display:flex;gap:2px;height:7px}
+.noktalar i{width:7px;height:7px;border-radius:50%;background:var(--c)}
+/* ödemeler */
+.grafik{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;height:160px;padding:10px 4px 0}
+.sutun{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.sutun i{width:100%;max-width:38px;background:color-mix(in srgb,var(--para-b) 35%,var(--card));border-radius:10px 10px 4px 4px;min-height:4px}
+.sutun.bu i{background:linear-gradient(180deg,var(--accent2),var(--para-b))}
+.sutun small{font-size:.74rem;color:var(--muted);font-weight:800}
+.sutun b{font-size:.7rem;font-family:var(--f-head);font-weight:600;color:var(--para);white-space:nowrap}
+label,.alan{display:flex;flex-direction:column;gap:6px;font-size:.85rem;font-weight:800;color:var(--muted)}
+.secim{display:flex;gap:6px;flex-wrap:wrap}
+.secim label{display:inline-block}
+.secim input{position:absolute;opacity:0;pointer-events:none;width:1px}
+.secim span{display:inline-block;padding:8px 14px;border-radius:999px;background:var(--soft);color:var(--ink);font-weight:800;font-size:.86rem;cursor:pointer}
+.secim input:checked+span{background:var(--cb,var(--accent));color:#fff}
+.secim input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.ipucu{font-size:.82rem;color:var(--muted);font-weight:700}
+.durum-bilgi{text-align:center;color:var(--muted);font-size:.8rem;margin-top:18px;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--card);padding:10px 18px;border-radius:14px;font-weight:800;font-size:.9rem;z-index:9;white-space:nowrap}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){.is,.yak{transition:transform .12s}.is:active,.yak:active{transform:scale(.985)}}
+</style>
+</head><body>
+<div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
+  <div class="kilit-logo">DT</div>
+  <h1>Dr Tez Akademi</h1>
+  <p>Devam etmek için şifreyi gir. Bu cihaz şifreyi hatırlar.</p>
+  <input id="kilitSifre" name="sifre" type="password" autocomplete="current-password" placeholder="Şifre" required>
+  <p id="kilitHata" class="kilit-hata" hidden>Şifre yanlış, tekrar dene.</p>
+  <button type="submit" class="kilit-btn">Aç</button>
+</form></div>
+<script>
+window.addEventListener("error",function(e){try{var g=document.getElementById("gorunum");if(g)g.innerHTML='<div style="margin:20px 0;padding:14px;border-radius:12px;background:#ffe0e0;color:#a11;font:14px monospace;white-space:pre-wrap">Hata: '+(e.message||e)+'\nSatır: '+(e.lineno||"?")+'</div>'}catch(_){}});
+</script>
+
+
+
+<div class="wrap">
+  <main id="gorunum"><p class="bos">Yükleniyor… (bu yazı kalıyorsa Index dosyası eksik yapıştırılmış olabilir)</p></main>
+  <p class="durum-bilgi" id="depo"></p>
+</div>
+
+<button class="ekle" id="ekleBtn" type="button" aria-label="Yeni iş ekle">+</button>
+<nav class="nav" id="nav">
+  <button type="button" data-v="isler" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>İşler</button>
+  <button type="button" data-v="takvim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Takvim</button>
+  <button type="button" data-v="odemeler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h4"/></svg>Ödemeler</button>
+  <button type="button" data-v="gecmis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Geçmiş</button>
+</nav>
+<div class="ekran" id="ekran" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ===== sabitler ===== */
+const DURUM={"Görüşme":"gorusme","Devam ediyor":"devam","Revizyonda":"revizyon","Teslim edildi":"teslim","İptal":"iptal"};
+const DURUMLAR=Object.keys(DURUM);
+const TURLER=["Yüksek lisans","Doktora","Uzmanlık tezi","Lisans bitirme","Proje / Ödev","Diğer"];
+const ASAMALAR=["Konu ve plan","Literatür taraması","Yöntem","Etik kurul / izinler","Veri toplama","İstatistik / analiz","Bulgular ve tartışma","Son okuma ve format"];
+const renkAd=k=>`--c:var(--${k});--cs:var(--${k}-s);--cb:var(--${k}-b)`;
+const renk=d=>renkAd(DURUM[d]||"iptal");
+
+/* ===== durum ===== */
+let isler=[],loglar=[],v="isler",filtre="Aktif",q="",sirala="teslim",kIs=null,kLog=null,kKur=null,acikId=null,ekranTur=null,kurDuzen=false;
+let KUR={usd:49.3681,tarih:"2026-10-13",kaynak:"TCMB döviz satış"},KURLAR={};
+let ayGor=(()=>{const d=new Date();return{y:d.getFullYear(),m:d.getMonth()}})(),secGun=null;
+try{const s=JSON.parse(localStorage.getItem("tez-defteri-ui")||"{}");if(s.sirala)sirala=s.sirala;if(s.filtre)filtre=s.filtre}catch(e){}
+try{const k=JSON.parse(localStorage.getItem("tez-defteri-kur")||"null");if(k&&k.usd)KUR=k}catch(e){}
+const uiSakla=()=>{try{localStorage.setItem("tez-defteri-ui",JSON.stringify({sirala,filtre}))}catch(e){}};
+
+/* ===== yardımcılar ===== */
+const $=s=>document.querySelector(s);
+const nf=(n,d=0)=>new Intl.NumberFormat("tr-TR",{minimumFractionDigits:d,maximumFractionDigits:d}).format(n||0);
+const tl=n=>nf(Math.round(n||0))+" ₺";
+const usd=n=>{const r=Math.round((n||0)*100)/100;return"$"+nf(r,r%1?2:0)};
+const para=(n,pb)=>pb==="USD"?usd(n):tl(n);
+const tlKisa=n=>n>=1000?nf(Math.round(n/100)/10,1).replace(",0","")+"b":String(Math.round(n||0));
+const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const bugun=()=>iso(new Date());
+const tarih=(s,kisa)=>s?new Date(s+"T00:00").toLocaleDateString("tr-TR",kisa?{day:"numeric",month:"short"}:{day:"numeric",month:"long",year:"numeric"}):"—";
+const fark=s=>s?Math.round((new Date(s+"T00:00")-new Date(bugun()+"T00:00"))/864e5):null;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const aktif=i=>!["Teslim edildi","İptal"].includes(i.durum);
+const yeniId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const saat=z=>new Date(z).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+const gunAdi=z=>{const f=fark(iso(new Date(z)));return f===0?"Bugün":f===-1?"Dün":new Date(z).toLocaleDateString("tr-TR",{day:"numeric",month:"long",weekday:"long"})};
+/* para hesapları: ücret işin para biriminde; her ödeme kendi kuruyla */
+const oKur=o=>+o.kur||KUR.usd;
+const oTL=o=>o.pb==="USD"?(+o.tutar||0)*oKur(o):(+o.tutar||0);
+const oUSD=o=>o.pb==="USD"?(+o.tutar||0):(+o.tutar||0)/oKur(o);
+const odenen=i=>(i.odemeler||[]).reduce((a,o)=>a+(i.pb==="USD"?oUSD(o):oTL(o)),0);
+const odenenTL=i=>(i.odemeler||[]).reduce((a,o)=>a+oTL(o),0);
+const kalan=i=>Math.max((+i.ucret||0)-odenen(i),0);
+const kalanTL=i=>i.pb==="USD"?kalan(i)*KUR.usd:kalan(i);
+const yuzde=i=>{const u=+i.ucret||0;return u?Math.min(100,Math.round(odenen(i)/u*100)):0};
+function sureMetni(i){
+  if(i.durum==="Teslim edildi")return{t:"Teslim edildi",c:"ok"};
+  if(i.durum==="İptal")return{t:"İptal",c:""};
+  const g=fark(i.teslim);if(g===null)return{t:"Tarih yok",c:""};
+  if(g<0)return{t:`${-g} gün gecikti`,c:"gec"};if(g===0)return{t:"Bugün teslim",c:"gec"};if(g===1)return{t:"Yarın teslim",c:"yakin"};
+  if(g<=7)return{t:`${g} gün kaldı`,c:"yakin"};return{t:`${g} gün kaldı`,c:""};
+}
+function telNorm(t){let d=(t||"").replace(/\D/g,"");if(!d)return"";if(d.startsWith("0"))d="90"+d.slice(1);else if(d.length===10&&d.startsWith("5"))d="90"+d;return d}
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.z);toast.z=setTimeout(()=>t.hidden=true,2200)}
+const ok=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+
+const KURLAR_SEED={"2026-06-01":45.91,"2026-06-02":45.92,"2026-06-03":45.95,"2026-06-04":45.97,"2026-06-05":45.99,"2026-06-08":46.1,"2026-06-09":46.12,"2026-06-10":46.13,"2026-06-11":46.15,"2026-06-12":46.17,"2026-06-15":46.28,"2026-06-16":46.3,"2026-06-17":46.31,"2026-06-18":46.33,"2026-06-19":46.36,"2026-06-22":46.46,"2026-06-23":46.48,"2026-06-24":46.49,"2026-06-25":46.51,"2026-06-26":46.53,"2026-06-29":46.64,"2026-06-30":46.66,"2026-07-01":46.67,"2026-07-02":46.69,"2026-07-03":46.72,"2026-07-06":46.82,"2026-07-07":46.84,"2026-07-08":46.85,"2026-07-09":46.87,"2026-07-10":46.89,"2026-07-13":47,"2026-07-14":47.01,"2026-07-16":47.05,"2026-07-17":47.07,"2026-07-20":47.18,"2026-07-21":47.2,"2026-07-22":47.22,"2026-07-23":47.23,"2026-07-24":47.25,"2026-07-27":47.35,"2026-07-28":47.38,"2026-07-29":47.39,"2026-07-30":47.41,"2026-07-31":47.43,"2026-08-03":47.54,"2026-08-04":47.56,"2026-08-05":47.57,"2026-08-06":47.59,"2026-08-07":47.61,"2026-08-10":47.71,"2026-08-11":47.74,"2026-08-12":47.74,"2026-08-13":47.75,"2026-08-14":47.81,"2026-08-17":47.9,"2026-08-18":47.92,"2026-08-19":47.93,"2026-08-20":47.95,"2026-08-21":47.97,"2026-08-24":48.08,"2026-08-25":48.1,"2026-08-26":48.1,"2026-08-27":48.13,"2026-08-28":48.16,"2026-08-31":48.26,"2026-09-01":48.28,"2026-09-02":48.29,"2026-09-03":48.31,"2026-09-04":48.32,"2026-09-07":48.43,"2026-09-08":48.46,"2026-09-09":48.48,"2026-09-10":48.49,"2026-09-11":48.52,"2026-09-14":48.62,"2026-09-15":48.62,"2026-09-16":48.67,"2026-09-17":48.67,"2026-09-18":48.7,"2026-09-21":48.8,"2026-09-22":48.82,"2026-09-23":48.84,"2026-09-24":48.85,"2026-09-25":48.88,"2026-09-28":48.99,"2026-09-29":49,"2026-09-30":49.02,"2026-10-01":49.03,"2026-10-02":49.06,"2026-10-05":49.16,"2026-10-06":49.18,"2026-10-07":49.2,"2026-10-08":49.22,"2026-10-09":49.22,"2026-10-12":49.34,"2026-10-13":49.3681};
+const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+function tarihSec(id,name,val,hizli,bos){
+  val=val||"";const [y,m,d]=val?val.split("-").map(Number):[0,0,0];const yil=new Date().getFullYear();
+  const op=(v,t,sec)=>`<option value="${v}" ${sec?"selected":""}>${t}</option>`;
+  let g=bos?op("","Gün",!d):"",a=bos?op("","Ay",!m):"",yy=bos?op("","Yıl",!y):"";
+  for(let k=1;k<=31;k++)g+=op(k,k,k===d);
+  AYLAR.forEach((t,k)=>a+=op(k+1,t,k+1===m));
+  for(let k=yil-2;k<=yil+2;k++)yy+=op(k,k,k===y);
+  return`<div class="tsec" data-for="${id}"><select id="${id}-g" aria-label="Gün">${g}</select><select id="${id}-a" aria-label="Ay">${a}</select><select id="${id}-y" aria-label="Yıl">${yy}</select><input type="hidden" id="${id}" ${name?`name="${name}"`:""} value="${val}"></div>`+
+    (hizli?`<div class="hizli" style="margin-top:6px"><button type="button" class="mini-btn" data-tgun="${id}" data-fark="0">Bugün</button><button type="button" class="mini-btn" data-tgun="${id}" data-fark="-1">Dün</button><button type="button" class="mini-btn" data-tgun="${id}" data-fark="-7">1 hafta önce</button></div>`:"");
+}
+function tsSync(id){const h=document.getElementById(id);if(!h)return;const v=h.value;const [y,m,d]=v?v.split("-").map(Number):["","",""];
+  const G=document.getElementById(id+"-g"),A=document.getElementById(id+"-a"),Y=document.getElementById(id+"-y");if(!G)return;
+  G.value=d||"";A.value=m||"";if(y&&![...Y.options].some(o=>+o.value===y))Y.insertAdjacentHTML("beforeend",`<option value="${y}">${y}</option>`);Y.value=y||""}
+function tarihYaz(id,v){const h=document.getElementById(id);if(!h)return;h.value=v||"";tsSync(id)}
+function tsDegisti(id){const G=document.getElementById(id+"-g"),A=document.getElementById(id+"-a"),Y=document.getElementById(id+"-y"),h=document.getElementById(id);
+  let d=+G.value,m=+A.value,y=+Y.value;
+  if(!d||!m||!y){h.value="";}else{const son=new Date(y,m,0).getDate();if(d>son){d=son;G.value=d}h.value=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
+  h.dispatchEvent(new Event("input",{bubbles:true}));}
+document.addEventListener("change",e=>{const w=e.target.closest&&e.target.closest(".tsec");if(w&&e.target.tagName==="SELECT")tsDegisti(w.dataset.for)});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-tgun]");if(!b)return;const d=new Date();d.setDate(d.getDate()+ +b.dataset.fark);
+  tarihYaz(b.dataset.tgun,iso(d));document.getElementById(b.dataset.tgun).dispatchEvent(new Event("input",{bubbles:true}))});
+
+function sayi(v){v=String(v??"").trim();if(!v)return 0;v=v.replace(/\./g,"").replace(",",".");const n=Number(v);return isFinite(n)?n:0}
+function fmtGiris(n){n=+n||0;return n?new Intl.NumberFormat("tr-TR",{maximumFractionDigits:2}).format(n):""}
+function paraBicim(el){const ham=el.value;let t=ham.replace(/[^\d,]/g,"");const i=t.indexOf(",");let tam=i<0?t:t.slice(0,i),ond=i<0?null:t.slice(i+1).replace(/,/g,"").slice(0,2);
+  tam=tam.replace(/^0+(?=\d)/,"");const bic=tam.replace(/\B(?=(\d{3})+(?!\d))/g,".")+(ond!==null?","+ond:"");if(bic!==ham){el.value=bic;try{el.setSelectionRange(bic.length,bic.length)}catch(_){}}}
+document.addEventListener("input",e=>{if(e.target.classList&&e.target.classList.contains("para-in"))paraBicim(e.target)},true);
+const WA_URL="https:"+"/"+"/wa.me/";
+/* ===== kayıt (Google E-Tablo) ===== */
+const LS_I="tez-defteri-v1",LS_L="tez-defteri-log-v1";
+const lsOku=k=>{try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}};
+const lsYaz=()=>{try{localStorage.setItem(LS_I,JSON.stringify(isler));localStorage.setItem(LS_L,JSON.stringify(loglar))}catch(e){}};
+let bekleyen=0;
+const API=window.TEZ_API||"";
+function sifreAl(){try{return localStorage.getItem("tez-sifre")||""}catch(_){return SIFRE_BELLEK||""}}
+let SIFRE_BELLEK="";
+function sifreYaz(v){SIFRE_BELLEK=v;try{v?localStorage.setItem("tez-sifre",v):localStorage.removeItem("tez-sifre")}catch(_){}}
+function sifreEkrani(hatali){const k=$("#kilit");if(!k)return;k.hidden=false;$("#kilitHata").hidden=!hatali;setTimeout(()=>{const i=$("#kilitSifre");if(i){i.value="";i.focus()}},50)}
+async function apiCagir(fn,a){
+  const s=sifreAl();if(!s){sifreEkrani(false);throw new Error("Şifre gerekli")}
+  const r=await fetch(API,{method:"POST",body:JSON.stringify({s,f:fn,a}),redirect:"follow"});
+  let d;try{d=await r.json()}catch(_){throw new Error("Sunucu yanıtı okunamadı ("+r.status+")")}
+  if(d&&d.sifre){sifreYaz("");sifreEkrani(true);throw new Error("Şifre yanlış")}
+  if(!d||!d.ok)throw new Error(d&&d.hata||"Sunucu hatası");
+  return d.r}
+const sr=(fn,...a)=>API?apiCagir(fn,a):new Promise((ok,no)=>{try{google.script.run.withSuccessHandler(ok).withFailureHandler(no)[fn](...a)}catch(e){no(e)}});
+const yazSr=async(fn,...a)=>{bekleyen++;try{return await sr(fn,...a)}finally{bekleyen--}};
+async function isYaz(is){is.guncelleme=new Date().toISOString();const k=isler.findIndex(x=>x.id===is.id);k<0?isler.push(is):isler[k]=is;lsYaz();ciz();await yazSr("kaydetIs",is)}
+async function isSil(id){isler=isler.filter(x=>x.id!==id);lsYaz();ciz();await yazSr("silIs",id)}
+async function log(is,metin,tur="oto"){
+  const l={id:yeniId("l"),zaman:new Date().toISOString(),isId:is?.id||"",isAd:is?.musteri||"",metin,tur};
+  loglar.push(l);lsYaz();ciz();await yazSr("logEkle",l)
+}
+async function logSil(id){loglar=loglar.filter(x=>x.id!==id);lsYaz();ciz();await yazSr("logSil",id)}
+async function kurYaz(k){KUR=k;try{localStorage.setItem("tez-defteri-kur",JSON.stringify(k))}catch(e){}ciz();await yazSr("kurKaydet",k)}
+const hata=()=>toast("Kaydedilemedi, tekrar dene");
+
+/* ===== ana çizim ===== */
+function ciz(){
+  document.querySelectorAll("#nav button").forEach(b=>b.dataset.v===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+  $("#ekleBtn").hidden=true;
+  const g=$("#gorunum"),a=document.activeElement?.id,p=document.activeElement?.selectionStart;
+  g.innerHTML=hero()+(v==="isler"?gIsler():v==="takvim"?gTakvim():v==="odemeler"?gOdemeler():gGecmis());
+  if(a){const x=document.getElementById(a);if(x&&g.contains(x)){x.focus();try{x.setSelectionRange(p,p)}catch(_){}}}
+  if(ekranTur==="detay")detayCiz();
+}
+function hero(){
+  const s=new Date().getHours(),sel=s<6?"İyi geceler":s<12?"Günaydın":s<18?"İyi günler":"İyi akşamlar";
+  return`<header class="ust-bar">
+    <div><p>${sel.toLocaleUpperCase("tr")} · ${new Date().toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"})}</p><h1>Dr Tez Akademi</h1></div>
+    <button type="button" class="kur2" data-kur aria-label="Dolar kurunu değiştir"><small>${esc(KUR.kaynak||"Kur")} · ${tarih(KUR.tarih,1)}</small><b>1 $ = ${nf(KUR.usd,2)} ₺</b></button>
+  </header>
+  ${kurDuzen?`<form class="kur-form2" id="kurForm"><input id="kur-deger" name="usd" type="number" inputmode="decimal" step="0.0001" min="1" value="${KUR.usd}" required aria-label="1 dolar kaç TL"><button class="btn ana" type="submit">Kaydet</button>
+    <small>TCMB döviz satış kuru önerilir; 15.30'da açıklanır. Kalan alacaklar bu kurla TL'ye çevrilir, geçmiş ödemeler kendi kuruyla kalır.</small></form>`:""}`;
+}
+
+function gIsler(){
+  const hesap=isler.filter(i=>i.durum!=="İptal");
+  const tah=hesap.reduce((a,i)=>a+odenenTL(i),0),kal=hesap.reduce((a,i)=>a+kalanTL(i),0),top=tah+kal,p=top?Math.round(tah/top*100):0;
+  const kalUSD=hesap.filter(i=>i.pb==="USD").reduce((a,i)=>a+kalan(i),0);
+  const ak=isler.filter(aktif),yak=ak.filter(i=>i.teslim).sort((a,b)=>a.teslim.localeCompare(b.teslim))[0];
+  let l=isler.filter(i=>filtre==="Tümü"||(filtre==="Aktif"?aktif(i):i.durum===filtre));
+  const k=q.toLocaleLowerCase("tr");if(k)l=l.filter(i=>[i.musteri,i.konu,i.universite,i.iletisim].join(" ").toLocaleLowerCase("tr").includes(k));
+  l.sort(sirala==="kalan"?(a,b)=>kalanTL(b)-kalanTL(a):sirala==="yeni"?(a,b)=>(b.olusturma||b.baslangic||"").localeCompare(a.olusturma||a.baslangic||""):(a,b)=>(a.teslim||"9999").localeCompare(b.teslim||"9999"));
+  const yf=yak?fark(yak.teslim):null;
+  return`
+  <div class="satir2">
+    <section class="bakiye" aria-label="Alacak özeti">
+      <div style="display:flex;flex-direction:column;gap:6px"><span class="e">TOPLAM ALACAK</span><b class="b num">${tl(kal)}</b>${kalUSD?`<span class="u">${usd(kalUSD)} · güncel kurla</span>`:""}</div>
+      <div class="cb" role="img" aria-label="Tahsilat yüzde ${p}"><i style="width:${p}%"></i></div>
+      <div class="uc"><div><span>Tahsil edilen</span><b>${tl(tah)}</b></div><div><span>Aktif iş</span><b>${ak.length}</b></div><div><span>En yakın teslim</span><b>${yf===null?"—":yf<0?`${-yf} gün gecikti`:yf===0?"Bugün":yf+" gün"}</b></div></div>
+    </section>
+    <section class="kutular">
+      <button type="button" class="kutu" data-git="yeni"><span class="ik" style="background:#e4eefc;color:#1c5fb8"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><b>Yeni iş</b></button>
+      <button type="button" class="kutu" data-git="odeme"><span class="ik" style="background:#dcf5e8;color:#0b6e4c">₺</span><b>Ödeme al</b></button>
+      <button type="button" class="kutu" data-git="takvim"><span class="ik" style="background:#ffeedb;color:#a85300"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><b>Takvim</b></button>
+      <button type="button" class="kutu" data-git="gecmis"><span class="ik" style="background:#eceaf5;color:#4a4466"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><b>Geçmiş</b></button>
+    </section>
+  </div>
+  <div>
+    <section class="panel">
+      <div class="bas2"><h2>İşlerim</h2><small>${ak.length} aktif</small></div>
+      <div class="arac">
+        <div class="arama"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="ara" type="search" placeholder="Müşteri, konu, üniversite" value="${esc(q)}" aria-label="Ara"></div>
+        <select id="sirala" aria-label="Sırala"><option value="teslim" ${sirala==="teslim"?"selected":""}>Teslime göre</option><option value="kalan" ${sirala==="kalan"?"selected":""}>Alacağa göre</option><option value="yeni" ${sirala==="yeni"?"selected":""}>En yeni</option></select>
+      </div>
+      <div class="cipler" style="margin-bottom:0">${["Aktif","Tümü",...DURUMLAR].map(s=>{const n=s==="Tümü"?isler.length:s==="Aktif"?isler.filter(aktif).length:isler.filter(i=>i.durum===s).length;
+        return`<button type="button" class="cip" data-f="${s}" aria-pressed="${s===filtre}" ${DURUM[s]?`style="${renk(s)}"`:""}>${s} · ${n}</button>`}).join("")}</div>
+      <div class="isler" style="gap:10px">${l.length?l.map(kartIs).join(""):bos()}</div>
+    </section>
+  </div>`;
+}
+function hareketSatir(x){
+  const od=/Ödeme alındı/.test(x.metin),sil=/silindi/.test(x.metin),dr=/Durum/.test(x.metin),kur=/Kur/.test(x.metin);
+  const [bg,fg,ik]=od?["#dcf5e8","#0b6e4c","₺"]:sil?["#ffe0e0","#c92a2a","×"]:kur?["#ffe6e6","#b04f00","$"]:dr?["#ffeedb","#a85300","↻"]:x.tur==="not"?["#e4eefc","#1c5fb8","✎"]:["#eceaf5","#4a4466","•"];
+  const m=od?x.metin.match(/Ödeme alındı: ([^(·]+)/):null;
+  return`<div class="hareket"><span class="ik" style="background:${bg};color:${fg}" aria-hidden="true">${ik}</span>
+    <div class="m"><b>${esc(od?"Ödeme alındı":x.metin)}</b><small>${esc(x.isAd||"")}${x.isAd?" · ":""}${gunAdi(x.zaman)} ${saat(x.zaman)}</small></div>
+    ${m?`<b style="font-size:17px;color:#0b6e4c;flex:none">+${esc(m[1].trim())}</b>`:""}</div>`;
+}
+function bos(){return isler.length?`<div class="bos" style="padding:20px"><b>Bu listede iş yok</b>Başka bir süzgeç seç ya da aramayı temizle.</div>`
+  :`<div class="bos" style="padding:20px"><b>İlk tezini ekle</b>Yukarıdaki "Yeni iş" kutusuna dokun.</div>`}
+function kartIs(i){
+  const s=sureMetni(i),p=yuzde(i),k=kalan(i),bas=(i.musteri||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("").toLocaleUpperCase("tr");
+  return`<button type="button" class="satir-is" data-ac="${i.id}" style="${renk(i.durum)}">
+    <span class="av" aria-hidden="true">${esc(bas)}</span>
+    <span class="orta"><span class="ad">${esc(i.musteri||"—")}</span><span class="kn">${esc(i.konu)}</span>
+      <span class="ch"><span class="d">${i.durum}</span><span class="${s.c}">${s.t}</span>${i.pb==="USD"?`<span>$</span>`:""}</span></span>
+    <span class="sag">${k?`<b>${para(k,i.pb)}</b><small>kalan · %${p} ödendi</small>`:(+i.ucret?`<b class="ok">Ödendi</b><small>%100</small>`:`<small>Ücret yok</small>`)}</span>
+  </button>`;
+}
+
+function gTakvim(){
+  const {y,m}=ayGor,ilk=new Date(y,m,1),bas=(ilk.getDay()+6)%7,gs=new Date(y,m+1,0).getDate(),ay=`${y}-${String(m+1).padStart(2,"0")}`;
+  const olay={};const ekle=(t,o)=>(olay[t]=olay[t]||[]).push(o);
+  isler.forEach(i=>{if(i.teslim)ekle(i.teslim,{tur:"teslim",i});(i.odemeler||[]).forEach(o=>ekle(o.tarih,{tur:"odeme",i,o}))});
+  let h=["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(x=>`<span class="bh">${x}</span>`).join("");
+  for(let k=0;k<bas;k++)h+=`<span></span>`;
+  for(let d=1;d<=gs;d++){const t=`${ay}-${String(d).padStart(2,"0")}`,o=olay[t]||[];
+    h+=`<button type="button" data-gun="${t}" class="${o.length?"var":""} ${t===bugun()?"bugun":""} ${t===secGun?"sec":""}">${d}<span class="noktalar">${o.slice(0,3).map(x=>`<i style="--c:${x.tur==="odeme"?"var(--para-b)":`var(--${DURUM[x.i.durum]}-b)`}"></i>`).join("")}</span></button>`}
+  const sec=secGun?(olay[secGun]||[]):null;
+  const buAy=Object.entries(olay).filter(([t])=>t.startsWith(ay)).flatMap(([t,o])=>o.filter(x=>x.tur==="teslim").map(x=>({t,...x}))).sort((a,b)=>a.t.localeCompare(b.t));
+  const liste=(arr,baslik)=>`<div class="bolum-baslik"><h2>${baslik}</h2></div><div class="isler">${arr.length?arr.map(x=>x.tur==="odeme"
+      ?`<button type="button" class="kart is" data-ac="${x.i.id}" style="${renkAd("para")}"><div class="sekme"><span class="ad">${esc(x.i.musteri)}</span><span class="sure">Ödeme</span></div><div class="govde" style="grid-template-columns:1fr"><div class="bilgi-s"><span class="pil para">${para(x.o.tutar,x.o.pb)}</span>${x.o.pb==="USD"||x.i.pb==="USD"?`<span class="pil">kur ${nf(oKur(x.o),2)}</span>`:""}${x.o.not?`<span class="pil">${esc(x.o.not)}</span>`:""}</div></div></button>`
+      :kartIs(x.i)).join(""):`<div class="kart bos">Bu ${secGun?"gün":"ay"} için kayıt yok.</div>`}</div>`;
+  return`<div class="satir2"><div style="flex:3 1 420px;min-width:0"><section class="kart" style="overflow:hidden"><div class="ay-ust"><button type="button" data-ay="-1" aria-label="Önceki ay">‹</button><h2>${ilk.toLocaleDateString("tr-TR",{month:"long",year:"numeric"})}</h2><button type="button" data-ay="1" aria-label="Sonraki ay">›</button></div>
+  <div class="gunler">${h}</div></section>
+  <p class="ipucu" style="margin:10px 4px 0;display:flex;gap:14px;flex-wrap:wrap"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--devam-b)"></i> Teslim (durum rengiyle)</span><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--para-b)"></i> Ödeme</span></p>
+  </div><div style="flex:2 1 300px;min-width:0">${sec?liste(sec,tarih(secGun)):liste(buAy,"Bu ayki teslimler")}</div></div>`;
+}
+
+function gOdemeler(){
+  const tum=isler.flatMap(i=>(i.odemeler||[]).map(o=>({...o,i}))).sort((a,b)=>b.tarih.localeCompare(a.tarih));
+  const aylar=[];const n=new Date();for(let k=5;k>=0;k--){const d=new Date(n.getFullYear(),n.getMonth()-k,1);aylar.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"short"}),t:0})}
+  tum.forEach(o=>{const a=aylar.find(x=>o.tarih.startsWith(x.a));if(a)a.t+=oTL(o)});
+  const mx=Math.max(...aylar.map(a=>a.t),1);
+  const borclu=isler.filter(i=>i.durum!=="İptal"&&kalan(i)>0).sort((a,b)=>kalanTL(b)-kalanTL(a));
+  return`<section class="kart blok" style="margin-top:16px"><h3>Aylık tahsilat <small>Bu ay ${tl(aylar[5].t)}</small></h3>
+    <div class="grafik">${aylar.map((a,k)=>`<div class="sutun ${k===5?"bu":""}"><b>${a.t?tlKisa(a.t):""}</b><i style="height:${Math.max(3,a.t/mx*100)}%"></i><small>${a.ad}</small></div>`).join("")}</div>
+    <p class="ipucu" style="margin:10px 0 0">Dolar ödemeler, ödendikleri günün kuruyla TL'ye çevrilir.</p></section>
+  ${borclu.length?`<div class="bolum-baslik"><h2>Alacaklar</h2><small>${tl(borclu.reduce((a,i)=>a+kalanTL(i),0))}</small></div>
+  <div class="isler">${borclu.map(kartIs).join("")}</div>`:""}
+  <div class="bolum-baslik"><h2>Tüm ödemeler</h2><small>${tum.length} kayıt</small></div>
+  <section class="kart blok" style="padding-top:4px">${tum.length?`<div class="odeme-liste" style="margin-top:0">${tum.map(o=>`<div class="odeme" data-ac="${o.i.id}" style="cursor:pointer"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${o.pb==="USD"?` <small style="display:inline">≈ ${tl(oTL(o))}</small>`:""}</b><small>${esc(o.i.musteri)}${o.not?" · "+esc(o.not):""}${o.pb==="USD"||o.i.pb==="USD"?" · kur "+nf(oKur(o),2):""}</small></div><small class="ipucu">${tarih(o.tarih,1)}</small></div>`).join("")}</div>`:`<p class="bos" style="padding:20px">Henüz ödeme yok.</p>`}</section>`;
+}
+
+function gGecmis(){return`<section class="kart blok" style="margin-top:16px"><h3>Tüm işlemler <small>${loglar.length} kayıt</small></h3>${logListe(loglar,true)}</section>`}
+function logListe(l,adli){
+  const s=[...l].sort((a,b)=>b.zaman.localeCompare(a.zaman));
+  if(!s.length)return`<p class="ipucu" style="margin:0">Henüz kayıt yok. Yaptığın her işlem buraya tarih ve saatiyle düşer.</p>`;
+  let son="",h="<ul class='log'>";
+  for(const x of s){const g=gunAdi(x.zaman);if(g!==son){h+=`<li class="gun">${g}</li>`;son=g}
+    const r=x.tur==="not"?"var(--accent)":/Ödeme alındı/.test(x.metin)?"var(--para-b)":/Durum/.test(x.metin)?"var(--revizyon-b)":/silindi/.test(x.metin)?"var(--gec-b)":/Aşama/.test(x.metin)?"var(--gorusme-b)":/Kur/.test(x.metin)?"var(--usd)":"var(--devam-b)";
+    h+=`<li><span class="nk" style="--k:${r}"></span><span class="m">${esc(x.metin)}${adli&&x.isAd?`<small>${esc(x.isAd)}</small>`:""}${x.tur==="not"?`<small><button class="lnk" style="padding:2px 0;font-size:.8rem" data-logsil="${x.id}">Notu sil</button></small>`:""}</span><time>${saat(x.zaman)}</time></li>`}
+  return h+"</ul>";
+}
+
+/* ===== detay ===== */
+function ekranAc(t,h){ekranTur=t;const e=$("#ekran");e.hidden=false;e.innerHTML=h;e.scrollTop=0;document.body.style.overflow="hidden"}
+function ekranKapa(){ekranTur=null;acikId=null;const e=$("#ekran");e.hidden=true;e.innerHTML="";document.body.style.overflow=""}
+let ODZ=null;
+function detayAc(id){acikId=id;ODZ=null;ekranAc("detay","");detayCiz()}
+function detayCiz(){
+  const i=isler.find(x=>x.id===acikId);if(!i){ekranKapa();return}
+  const e=$("#ekran"),st=e.scrollTop,deger={};e.querySelectorAll("input[id],textarea[id]").forEach(x=>{deger[x.id]=x.type==="radio"?x.checked:x.value});
+  const s=sureMetni(i),f=fark(i.teslim),d=new Set(i.asamalar||[]),wa=telNorm(i.iletisim),k=kalan(i),U=i.pb==="USD";
+  const kTL=U?k*KUR.usd:k;
+  e.innerHTML=`
+  <div class="ekran-ust"><button type="button" data-geri>‹ Geri</button><span class="ort">${esc(i.musteri)}</span><button type="button" data-duzen>Düzenle</button></div>
+  <div class="ic" style="${renk(i.durum)}">
+    <section class="kart kahraman">
+      <span class="tur">${esc(i.tur||"")}${U?" · Dolar":""}</span>
+      <div class="ad">${esc(i.musteri)}</div><p class="konu">${esc(i.konu)}</p>
+      <div class="geri-sayim">${aktif(i)&&f!==null?`<b class="num">${Math.abs(f)}</b><span>${f<0?"gün gecikti":f===0?"bugün teslim":"gün kaldı"}</span>`:`<span>${s.t}</span>`}<small>Teslim ${tarih(i.teslim)}</small></div>
+      <div class="durum-sec" role="group" aria-label="Durum">${DURUMLAR.map(x=>`<button type="button" data-durum="${x}" aria-pressed="${x===i.durum}">${x}</button>`).join("")}</div>
+    </section>
+
+    <section class="kart blok"><h3>Ödemeler <small>${(i.odemeler||[]).length} ödeme</small></h3>
+      <div class="para-ust"><div class="halka" style="--p:${yuzde(i)}"><span>%${yuzde(i)}</span></div>
+        <dl><dt>Ücret</dt><dd>${para(i.ucret,i.pb)}</dd>
+        <dt>Ödenen</dt><dd style="color:var(--para)">${para(odenen(i),i.pb)}${U&&odenenTL(i)?`<small>${tl(odenenTL(i))} alındı</small>`:""}</dd>
+        <dt>Kalan</dt><dd style="color:${k?"var(--yakin)":"var(--teslim)"}">${para(k,i.pb)}</dd></dl></div>
+      ${U?`<div class="tablo-aciklama">
+        ${(i.odemeler||[]).length?`<div><span>Alınan</span><b>${(i.odemeler||[]).map(o=>o.pb==="USD"?usd(o.tutar):`${tl(o.tutar)} ÷ ${nf(oKur(o),2)} = ${usd(oUSD(o))}`).join("<br>")}</b></div>`:""}
+        <div><span>Kalan alacak</span><b style="color:var(--yakin)">${usd(k)} × ${nf(KUR.usd,2)} = ${tl(kTL)}</b></div>
+        <p>Alınan her ödeme kendi gününün TCMB kuruyla dolara çevrilip sabitlenir. Kalan dolar her iş günü güncel TCMB kuruyla (şu an ${nf(KUR.usd,4)}, ${tarih(KUR.tarih,1)}) TL'ye çevrilir; kur değiştikçe alacağın TL tutarı da değişir.</p>
+      </div>`:""}
+      ${(i.odemeler||[]).length?`<div class="odeme-liste">${i.odemeler.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${U&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}${!U&&o.pb==="USD"?` <small style="display:inline">= ${tl(oTL(o))}</small>`:""}</b><small>${tarih(o.tarih)}${U||o.pb==="USD"?" · kur "+nf(oKur(o),4):""}${o.not?" · "+esc(o.not):""}</small></div><button type="button" class="mini-btn" data-oduz="${n}">${ODZ===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`:""}
+      <form id="odemeForm" class="izgara">
+        <div class="secim tam" role="group" aria-label="Ödeme para birimi">
+          <label><input type="radio" id="o-pb-try" name="pb" value="TRY" checked><span>₺ TL aldım</span></label>
+          <label><input type="radio" id="o-pb-usd" name="pb" value="USD"><span>$ Dolar aldım</span></label></div>
+        <input id="o-tutar" name="tutar" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Tutar" required>
+        <div class="tam">${tarihSec("o-tarih","tarih",bugun(),true)}</div>
+        <label class="tam" id="kurAlan" ${U?"":"hidden"}>O günün TCMB kuru (1 $ kaç ₺)<input id="o-kur" name="kur" type="number" inputmode="decimal" step="0.0001" min="1" value="${kurBul(bugun())?.v||KUR.usd}" required><small class="ipucu" id="kurNot">${kurNotu(bugun())}</small></label>
+        <div class="onizle tam" id="onizle" hidden></div>
+        ${k?`<div class="hizli tam"><button type="button" class="mini-btn" data-hizli="${Math.round(kTL)}">Kalanın tamamı · ${tl(kTL)}</button>${kTL>1?`<button type="button" class="mini-btn" data-hizli="${Math.round(kTL/2)}">Yarısı · ${tl(kTL/2)}</button>`:""}</div>`:""}
+        <div class="hizli tam">${["Kapora","Ara ödeme","Son ödeme"].map(x=>`<button type="button" class="mini-btn" data-onot="${x}">${x}</button>`).join("")}</div>
+        <input id="o-not" name="not" class="tam" placeholder="Açıklama: kapora, ara ödeme, EFT…">
+        <button class="btn para tam" type="submit">${ODZ!==null?"Değişikliği kaydet":"Ödeme ekle"}</button>
+        ${ODZ!==null?`<div class="eylem tam"><button type="button" class="btn" data-oduzvaz>Vazgeç</button><button type="button" class="btn sil" data-odsil="${ODZ}">Bu ödemeyi sil</button></div>`:""}
+      </form>
+    </section>
+
+    <section class="kart blok"><h3>Tez aşamaları <small>${d.size}/${ASAMALAR.length}</small></h3>
+      <div class="cubuk" style="margin:0 0 12px;height:8px"><i style="width:${d.size/ASAMALAR.length*100}%;background:var(--accent)"></i></div>
+      <div class="asamalar">${ASAMALAR.map((a,n)=>`<button type="button" class="asama ${d.has(a)?"d":""}" data-asama="${a}" aria-pressed="${d.has(a)}"><span class="kutu">${ok}</span><span class="t">${a}</span><span class="no">${n+1}</span></button>`).join("")}</div>
+    </section>
+
+    <section class="kart blok"><h3>Bilgiler</h3><div class="bilgi">
+      <div><span>İletişim</span><b>${esc(i.iletisim||"—")}</b></div>
+      ${i.iletisim?`<div style="justify-content:flex-end;gap:8px;padding-top:0;border-top:0"><button class="mini-btn" type="button" data-kopya="${esc(i.iletisim)}">Kopyala</button>${wa.length>=11?`<a class="mini-btn" href="${WA_URL}${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}</div>`:""}
+      <div><span>Üniversite</span><b>${esc(i.universite||"—")}</b></div>
+      <div><span>Para birimi</span><b>${U?"Dolar ($)":"Türk lirası (₺)"}</b></div>
+      <div><span>Başlangıç</span><b>${tarih(i.baslangic)}</b></div>
+      <div><span>Teslim</span><b>${tarih(i.teslim)}</b></div>
+      ${i.baslangic&&i.teslim?`<div><span>Toplam süre</span><b>${Math.round((new Date(i.teslim)-new Date(i.baslangic))/864e5)} gün</b></div>`:""}
+      ${i.notlar?`<div style="flex-direction:column;align-items:flex-start;gap:4px"><span>Notlar</span><b style="text-align:left;white-space:pre-wrap;font-weight:600">${esc(i.notlar)}</b></div>`:""}
+    </div></section>
+
+    <section class="kart blok"><h3>İş günlüğü</h3>
+      <form id="notForm" class="not-form"><input id="n-metin" name="metin" placeholder="Not düş: 2. bölüm gönderildi…" required><button class="btn ana" type="submit">Ekle</button></form>
+      ${logListe(loglar.filter(l=>l.isId===i.id),false)}
+    </section>
+    <button class="btn sil" type="button" data-issil>Bu işi sil</button>
+  </div>`;
+  Object.entries(deger).forEach(([k2,v2])=>{const x=e.querySelector("#"+CSS.escape(k2));if(x){x.type==="radio"?x.checked=v2:x.value=v2}});
+  e.querySelectorAll(".tsec").forEach(w=>tsSync(w.dataset.for));
+  onizle();e.scrollTop=st;
+}
+function kurBul(t){
+  const m={...KURLAR_SEED,...KURLAR};if(KUR.tarih&&KUR.usd)m[KUR.tarih]=KUR.usd;
+  let d=null;for(const k of Object.keys(m).sort()){if(k<=t)d=k;else break}
+  return d?{d,v:+m[d]}:null;
+}
+function kurNotu(t){const k=kurBul(t);if(!t)return"";if(!k)return"Bu tarih için kayıtlı kur yok, elle gir.";
+  if(k.d===t)return`TCMB ${tarih(k.d,1)} kuru otomatik geldi. İstersen değiştir.`;
+  const g=new Date(t+"T00:00").getDay(),neden=g===0||g===6?"hafta sonu, kur açıklanmaz":t===bugun()?"bugünün kuru 15.30'da açıklanır":t>bugun()?"ileri tarih":"o gün kur açıklanmamış (tatil)";
+  return`${tarih(t,1)}: ${neden}. Son açıklanan ${tarih(k.d,1)} kuru kullanıldı.`}
+function kurTarihten(){
+  const t=$("#o-tarih")?.value,k=kurBul(t);if(!t)return;
+  if(k)$("#o-kur").value=k.v;$("#kurNot").textContent=kurNotu(t);onizle();
+}
+function onizle(){
+  const el=$("#onizle");if(!el)return;const i=isler.find(x=>x.id===acikId);if(!i)return;
+  const t=sayi($("#o-tutar").value),pb=$("#o-pb-usd").checked?"USD":"TRY",kr=+$("#o-kur").value||KUR.usd;
+  $("#kurAlan").hidden=!(i.pb==="USD"||pb==="USD");
+  if(!t||(i.pb!=="USD"&&pb!=="USD")){el.hidden=true;return}
+  el.hidden=false;el.textContent=i.pb==="USD"
+    ?(pb==="USD"?`Borçtan ${usd(t)} düşülecek (≈ ${tl(t*kr)})`:`${tl(t)} ÷ ${nf(kr,4)} = borçtan ${usd(t/kr)} düşülecek`)
+    :`${usd(t)} × ${nf(kr,4)} = ${tl(t*kr)} olarak işlenecek`;
+}
+
+/* ===== form ===== */
+function formAc(eski){
+  const yeni=!eski,i=eski?{...eski}:{id:yeniId("t"),durum:"Devam ediyor",tur:"Yüksek lisans",pb:"TRY",baslangic:bugun(),odemeler:[],asamalar:[]};
+  const radyo=(ad,liste,sec,stil,etiket)=>`<div class="secim">${liste.map((x,n)=>`<label ${stil?`style="${stil(x)}"`:""}><input type="radio" id="f-${ad}-${n}" name="${ad}" value="${x}" ${x===sec?"checked":""}><span>${etiket?etiket(x):x}</span></label>`).join("")}</div>`;
+  ekranAc("form",`
+  <div class="ekran-ust"><button type="button" data-vazgec>Vazgeç</button><span class="ort">${yeni?"Yeni iş":"İşi düzenle"}</span><button type="submit" form="isForm">Kaydet</button></div>
+  <form class="ic" id="isForm">
+    <section class="kart blok" style="display:flex;flex-direction:column;gap:14px">
+      <label>Müşteri adı<input id="f-musteri" name="musteri" value="${esc(i.musteri)}" required autocomplete="off"></label>
+      <label>Tez konusu<textarea id="f-konu" name="konu" required>${esc(i.konu)}</textarea></label>
+      <div class="alan"><span>Tür</span>${radyo("tur",TURLER,i.tur)}</div>
+    </section>
+    <section class="kart blok" style="display:flex;flex-direction:column;gap:14px">
+      <div class="alan"><span>Ücret hangi para biriminde?</span>${radyo("pb",["TRY","USD"],i.pb||"TRY",null,x=>x==="USD"?"$ Dolar":"₺ Türk lirası")}</div>
+      <div class="izgara" style="margin:0">
+        <label>Toplam ücret<input id="f-ucret" name="ucret" type="text" inputmode="decimal" class="para-in" autocomplete="off" value="${i.ucret?fmtGiris(i.ucret):""}" required></label>
+        <span></span>
+        <p class="ipucu tam" id="ucretTL" style="margin:0"></p>
+        <div class="alan tam"><span>Başlangıç</span>${tarihSec("f-bas","baslangic",i.baslangic,false,true)}</div>
+        <div class="alan tam"><span>Tahmini teslim</span>${tarihSec("f-teslim","teslim",i.teslim,false,true)}</div>
+      </div>
+      <div class="hizli"><span class="ipucu" style="align-self:center">Teslim:</span>${[[30,"1 ay"],[60,"2 ay"],[90,"3 ay"],[180,"6 ay"]].map(([g,t])=>`<button type="button" class="mini-btn" data-sure="${g}">${t}</button>`).join("")}</div>
+      <div class="alan"><span>Durum</span>${radyo("durum",DURUMLAR,i.durum,renk)}</div>
+    </section>
+    <section class="kart blok"><h3>Ödemeler <small id="fo-ozet"></small></h3>
+      <div id="fo-liste"></div>
+      <div class="izgara">
+        <div class="tam ipucu" style="margin-top:4px">Kapora, ara ödeme ya da son ödeme ekle:</div>
+        <div class="secim tam" role="group" aria-label="Ödeme para birimi">
+          <label><input type="radio" id="fo-pb-try" name="fo_pb" value="TRY" checked><span>₺ TL aldım</span></label>
+          <label><input type="radio" id="fo-pb-usd" name="fo_pb" value="USD"><span>$ Dolar aldım</span></label></div>
+        <input id="fo-tutar" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Tutar" aria-label="Ödeme tutarı">
+        <div class="tam">${tarihSec("fo-tarih","",bugun(),true)}</div>
+        <label class="tam" id="fo-kurAlan" hidden>O günün TCMB kuru (1 $ kaç ₺)<input id="fo-kur" type="number" inputmode="decimal" step="0.0001" min="1" value="${kurBul(bugun())?.v||KUR.usd}"><small class="ipucu" id="fo-kurNot">${kurNotu(bugun())}</small></label>
+        <div class="hizli tam">${["Kapora","Ara ödeme","Son ödeme"].map(x=>`<button type="button" class="mini-btn" data-fnot="${x}">${x}</button>`).join("")}</div>
+        <input id="fo-not" class="tam" placeholder="Açıklama" aria-label="Ödeme açıklaması">
+        <div class="onizle tam" id="fo-onizle" hidden></div>
+        <button class="btn para tam" type="button" id="fo-ekle" data-fekle>+ Ödemeyi ekle</button>
+        <div class="eylem tam" id="fo-duzAraclar" hidden><button type="button" class="btn" data-fvaz>Vazgeç</button><button type="button" class="btn sil" data-fsil>Bu ödemeyi sil</button></div>
+      </div>
+    </section>
+    <section class="kart blok" style="display:flex;flex-direction:column;gap:14px">
+      <label>Telefon / iletişim<input id="f-iletisim" name="iletisim" type="tel" value="${esc(i.iletisim)}" placeholder="05xx xxx xx xx"></label>
+      <label>Üniversite / bölüm<input id="f-uni" name="universite" value="${esc(i.universite)}"></label>
+      <label>Notlar<textarea id="f-not" name="notlar" placeholder="Danışman, şablon, özel istekler…">${esc(i.notlar)}</textarea></label>
+    </section>
+    <button class="btn ana" type="submit">Kaydet</button>
+  </form>`);
+  FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null};
+  ucretOn();fOdemeCiz();
+  $("#isForm").onsubmit=async ev=>{
+    ev.preventDefault();if(sayi($("#fo-tutar").value))fOdemeEkle(true);else if(FORM.duz!==null)fGirisTemizle();
+    const f=new FormData(ev.target),n={...i};
+    ["musteri","konu","durum","baslangic","teslim","tur","iletisim","universite","notlar","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());
+    n.ucret=sayi(f.get("ucret"));if(yeni)n.olusturma=new Date().toISOString();
+    const yeniOd=FORM.odm.filter(o=>o._yeni),silinen=FORM.silinen;
+    const duzeltilen=FORM.duzeltilen.filter(([,y])=>FORM.odm.includes(y)&&!y._yeni);
+    n.odemeler=FORM.odm.map(({_yeni,_orijinal,...o})=>o).sort((a,b)=>a.tarih.localeCompare(b.tarih));
+    const dg=[];
+    if(!yeni){if(eski.durum!==n.durum)dg.push(`Durum: ${eski.durum} → ${n.durum}`);
+      if((eski.teslim||"")!==n.teslim)dg.push(`Teslim tarihi: ${tarih(eski.teslim)} → ${tarih(n.teslim)}`);
+      if((+eski.ucret||0)!==n.ucret||(eski.pb||"TRY")!==n.pb)dg.push(`Ücret: ${para(eski.ucret,eski.pb)} → ${para(n.ucret,n.pb)}`);
+      if((eski.konu||"")!==n.konu)dg.push("Tez konusu güncellendi");
+      if(["musteri","iletisim","universite","tur","baslangic","notlar"].some(k=>(eski[k]||"")!==n[k]))dg.push("Bilgiler güncellendi")}
+    try{await isYaz(n);
+      if(yeni)await log(n,`İş açıldı · ücret ${para(n.ucret,n.pb)}${n.teslim?" · teslim "+tarih(n.teslim):""}`);
+      for(const x of dg)await log(n,x);
+      for(const o of yeniOd)await log(n,odemeLogMetni(n,o));
+      for(const o of silinen)await log(n,`Ödeme kaydı silindi: ${para(o.tutar,o.pb)} (${tarih(o.tarih)})`);
+      const sonHal=new Map();for(const [e1,y] of duzeltilen)sonHal.set(JSON.stringify(e1),[e1,y]);
+      for(const [e1,y] of sonHal.values())await log(n,`Ödeme düzeltildi: ${para(e1.tutar,e1.pb)} (${tarih(e1.tarih,1)}) → ${para(y.tutar,y.pb)} (${tarih(y.tarih,1)})`);
+      toast(yeni?"İş eklendi":"Kaydedildi");detayAc(n.id)}catch(e){hata()}
+  };
+  setTimeout(()=>$(yeni?"#f-musteri":"#f-konu")?.focus(),50);
+}
+let FORM={odm:[],silinen:[]};
+function odemeLogMetni(i,o){
+  const ac=i.pb==="USD"&&o.pb!=="USD"?` · kur ${nf(oKur(o),4)} = ${usd(oUSD(o))}`:i.pb!=="USD"&&o.pb==="USD"?` · kur ${nf(oKur(o),4)} = ${tl(oTL(o))}`:"";
+  return`Ödeme alındı: ${para(o.tutar,o.pb)}${o.not?" ("+o.not+")":""}${ac}${o.tarih!==bugun()?" · "+tarih(o.tarih):""}`;
+}
+const fPb=()=>$("#f-pb-1")?.checked?"USD":"TRY";
+function fOdemeCiz(){
+  const el=$("#fo-liste");if(!el)return;const g={pb:fPb(),ucret:sayi($("#f-ucret").value),odemeler:FORM.odm};
+  $("#fo-ozet").textContent=`Ödenen ${para(odenen(g),g.pb)} · Kalan ${para(kalan(g),g.pb)}`;
+  el.innerHTML=FORM.odm.length?`<div class="odeme-liste" style="margin-top:0">${FORM.odm.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${g.pb==="USD"&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}${o._yeni?` <small style="display:inline;color:var(--para)">· yeni</small>`:""}</b><small>${tarih(o.tarih)}${g.pb==="USD"||o.pb==="USD"?" · kur "+nf(oKur(o),4):""}${o.not?" · "+esc(o.not):""}</small></div><button type="button" class="mini-btn" data-fduz="${n}">${FORM.duz===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`
+    :`<p class="ipucu" style="margin:0 0 4px">Henüz ödeme yok.</p>`;
+  fOnizle();
+}
+function fOnizle(){
+  const el=$("#fo-onizle");if(!el)return;const jp=fPb(),t=sayi($("#fo-tutar").value),pb=$("#fo-pb-usd").checked?"USD":"TRY",kr=+$("#fo-kur").value||KUR.usd;
+  $("#fo-kurAlan").hidden=!(jp==="USD"||pb==="USD");
+  if(!t||(jp!=="USD"&&pb!=="USD")){el.hidden=true;return}
+  el.hidden=false;el.textContent=jp==="USD"?(pb==="USD"?`Borçtan ${usd(t)} düşülecek`:`${tl(t)} ÷ ${nf(kr,4)} = borçtan ${usd(t/kr)} düşülecek`):`${usd(t)} × ${nf(kr,4)} = ${tl(t*kr)} olarak işlenecek`;
+}
+function fGirisTemizle(){FORM.duz=null;$("#fo-tutar").value="";$("#fo-not").value="";tarihYaz("fo-tarih",bugun());const k=kurBul(bugun());if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(bugun());$("#fo-pb-try").checked=true;
+  $("#fo-ekle").textContent="+ Ödemeyi ekle";$("#fo-duzAraclar").hidden=true;const s=$("[data-fsil]");s.classList.remove("emin");s.textContent="Bu ödemeyi sil"}
+function fOdemeEkle(sessiz){
+  const t=sayi($("#fo-tutar").value);if(!t){$("#fo-tutar").focus();return}
+  const o={tarih:$("#fo-tarih").value||bugun(),tutar:t,pb:$("#fo-pb-usd").checked?"USD":"TRY",kur:+$("#fo-kur").value||KUR.usd,not:$("#fo-not").value.trim()};
+  const dz=FORM.duz;
+  if(dz!==null){const eski=FORM.odm[dz];if(eski._yeni)o._yeni=true;else FORM.duzeltilen.push([eski._orijinal||{...eski},o]);if(!eski._yeni)o._orijinal=eski._orijinal||{...eski};FORM.odm[dz]=o}
+  else FORM.odm.push({...o,_yeni:true});
+  fGirisTemizle();fOdemeCiz();if(!sessiz)toast(dz!==null?"Güncellendi · Kaydet'e bas":"Eklendi · Kaydet'e basmayı unutma");
+}
+function fOdemeDuzenle(n){
+  const o=FORM.odm[n];if(!o)return;FORM.duz=n;
+  $("#fo-pb-"+(o.pb==="USD"?"usd":"try")).checked=true;$("#fo-tutar").value=fmtGiris(o.tutar);tarihYaz("fo-tarih",o.tarih);$("#fo-kur").value=oKur(o);$("#fo-not").value=o.not||"";
+  $("#fo-kurNot").textContent="Bu ödemede kaydedilen kur. Tarihi değiştirirsen o günün kuru gelir.";
+  $("#fo-ekle").textContent="Değişikliği uygula";$("#fo-duzAraclar").hidden=false;fOdemeCiz();$("#fo-tutar").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function ucretOn(){const el=$("#ucretTL");if(!el)return;const u=$("#f-pb-1")?.checked,t=sayi($("#f-ucret").value);
+  el.textContent=u&&t?`≈ ${tl(t*KUR.usd)} (bugünkü kur ${nf(KUR.usd,2)}). Her ödeme kendi gününün kuruyla dolardan düşülür.`:""}
+
+/* ===== olaylar ===== */
+document.addEventListener("click",async e=>{
+  const t=e.target.closest("button,[data-ac],a");if(!t)return;const ds=t.dataset;
+  if(ds.v){v=ds.v;secGun=null;kurDuzen=false;ciz();window.scrollTo(0,0);return}
+  if(ds.kur!==undefined){kurDuzen=!kurDuzen;ciz();if(kurDuzen)$("#kur-deger")?.focus();return}
+  if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
+  if(ds.f){filtre=ds.f;uiSakla();ciz();return}
+  if(ds.ay){ayGor.m+=+ds.ay;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}secGun=null;ciz();return}
+  if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
+  if(ds.logsil){try{await logSil(ds.logsil);toast("Not silindi")}catch(_){hata()}return}
+  if(t.id==="ekleBtn"){formAc();return}
+  if(ds.git){if(ds.git==="yeni"){formAc();return}if(ds.git==="takvim"||ds.git==="gecmis"){v=ds.git;secGun=null;ciz();window.scrollTo(0,0);return}
+    if(ds.git==="odeme"){const ak=isler.filter(aktif);if(ak.length===1){detayAc(ak[0].id);setTimeout(()=>{$("#odemeForm")?.scrollIntoView({behavior:"smooth",block:"center"});$("#o-tutar")?.focus()},50)}else{filtre="Aktif";ciz();toast(ak.length?"Ödeme alacağın işe dokun":"Önce bir iş ekle")}return}}
+  if(ds.geri!==undefined){ekranKapa();return}
+  if(ds.vazgec!==undefined){acikId?detayAc(acikId):ekranKapa();return}
+  if(ds.sure){const b=$("#f-bas").value||bugun(),d=new Date(b+"T00:00");d.setDate(d.getDate()+ +ds.sure);tarihYaz("f-teslim",iso(d));return}
+  if(ds.fekle!==undefined){fOdemeEkle();return}
+  if(ds.fduz!==undefined){fOdemeDuzenle(+ds.fduz);return}
+  if(ds.fvaz!==undefined){fGirisTemizle();fOdemeCiz();return}
+  if(ds.fsil!==undefined){if(FORM.duz===null)return;
+    if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";return}
+    const [x]=FORM.odm.splice(FORM.duz,1);if(x&&!x._yeni)FORM.silinen.push(x._orijinal||x);
+    FORM.duzeltilen=FORM.duzeltilen.filter(([,y])=>y!==x);fGirisTemizle();fOdemeCiz();toast("Kaldırıldı · Kaydet'e bas");return}
+  if(ds.fnot){$("#fo-not").value=ds.fnot;$("#fo-tutar").focus();return}
+  if(ds.onot){$("#o-not").value=ds.onot;$("#o-tutar").focus();return}
+  if(ds.kopya){try{await navigator.clipboard.writeText(ds.kopya);toast("Kopyalandı")}catch(_){toast(ds.kopya)}return}
+  const i=isler.find(x=>x.id===acikId);if(!i)return;
+  if(ds.duzen!==undefined){formAc(i);return}
+  if(ds.hizli){$("#o-pb-try").checked=true;$("#o-tutar").value=fmtGiris(+ds.hizli);$("#o-tutar").focus();onizle();return}
+  if(ds.durum&&ds.durum!==i.durum){try{await isYaz({...i,durum:ds.durum});await log(i,`Durum: ${i.durum} → ${ds.durum}`);toast(ds.durum)}catch(_){hata()}return}
+  if(ds.asama){const s=new Set(i.asamalar||[]),v2=!s.has(ds.asama);v2?s.add(ds.asama):s.delete(ds.asama);
+    try{await isYaz({...i,asamalar:ASAMALAR.filter(a=>s.has(a))});await log(i,`Aşama ${v2?"tamamlandı":"geri alındı"}: ${ds.asama}`);if(v2&&s.size===ASAMALAR.length)toast("Tüm aşamalar tamamlandı")}catch(_){hata()}return}
+  if(ds.oduz!==undefined){const n=+ds.oduz,o=i.odemeler[n];if(!o)return;ODZ=n;detayCiz();
+    $("#o-pb-"+(o.pb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(o.tutar);tarihYaz("o-tarih",o.tarih);$("#o-kur").value=oKur(o);$("#o-not").value=o.not||"";
+    $("#kurNot").textContent="Bu ödemede kaydedilen kur. Tarihi değiştirirsen o günün kuru gelir.";onizle();$("#odemeForm").scrollIntoView({behavior:"smooth",block:"center"});return}
+  if(ds.oduzvaz!==undefined){ODZ=null;detayCiz();$("#odemeForm").reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();return}
+  if(ds.odsil!==undefined){if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";setTimeout(()=>{if(t.isConnected){t.classList.remove("emin");t.textContent="Bu ödemeyi sil"}},4000);return}
+    ODZ=null;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);try{await isYaz({...i,odemeler:o});await log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`);toast("Ödeme silindi")}catch(_){hata()}return}
+  if(ds.issil!==undefined){
+    if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Silmek için tekrar dokun";setTimeout(()=>{t.classList.remove("emin");t.textContent="Bu işi sil"},4000);return}
+    try{await log(i,"İş silindi");await isSil(i.id);ekranKapa();toast("İş silindi")}catch(_){hata()}}
+});
+document.addEventListener("input",e=>{
+  if(e.target.id==="ara"){q=e.target.value;ciz()}
+  if(["o-tutar","o-kur","o-pb-try","o-pb-usd"].includes(e.target.id))onizle();
+  if(e.target.id==="o-tarih")kurTarihten();
+  if(e.target.id==="f-ucret"||e.target.name==="pb"&&e.target.id.startsWith("f-")){ucretOn();fOdemeCiz()}
+  if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value)}
+  if(e.target.id?.startsWith("fo-"))fOnizle();
+});
+document.addEventListener("change",e=>{if(e.target.id==="sirala"){sirala=e.target.value;uiSakla();ciz()}
+  if(e.target.id==="o-pb-try"||e.target.id==="o-pb-usd")onizle();if(e.target.id==="o-tarih")kurTarihten();
+  if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value)}
+  if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
+document.addEventListener("submit",async e=>{
+  if(e.target.id==="kurForm"){e.preventDefault();const u=+new FormData(e.target).get("usd");if(!u)return;const eski=KUR.usd;kurDuzen=false;
+    try{await kurYaz({usd:u,tarih:bugun(),kaynak:"Elle girildi",zaman:new Date().toISOString()});await log(null,`Kur güncellendi: ${nf(eski,4)} → ${nf(u,4)} ₺`);toast("Kur kaydedildi")}catch(_){hata()}return}
+  const i=isler.find(x=>x.id===acikId);if(!i)return;
+  if(e.target.id==="odemeForm"){e.preventDefault();const f=new FormData(e.target);
+    const o={tarih:f.get("tarih"),tutar:sayi(f.get("tutar")),pb:f.get("pb")||"TRY",kur:+f.get("kur")||KUR.usd,not:(f.get("not")||"").trim()};
+    if(!o.tutar)return;const arr=[...(i.odemeler||[])],dz=ODZ,eski=dz!==null?arr[dz]:null;
+    if(dz!==null)arr[dz]=o;else arr.push(o);
+    const od=arr.sort((a,b)=>a.tarih.localeCompare(b.tarih));
+    ODZ=null;e.target.reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();
+    try{const n={...i,odemeler:od};await isYaz(n);
+      if(eski){await log(i,`Ödeme düzeltildi: ${para(eski.tutar,eski.pb)} (${tarih(eski.tarih,1)}) → ${para(o.tutar,o.pb)} (${tarih(o.tarih,1)})${i.pb==="USD"&&o.pb!=="USD"?` · kur ${nf(o.kur,4)} = ${usd(oUSD(o))}`:""}`);toast("Ödeme güncellendi")}
+      else{await log(i,odemeLogMetni(i,o));toast(kalan(n)<=0.01?"Ödeme tamamlandı":"Ödeme eklendi")}
+      detayCiz()}catch(_){hata()}}
+  if(e.target.id==="notForm"){e.preventDefault();const m=(new FormData(e.target).get("metin")||"").trim();if(!m)return;e.target.reset();try{await log(i,m,"not");toast("Günlüğe eklendi")}catch(_){hata()}}
+});
+
+/* ===== başlat ===== */
+isler=lsOku(LS_I);loglar=lsOku(LS_L);ciz();
+function yenile(){
+  if(API&&!sifreAl())return Promise.resolve();
+  return sr("hepsi").then(d=>{
+    if(bekleyen>0)return;
+    isler=d.isler||[];loglar=d.loglar||[];KURLAR=d.kurlar||{};
+    if(d.kur&&d.kur.usd){KUR=d.kur;try{localStorage.setItem("tez-defteri-kur",JSON.stringify(KUR))}catch(_){}}
+    lsYaz();if(ekranTur!=="form")ciz();
+    $("#depo").textContent="Kayıtlar Google E-Tablonda · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})+" itibarıyla güncel";
+  }).catch(e=>{$("#depo").textContent="Sunucuya ulaşılamadı: "+(e&&e.message||e)});
+}
+document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim();if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
+if(API&&!sifreAl())sifreEkrani(false);else yenile();
+setInterval(()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()},60000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()});
+</script>
+
+</body></html>
