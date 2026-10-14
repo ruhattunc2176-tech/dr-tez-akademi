@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=22"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=23"></script><base target="_top">
 <style>.ust-tl{font-weight:800;color:inherit}.kurla{display:block;font-size:16px;font-weight:600;color:var(--muted);margin:2px 0}.kurla strong{color:var(--ink);font-weight:800}.kurla strong.uy-eksik{color:#b3261e}.kurla strong.uy-fazla{color:#0b6e4c}
 .alt-baslik{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:16px}
 .yeni-odeme-btn{width:100%;margin-top:16px;padding:15px;border-radius:16px;border:2px dashed #0fa86f;background:#f0faf5;color:#0b6e4c;font:inherit;font-weight:800;font-size:17px;cursor:pointer}
@@ -789,7 +789,9 @@ document.addEventListener("focusin",e=>{const id=e.target&&e.target.id;
    Bir ödeme düzenleniyorsa o ödeme hariç kalan hesaplanır (düzenlenen ödeme onun yerine geçeceği için). */
 function hizliCiz(i,pb,kr){
   const hz=$("#hizliAlan");if(!hz)return;
-  const baz=ODZ!==null?{...i,odemeler:(i.odemeler||[]).filter((_,n)=>n!==ODZ)}:i;
+  /* ödeme düzenlenirken: sadece gerçek kalan borç bilgi olarak gösterilir, hızlı tutar düğmesi yok */
+  if(ODZ!==null){const kb=kalan(i);hz.hidden=false;hz.innerHTML=`<small class="ipucu" style="margin:0">Kalan borç: <b>${para(kb,i.pb)}</b>${i.pb==="USD"&&kb?` (≈ ${tl(kb*KUR.usd)})`:""}</small>`;return}
+  const baz=i;
   const kk=kalan(baz);if(!(kk>0.009)){hz.hidden=true;hz.innerHTML="";return}
   const U=i.pb==="USD";
   const tut=pb==="USD"?(U?kk:kk/kr):(U?kk*kr:kk);
@@ -797,7 +799,7 @@ function hizliCiz(i,pb,kr){
   const ek=U&&pb!=="USD"?` (${usd(kk)} × ${nf(kr,2)})`:!U&&pb==="USD"?` (${tl(kk)} ÷ ${nf(kr,2)})`:"";
   const yuv=v=>Math.round(v*100)/100;
   hz.hidden=false;
-  hz.innerHTML=`<small class="ipucu" style="flex-basis:100%;margin:0">${ODZ!==null?"Bu ödeme hariç kalan borç":"Kalan borç"}${ek}:</small>`+
+  hz.innerHTML=`<small class="ipucu" style="flex-basis:100%;margin:0">Kalan borç${ek}:</small>`+
     `<button type="button" class="mini-btn" data-hizli="${yuv(tut)}" data-hpb="${pb}" data-horan="1">Tamamı · ${yaz(tut)}</button>`+
     (tut>1?`<button type="button" class="mini-btn" data-hizli="${yuv(tut/2)}" data-hpb="${pb}" data-horan="0.5">Yarısı · ${yaz(tut/2)}</button>`:"")}
 /* Dolar ödemenin TL karşılığı: elle yazılan "alındı", yoksa o günün kuruyla tahmini */
