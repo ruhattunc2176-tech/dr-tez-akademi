@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=17"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=18"></script><base target="_top">
 <style>.kutu b{text-align:left;line-height:1.25}
 .sekmeler{display:flex;gap:6px;background:var(--card);border-radius:16px;padding:5px;margin-top:16px;box-shadow:var(--shadow)}
 .sekmeler button{flex:1;border:0;background:transparent;font:inherit;font-weight:800;font-size:16px;padding:11px 8px;border-radius:12px;color:var(--muted);cursor:pointer}
@@ -970,6 +970,9 @@ document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.pre
 try{history.replaceState(navDurum(),"")}catch(_){}
 if(!sifreAl())sifreEkrani(false);else yenile();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
+/* kur 5 dakikadan eskiyse (ör. uygulama arka plandan dönünce) hemen tazele */
+async function kurTazeleGerekirse(){if(document.visibilityState!=="visible"||!sifreAl())return;if(KUR.zaman&&Date.now()-new Date(KUR.zaman)<300000)return;try{const b=await sr("canliKur");if(b&&b.usd&&!(KUR.kaynak==="Elle girildi"&&KUR.tarih===bugun())){KUR={usd:b.usd,tarih:bugun(),kaynak:b.kaynak,zaman:new Date().toISOString()};try{localStorage.setItem("tez-defteri-kur",JSON.stringify(KUR))}catch(_){}if(ekranTur!=="form"&&!kullaniciYaziyor())ciz()}}catch(_){}}
+document.addEventListener("visibilitychange",()=>setTimeout(kurTazeleGerekirse,1500));setTimeout(kurTazeleGerekirse,3000);
 setInterval(async()=>{if(document.visibilityState!=="visible"||!sifreAl())return;try{const b=await sr("canliKur");if(b&&b.usd&&!(KUR.kaynak==="Elle girildi"&&KUR.tarih===bugun())){KUR={usd:b.usd,tarih:bugun(),kaynak:b.kaynak,zaman:new Date().toISOString()};if(ekranTur!=="form"&&!kullaniciYaziyor())ciz()}}catch(_){}},300000);
 let SON_SURUM=null,kontrolde=false;
 async function degisiklikVarMi(){
