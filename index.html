@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=46"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=47"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -260,6 +260,12 @@ textarea{resize:vertical;min-height:84px}
 .ekran-ust .ort{font-weight:800;flex:1;text-align:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ic{max-width:640px;margin:0 auto;padding:4px 16px calc(40px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
 .kahraman{padding:18px;background:var(--cb);color:var(--on);border:0;box-shadow:0 8px 22px color-mix(in srgb,var(--cb) 30%,transparent)}
+.k-ust{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.k-sol{min-width:0;flex:1}
+.kahraman .k-sol .ad{margin:0 0 4px}
+.etiketler{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:none;max-width:45%}
+.etiketler span{font-size:.76rem;font-weight:800;background:rgba(255,255,255,.22);padding:4px 10px;border-radius:999px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.etiketler .mk-e{background:#fde4f2;color:#a3266f}
 .kahraman .tur{font-size:.78rem;font-weight:800;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:999px}
 .kahraman .ad{font-family:var(--f-head);font-size:1.4rem;font-weight:600;margin:10px 0 4px}
 .kahraman .konu{margin:0;opacity:.95;overflow-wrap:anywhere}
@@ -753,8 +759,7 @@ function detayCiz(){
   <div class="ekran-ust"><button type="button" data-geri>‹ Geri</button><span class="ort">${esc(i.musteri)}</span><button type="button" data-duzen ${i.beklemede?`class="kilit-btn"`:""}>Düzenle</button></div>
   <div class="ic" style="${renk(i.durum)}">
     <section class="kart kahraman">
-      <span class="tur">${esc(i.tur||"")}${U?" · Dolar":""}${i.makale?" · Makale":""}</span>
-      <div class="ad">${esc(i.musteri)}</div><p class="konu">${esc(i.konu)}</p>
+      <div class="k-ust"><div class="k-sol"><div class="ad">${esc(i.musteri)}</div><p class="konu">${esc(i.konu)}</p></div><div class="etiketler">${i.tur?`<span>${esc(i.tur)}</span>`:""}<span>${U?"$ Dolar":"₺ TL"}</span>${i.makale?`<span class="mk-e">Makale</span>`:""}</div></div>
       <div class="geri-sayim">${aktif(i)&&f!==null?`<b class="num">${Math.abs(f)}</b><span>${f<0?"gün gecikti":f===0?"bugün teslim":"gün kaldı"}</span>`:`<span>${s.t}</span>`}<small>Teslim ${tarih(i.teslim)}</small></div>
       <div class="durum-sec"><span class="su-durum">${esc(i.durum)}</span><button type="button" data-bekle aria-pressed="${!!i.beklemede}">${i.beklemede?"Beklemede (müşteriden) ✓":"Beklemeye al"}</button></div>
     </section>
