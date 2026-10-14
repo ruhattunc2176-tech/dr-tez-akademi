@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=49"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=50"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -293,6 +293,14 @@ textarea{resize:vertical;min-height:84px}
 .kilit-bant{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:#fff1cc;color:#5a3c00;border:2px solid #ffd75e;border-radius:18px;padding:14px 16px;margin-top:14px}
 .kilit-bant b{font-weight:800;width:100%}.kilit-bant span{flex:1;min-width:160px;font-weight:600;font-size:.92rem}
 .kilit-bant button{border:0;background:#b37400;color:#fff;border-radius:12px;padding:9px 14px;font:inherit;font-weight:800;cursor:pointer}
+.gb-ust{display:grid;grid-template-columns:1.35fr 1fr .7fr;gap:8px}.gb-ust div{background:var(--soft);border-radius:14px;padding:10px 12px;min-width:0}
+.gb-ust span{display:block;font-size:12px;color:var(--muted);font-weight:700}.gb-ust b{display:block;font-size:18px;font-weight:800;white-space:nowrap}
+.gb-ust .ana{background:#0b6e4c}.gb-ust .ana span{color:#cfeee0}.gb-ust .ana b{color:#ffd75e}
+.gb{height:190px;display:grid;grid-template-columns:repeat(6,1fr);gap:6px;align-items:end;margin-top:10px;border-bottom:1px solid var(--line)}
+.gb .c{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.gb .c i{width:70%;background:#0fa86f;border-radius:4px 4px 0 0}.gb .c.bu i{background:#0b6e4c}
+.gb .c b{font-size:11.5px;font-weight:800;margin-bottom:4px;white-space:nowrap;letter-spacing:-.02em}.gb .c.sifir b{color:var(--muted);font-weight:600}
+.gb-ay{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:6px;text-align:center;font-size:13px;font-weight:700;color:var(--muted)}.gb-ay .bu{color:#0b6e4c}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -675,10 +683,11 @@ function gAlinan(){
   const satir=o=>`<button type="button" class="odeme alinan" data-ac="${o.i.id}"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span>
       <span class="o"><b>${anaTutar(o)} <span class="kim">${esc(o.i.musteri||"—")}</span></b>${odemeEk(o)}
       <small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</span></button>`;
-  return`<section class="kart blok ozet3" style="margin-top:16px">
-      <div><span>Toplam tahsilat</span><b data-sayac="topTahsil" data-deger="${topTL}">${tl(topTL)}</b></div><div><span>Bu ay</span><b>${tl(aylar[5].t)}</b></div><div><span>Ödeme sayısı</span><b>${tum.length}</b></div></section>
-    <section class="kart blok"><h3>Aylık tahsilat</h3>
-    <div class="grafik">${aylar.map((a,k)=>`<div class="sutun ${k===5?"bu":""}"><b>${a.t?tlKisa(a.t):""}</b><i style="height:${Math.max(3,a.t/mx*100)}%"></i><small>${a.ad}</small></div>`).join("")}</div>
+  return`<section class="kart blok" style="margin-top:16px">
+    <div class="gb-ust"><div class="ana"><span>Toplam tahsilat</span><b data-sayac="topTahsil" data-deger="${topTL}">${tl(topTL)}</b></div><div><span>Bu ay</span><b>${tl(aylar[5].t)}</b></div><div><span>Ödeme</span><b>${tum.length}</b></div></div>
+    <h3 style="margin:18px 0 0">Son 6 ay</h3>
+    <div class="gb" role="img" aria-label="Son 6 ay tahsilat">${aylar.map((a,k)=>`<div class="c ${k===5?"bu":""} ${a.t?"":"sifir"}" title="${a.ad}: ${tl(a.t)}"><b>${a.t?tl(a.t):"0"}</b>${a.t?`<i style="height:${Math.max(4,a.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
+    <div class="gb-ay">${aylar.map((a,k)=>`<span class="${k===5?"bu":""}">${a.ad}</span>`).join("")}</div>
     <p class="ipucu" style="margin:10px 0 0">TL tutarlar ödemenin alındığı günün kuruyla hesaplanır.</p></section>
   ${gruplar.length?gruplar.map(g=>`<div class="bolum-baslik"><h2>${ayAdi(g.a)}</h2><small>${tl(g.t)} · ${g.l.length} ödeme</small></div>
   <section class="kart blok" style="padding-top:4px"><div class="odeme-liste" style="margin-top:0">${g.l.map(satir).join("")}</div></section>`).join("")
