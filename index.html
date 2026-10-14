@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=3"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=4"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -416,7 +416,11 @@ async function apiCagir(fn,a){
   if(d&&d.sifre){sifreYaz("");sifreEkrani(true);throw new Error("Şifre yanlış")}
   if(!d||!d.ok)throw new Error(d&&d.hata||"Sunucu hatası");
   return d.r}
-const sr=(fn,...a)=>API?apiCagir(fn,a):new Promise((ok,no)=>{try{google.script.run.withSuccessHandler(ok).withFailureHandler(no)[fn](...a)}catch(e){no(e)}});
+function gasCagir(fn,a){const s=sifreAl();if(!s){sifreEkrani(false);return Promise.reject(new Error("Şifre gerekli"))}
+  return new Promise((ok,no)=>{try{google.script.run.withSuccessHandler(ok).withFailureHandler(no).api({s,f:fn,a})}catch(e){no(e)}}).then(d=>{
+    if(d&&d.sifre){sifreYaz("");sifreEkrani(true);throw new Error("Şifre yanlış")}
+    if(!d||!d.ok)throw new Error(d&&d.hata||"Sunucu hatası");return d.r})}
+const sr=(fn,...a)=>API?apiCagir(fn,a):gasCagir(fn,a);
 const yazSr=async(fn,...a)=>{bekleyen++;try{return await sr(fn,...a)}finally{bekleyen--}};
 async function isYaz(is){is.guncelleme=new Date().toISOString();const k=isler.findIndex(x=>x.id===is.id);k<0?isler.push(is):isler[k]=is;lsYaz();ciz();await yazSr("kaydetIs",is)}
 async function isSil(id){isler=isler.filter(x=>x.id!==id);lsYaz();ciz();await yazSr("silIs",id)}
@@ -832,7 +836,7 @@ document.addEventListener("submit",async e=>{
 /* ===== başlat ===== */
 isler=lsOku(LS_I);loglar=lsOku(LS_L);ciz();
 function yenile(){
-  if(API&&!sifreAl())return Promise.resolve();
+  if(!sifreAl())return Promise.resolve();
   return sr("hepsi").then(d=>{
     if(bekleyen>0)return;
     isler=d.isler||[];loglar=d.loglar||[];KURLAR=d.kurlar||{};
@@ -842,7 +846,7 @@ function yenile(){
   }).catch(e=>{$("#depo").textContent="Sunucuya ulaşılamadı"+(API?" (…"+API.slice(-14,-5)+")":"")+": "+(e&&e.message||e)});
 }
 document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim();if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
-if(API&&!sifreAl())sifreEkrani(false);else yenile();
+if(!sifreAl())sifreEkrani(false);else yenile();
 setInterval(()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()},60000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()});
 </script>
