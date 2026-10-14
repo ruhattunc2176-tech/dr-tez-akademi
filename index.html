@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=5"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=6"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -445,10 +445,10 @@ function hero(){
   const s=new Date().getHours(),sel=s<6?"İyi geceler":s<12?"Günaydın":s<18?"İyi günler":"İyi akşamlar";
   return`<header class="ust-bar">
     <div><p>${sel.toLocaleUpperCase("tr")} · ${new Date().toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"})}</p><h1>Dr Tez Akademi</h1></div>
-    <button type="button" class="kur2" data-kur aria-label="Dolar kurunu değiştir"><small>${esc(KUR.kaynak||"Kur")} · ${tarih(KUR.tarih,1)}</small><b>1 $ = ${nf(KUR.usd,2)} ₺</b></button>
+    <button type="button" class="kur2" data-kur aria-label="Dolar kurunu değiştir"><small>${esc(KUR.kaynak||"Kur")} · ${tarih(KUR.tarih,1)}${KUR.zaman&&KUR.tarih===bugun()?" "+new Date(KUR.zaman).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}):""}</small><b>1 $ = ${nf(KUR.usd,2)} ₺</b></button>
   </header>
   ${kurDuzen?`<form class="kur-form2" id="kurForm"><input id="kur-deger" name="usd" type="number" inputmode="decimal" step="0.0001" min="1" value="${KUR.usd}" required aria-label="1 dolar kaç TL"><button class="btn ana" type="submit">Kaydet</button>
-    <small>TCMB döviz satış kuru önerilir; 15.30'da açıklanır. Kalan alacaklar bu kurla TL'ye çevrilir, geçmiş ödemeler kendi kuruyla kalır.</small></form>`:""}`;
+    <small>Kur Google Finans'tan canlı gelir (yaklaşık 20 dk gecikmeli). Kalan alacaklar bu kurla TL'ye çevrilir, geçmiş ödemeler kendi kuruyla kalır. Elle girdiğin kur bir sonraki yenilemede canlı kurla değişir.</small></form>`:""}`;
 }
 
 function gIsler(){
@@ -632,7 +632,7 @@ function kurBul(t){
   return d?{d,v:+m[d]}:null;
 }
 function kurNotu(t){const k=kurBul(t);if(!t)return"";if(!k)return"Bu tarih için kayıtlı kur yok, elle gir.";
-  if(k.d===t)return`TCMB ${tarih(k.d,1)} kuru otomatik geldi. İstersen değiştir.`;
+  if(k.d===t)return t===bugun()&&/Google/.test(KUR.kaynak||"")?`Google Finans canlı kuru geldi. İstersen değiştir.`:`TCMB ${tarih(k.d,1)} kuru otomatik geldi. İstersen değiştir.`;
   const g=new Date(t+"T00:00").getDay(),neden=g===0||g===6?"hafta sonu, kur açıklanmaz":t===bugun()?"bugünün kuru 15.30'da açıklanır":t>bugun()?"ileri tarih":"o gün kur açıklanmamış (tatil)";
   return`${tarih(t,1)}: ${neden}. Son açıklanan ${tarih(k.d,1)} kuru kullanıldı.`}
 function kurTarihten(){
@@ -847,7 +847,7 @@ function yenile(){
 }
 document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim().toLocaleLowerCase("tr").replace(/ı/g,"i");if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
 if(!sifreAl())sifreEkrani(false);else yenile();
-setInterval(()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()},60000);
+setInterval(()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()},30000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()});
 </script>
 
