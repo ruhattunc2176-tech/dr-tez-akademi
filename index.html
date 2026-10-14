@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=35"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=36"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -106,6 +106,8 @@ html,body{margin:0}body{font:14px system-ui,sans-serif}[hidden]{display:none!imp
 .satir-is .orta{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .satir-is .ad{font-size:19px;font-weight:800}
 .satir-is .kn{font-size:15px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.satir-is .ch .mk{display:inline-flex;align-items:center;gap:4px;background:#fde4f2;color:#a3266f}
+.mk-sec input:checked+span svg{vertical-align:-2px}
 .satir-is .ch{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
 .satir-is .ch span{font-size:13px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--card);color:var(--ink)}
 .satir-is .ch .d{background:var(--cs);color:var(--c)}.satir-is .ch .gec{background:var(--gec-s);color:var(--gec)}.satir-is .ch .yakin{background:var(--yakin-s);color:var(--yakin)}
@@ -540,7 +542,7 @@ function gIsler(){
   const carp=i=>i.pb==="USD"?KUR.usd:1,ucTop=hesap.reduce((a,i)=>a+(+i.ucret||0)*carp(i),0),odTop=hesap.reduce((a,i)=>a+Math.min(odenen(i),+i.ucret||0)*carp(i),0),p=ucTop?Math.round(odTop/ucTop*100):0;
   const kalUSD=hesap.filter(i=>i.pb==="USD").reduce((a,i)=>a+kalan(i),0),kalTRY=hesap.filter(i=>i.pb!=="USD").reduce((a,i)=>a+kalan(i),0);
   const ak=isler.filter(aktif),yak=ak.filter(i=>i.teslim).sort((a,b)=>a.teslim.localeCompare(b.teslim))[0];
-  let l=isler.filter(i=>filtre==="Tümü"||(filtre==="Aktif"?aktif(i):i.durum===filtre));
+  let l=isler.filter(i=>filtre==="Tümü"||(filtre==="Aktif"?aktif(i):filtre==="Makale"?i.makale:i.durum===filtre));
   const k=q.toLocaleLowerCase("tr");if(k)l=l.filter(i=>[i.musteri,i.konu,i.universite,i.iletisim].join(" ").toLocaleLowerCase("tr").includes(k));
   l.sort(sirala==="kalan"?(a,b)=>kalanTL(b)-kalanTL(a):sirala==="yeni"?(a,b)=>(b.olusturma||b.baslangic||"").localeCompare(a.olusturma||a.baslangic||""):(a,b)=>(a.teslim||"9999").localeCompare(b.teslim||"9999"));
   const yf=yak?fark(yak.teslim):null;
@@ -565,8 +567,8 @@ function gIsler(){
           <input id="ara" type="search" placeholder="Müşteri, konu, üniversite" value="${esc(q)}" aria-label="Ara"></div>
         <select id="sirala" aria-label="Sırala"><option value="teslim" ${sirala==="teslim"?"selected":""}>Teslime göre</option><option value="kalan" ${sirala==="kalan"?"selected":""}>Alacağa göre</option><option value="yeni" ${sirala==="yeni"?"selected":""}>En yeni</option></select>
       </div>
-      <div class="cipler" style="margin-bottom:0">${["Aktif","Tümü",...DURUMLAR].map(s=>{const n=s==="Tümü"?isler.length:s==="Aktif"?isler.filter(aktif).length:isler.filter(i=>i.durum===s).length;
-        return`<button type="button" class="cip" data-f="${s}" aria-pressed="${s===filtre}" ${DURUM[s]?`style="${renk(s)}"`:""}>${s} · ${n}</button>`}).join("")}</div>
+      <div class="cipler" style="margin-bottom:0">${["Aktif","Tümü","Makale",...DURUMLAR].map(s=>{const n=s==="Tümü"?isler.length:s==="Aktif"?isler.filter(aktif).length:s==="Makale"?isler.filter(i=>i.makale).length:isler.filter(i=>i.durum===s).length;
+        return`<button type="button" class="cip" data-f="${s}" aria-pressed="${s===filtre}" ${DURUM[s]?`style="${renk(s)}"`:s==="Makale"?`style="background:#fde4f2;color:#a3266f"`:""}>${s} · ${n}</button>`}).join("")}</div>
       <div class="isler" style="gap:10px">${l.length?l.map(kartIs).join(""):bos()}</div>
     </section>
   </div>`;
@@ -586,7 +588,7 @@ function kartIs(i){
   return`<button type="button" class="satir-is" data-ac="${i.id}" style="${renk(i.durum)}">
     <span class="av" aria-hidden="true">${esc(bas)}</span>
     <span class="orta"><span class="ad">${esc(i.musteri||"—")}</span><span class="kn">${esc(i.konu)}</span>
-      <span class="ch"><span class="d">${i.durum}</span><span class="${s.c}">${s.t}</span>${i.pb==="USD"?`<span>$</span>`:""}</span></span>
+      <span class="ch"><span class="d">${i.durum}</span><span class="${s.c}">${s.t}</span>${i.pb==="USD"?`<span>$</span>`:""}${i.makale?`<span class="mk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Makale</span>`:""}</span></span>
     <span class="sag">${k?`<b>${para(k,i.pb)}</b><small>kalan · %${p} ödendi</small>`:(+i.ucret?`<b class="ok">Ödendi</b><small>%100</small>`:`<small>Ücret yok</small>`)}</span>
   </button>`;
 }
@@ -711,7 +713,7 @@ function detayCiz(){
   <div class="ekran-ust"><button type="button" data-geri>‹ Geri</button><span class="ort">${esc(i.musteri)}</span><button type="button" data-duzen>Düzenle</button></div>
   <div class="ic" style="${renk(i.durum)}">
     <section class="kart kahraman">
-      <span class="tur">${esc(i.tur||"")}${U?" · Dolar":""}</span>
+      <span class="tur">${esc(i.tur||"")}${U?" · Dolar":""}${i.makale?" · Makale":""}</span>
       <div class="ad">${esc(i.musteri)}</div><p class="konu">${esc(i.konu)}</p>
       <div class="geri-sayim">${aktif(i)&&f!==null?`<b class="num">${Math.abs(f)}</b><span>${f<0?"gün gecikti":f===0?"bugün teslim":"gün kaldı"}</span>`:`<span>${s.t}</span>`}<small>Teslim ${tarih(i.teslim)}</small></div>
       <div class="durum-sec" role="group" aria-label="Durum">${DURUMLAR.map(x=>`<button type="button" data-durum="${x}" aria-pressed="${x===i.durum}">${x}</button>`).join("")}</div>
@@ -863,6 +865,7 @@ function formAc(eski){setTimeout(navIt,0);
       <label>Müşteri adı<input id="f-musteri" name="musteri" value="${esc(i.musteri)}" required autocomplete="off"></label>
       <label>Tez konusu<textarea id="f-konu" name="konu" required>${esc(i.konu)}</textarea></label>
       <div class="alan"><span>Tür</span>${radyo("tur",TURLER,i.tur)}</div>
+      <div class="alan"><span>Makale de yapılacak mı?</span><div class="secim mk-sec"><label><input type="radio" id="f-makale-0" name="makale" value="1" ${i.makale?"checked":""}><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg> Makale var</span></label><label><input type="radio" id="f-makale-1" name="makale" value="" ${i.makale?"":"checked"}><span>Yok</span></label></div></div>
     </section>
     <section class="kart blok" style="display:flex;flex-direction:column;gap:14px">
       <div class="alan"><span>Ücret hangi para biriminde?</span>${radyo("pb",["TRY","USD"],i.pb||"TRY",null,x=>x==="USD"?"$ Dolar":"₺ Türk lirası")}</div>
@@ -908,7 +911,7 @@ function formAc(eski){setTimeout(navIt,0);
   $("#isForm").onsubmit=async ev=>{
     ev.preventDefault();if(sayi($("#fo-tutar").value)&&fOdemeEkle(true)===false)return;else if(FORM.duz!==null)fGirisTemizle();
     const f=new FormData(ev.target),n={...i};
-    ["musteri","konu","durum","baslangic","teslim","tur","iletisim","universite","notlar","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());
+    ["musteri","konu","durum","baslangic","teslim","tur","iletisim","universite","notlar","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");
     n.ucret=sayi(f.get("ucret"));if(yeni)n.olusturma=new Date().toISOString();
     const yeniOd=FORM.odm.filter(o=>o._yeni),silinen=FORM.silinen;
     const duzeltilen=FORM.duzeltilen.filter(([,y])=>FORM.odm.includes(y)&&!y._yeni);
@@ -917,7 +920,7 @@ function formAc(eski){setTimeout(navIt,0);
     if(!yeni){if(eski.durum!==n.durum)dg.push(`Durum: ${eski.durum} → ${n.durum}`);
       if((eski.teslim||"")!==n.teslim)dg.push(`Teslim tarihi: ${tarih(eski.teslim)} → ${tarih(n.teslim)}`);
       if((+eski.ucret||0)!==n.ucret||(eski.pb||"TRY")!==n.pb)dg.push(`Ücret: ${para(eski.ucret,eski.pb)} → ${para(n.ucret,n.pb)}`);
-      if((eski.konu||"")!==n.konu)dg.push("Tez konusu güncellendi");
+      if((eski.konu||"")!==n.konu)dg.push("Tez konusu güncellendi");if(!!eski.makale!==n.makale)dg.push(n.makale?"Makale eklendi":"Makale kaldırıldı");
       if(["musteri","iletisim","universite","tur","baslangic","notlar"].some(k=>(eski[k]||"")!==n[k]))dg.push("Bilgiler güncellendi")}
     const islem=[isYaz(n)];
     if(yeni)islem.push(log(n,`İş açıldı · ücret ${para(n.ucret,n.pb)}${n.teslim?" · teslim "+tarih(n.teslim):""}`));
