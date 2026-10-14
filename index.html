@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=52"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=53"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -304,6 +304,19 @@ textarea{resize:vertical;min-height:84px}
 .tk-od{border:0!important;padding:0!important;margin:0;text-align:left}
 .kay-s{animation:kayS .25s ease-out}.kay-g{animation:kayG .25s ease-out}
 @keyframes kayS{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}@keyframes kayG{from{transform:translateX(-24px);opacity:.4}to{transform:none;opacity:1}}
+.ozet-kart{padding:14px 16px;margin-top:14px;display:flex;flex-direction:column;gap:2px}
+.ozet-kart.tamam{flex-direction:row;align-items:center;gap:12px;background:#e9f8f0}.ozet-kart.tamam b{display:block}.ozet-kart.tamam small{color:var(--muted);font-weight:600}
+.oz-ik{width:34px;height:34px;border-radius:50%;background:#0fa86f;color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.oz-bas{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.oz-bas b{font-size:1.1rem;font-weight:800}.oz-bas small{color:var(--muted);font-weight:700;display:flex;gap:8px;align-items:center}
+.oz-say{background:#ffe0e0;color:#b3261e;border-radius:999px;padding:2px 9px;font-weight:800}
+.oz-satir{display:flex;align-items:center;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;padding:10px 4px;border-top:1px solid var(--line);cursor:pointer;width:100%}
+.oz-bas+.oz-satir,.ozet-kart.detay .oz-satir:first-child{border-top:0}
+.oz-satir i{width:12px;height:12px;border-radius:50%;flex:none}.oz-satir span{flex:1;min-width:0;display:flex;flex-direction:column}
+.oz-satir b{font-weight:800}.oz-satir small{font-size:.9rem;font-weight:600;color:var(--muted)}.oz-satir em{font-style:normal;color:var(--muted);font-size:1.3rem}
+.oz-satir.d3 i{background:#d6336c;box-shadow:0 0 0 4px #ffe0ea}.oz-satir.d2 i{background:#f08c00;box-shadow:0 0 0 4px #fff0d6}.oz-satir.d1 i{background:#e3b505;box-shadow:0 0 0 4px #fff7cc}
+.oz-satir.d3 small{color:#b3261e}.ozet-kart.detay .oz-satir small{font-size:.95rem;color:var(--ink)}
+.oz-tum{border:0;background:var(--soft);border-radius:12px;padding:10px;font:inherit;font-weight:800;color:var(--accent);cursor:pointer;margin-top:6px}
+.satir-is .ch .uy-r{color:#fff}.satir-is .ch .uy-r.d3{background:#d6336c}.satir-is .ch .uy-r.d2{background:#f08c00}.satir-is .ch .uy-r.d1{background:#e3b505;color:#3a2c00}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -436,6 +449,39 @@ const DURUMLAR=Object.keys(DURUM);
 const durumlar=i=>DURUMLAR.filter(d=>d!==ADAY&&(d!==MAKALE_ASAMA||i.makale));
 const ESKI_DURUM={"Devam ediyor":"Teze başlandı","Görüşme":ADAY};
 function durumAta(i,yeni){const g=[...(i.gecmis||[])];if(!g.length&&i.durum)g.push({d:i.durum,t:(i.baslangic||bugun())+"T00:00:00"});g.push({d:yeni,t:new Date().toISOString()});return{...i,durum:yeni,gecmis:g}}
+/* ===== İş özeti kuralları (uygulama ve e-posta ortak) ===== */
+function uyariHesapla(i,bugun,A,kalanMetin){
+  const G=(a,b)=>Math.round((new Date(String(b).slice(0,10)+"T00:00:00")-new Date(String(a).slice(0,10)+"T00:00:00"))/864e5);
+  const HEDEF=[["Etik kurula sunuldu",.15],["Etik onay alındı",.30],["Veri seti tamamlandı",.55],["İstatistiğe başlandı",.70],["Tez yazımına başlandı",.85]];
+  const SONRA=["Revizyonda","Makale yazımına başlandı","Teslim edildi"];
+  const out=[],ek=(d,m)=>out.push({d:d,m:m});
+  const durum=i.durum==="Devam ediyor"?"Teze başlandı":i.durum==="Görüşme"?"Ön görüşme":i.durum;
+  A=A||i.asamaT||{};
+  if(durum==="İptal")return out;
+  if(durum==="Ön görüşme"){const t=i.olusturma||(i.gecmis&&i.gecmis[0]&&i.gecmis[0].t)||i.baslangic;const g=t?G(t,bugun):0;if(g>=7)ek(1,"Ön görüşme "+g+" gündür bekliyor · dönüş yap");return out}
+  if(durum==="Teslim edildi"){if(kalanMetin)ek(2,"Teslim edildi, "+kalanMetin+" alacak kaldı");return out}
+  if(i.beklemede){const g=i.bekleT?G(i.bekleT,bugun):0;if(g>=10)ek(2,g+" gündür müşteriden dönüş bekleniyor");return out}
+  const kg=i.teslim?G(bugun,i.teslim):null,ileri=SONRA.some(s=>A[s]);
+  if(kg!==null&&kg<0)ek(3,"Teslim "+(-kg)+" gün gecikti");
+  else if(kg!==null&&kg<14&&!A["Tez yazımına başlandı"]&&!ileri)ek(3,"Teslime "+kg+" gün kaldı, tez yazımına başlanmadı");
+  let geride=false;
+  if(i.baslangic&&i.teslim&&!ileri){const top=G(i.baslangic,i.teslim),gec=G(i.baslangic,bugun);
+    if(top>0&&gec>0){const f=gec/top;
+      const eksik=HEDEF.find((h,n)=>f>=h[1]&&!A[h[0]]&&!HEDEF.slice(n+1).some(x=>A[x[0]]));
+      if(eksik){geride=true;ek(f-eksik[1]>=.2?3:2,"Süre %"+Math.round(Math.min(f,1)*100)+" doldu, “"+eksik[0]+"” henüz yok")}}}
+  const et=A["Etik kurula sunuldu"];
+  if(et&&!A["Etik onay alındı"]&&G(et,bugun)>30)ek(2,"Etik onay "+G(et,bugun)+" gündür bekleniyor");
+  else if(!geride){const t=A[durum];if(t&&durum!=="Etik kurula sunuldu"&&G(t,bugun)>21)ek(2,G(t,bugun)+" gündür “"+durum+"” aşamasında")}
+  return out.sort((a,b)=>b.d-a.d);
+}
+function isUyari(i){return uyariHesapla(i,bugun(),asamaT(i),kalan(i)>0.5?para(kalan(i),i.pb):"")}
+let ozetAcik=false;
+function gOzet(){const l=isler.flatMap(i=>isUyari(i).map(u=>({...u,i}))).sort((a,b)=>b.d-a.d||(a.i.teslim||"9").localeCompare(b.i.teslim||"9"));
+  if(!l.length)return`<section class="kart ozet-kart tamam"><span class="oz-ik">✓</span><div><b>İş özeti</b><small>Her şey yolunda, dikkat gerektiren iş yok.</small></div></section>`;
+  const g=ozetAcik?l:l.slice(0,4),k=l.filter(x=>x.d===3).length;
+  return`<section class="kart ozet-kart"><div class="oz-bas"><b>İş özeti</b><small>${k?`<span class="oz-say d3">${k} acil</span>`:""}${l.length} uyarı</small></div>
+    ${g.map(x=>`<button type="button" class="oz-satir d${x.d}" data-ac="${x.i.id}"><i></i><span><b>${esc(x.i.musteri||"—")}</b><small>${esc(x.m)}</small></span><em>›</em></button>`).join("")}
+    ${l.length>4?`<button type="button" class="oz-tum" data-ozettum>${ozetAcik?"Daha az göster":`Tümünü göster (${l.length})`}</button>`:""}</section>`}
 const kilitUyari=()=>toast("İş beklemede · önce beklemeden çıkar");
 function asamaT(i){if(i.asamaT)return i.asamaT;const L=DURUMLAR,ci=L.indexOf(ESKI_DURUM[i.durum]||i.durum),o={};if(ci<1)return o;
   const son=d=>[...(i.gecmis||[])].reverse().find(e=>e.d===d);
@@ -604,6 +650,7 @@ function gIsler(){
   l.sort(sirala==="kalan"?(a,b)=>kalanTL(b)-kalanTL(a):sirala==="yeni"?(a,b)=>(b.olusturma||b.baslangic||"").localeCompare(a.olusturma||a.baslangic||""):(a,b)=>(a.teslim||"9999").localeCompare(b.teslim||"9999"));
   const yf=yak?fark(yak.teslim):null;
   return`
+  ${gOzet()}
   <div class="satir2">
     <section class="bakiye" aria-label="Alacak özeti">
       <div style="display:flex;flex-direction:column;gap:6px"><span class="e">TOPLAM ALACAK</span><b class="b num" data-sayac="alacak" data-deger="${kal}">${tl(kal)}</b><div class="kirilim">${kalUSD?`<span><small>Dolar alacak</small><b>${usd(kalUSD)}</b><em>× ${nf(KUR.usd,2)}</em></span>`:""}${kalTRY?`<span><small>TL alacak</small><b>${tl(kalTRY)}</b></span>`:""}</div></div>
@@ -645,7 +692,7 @@ function kartIs(i){
   return`<button type="button" class="satir-is" data-ac="${i.id}" style="${renk(i.durum)}">
     <span class="av" aria-hidden="true">${esc(bas)}</span>
     <span class="orta"><span class="ad">${esc(i.musteri||"—")}</span><span class="kn">${esc(i.konu)}</span>
-      <span class="ch"><span class="d">${i.durum}</span>${i.beklemede?`<span class="bk">Beklemede</span>`:""}<span class="${s.c}">${s.t}</span>${i.makale?`<span class="mk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Makale</span>`:""}</span></span>
+      <span class="ch"><span class="d">${i.durum}</span>${(()=>{const u=isUyari(i);return u.length?`<span class="uy-r d${u[0].d}">${u[0].d===3?"Acil":"Dikkat"}</span>`:""})()}${i.beklemede?`<span class="bk">Beklemede</span>`:""}<span class="${s.c}">${s.t}</span>${i.makale?`<span class="mk"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Makale</span>`:""}</span></span>
     <span class="sag">${i.durum===ADAY?(+i.ucret?`<b>${para(i.ucret,i.pb)}</b><small>teklif</small>`:`<small>Muhtemel müşteri</small>`):k?`<b>${para(k,i.pb)}</b><small>kalan · %${p} ödendi</small>`:(+i.ucret?`<b class="ok">Ödendi</b><small>%100</small>`:`<small>Ücret yok</small>`)}</span>
   </button>`;
 }
@@ -782,6 +829,7 @@ function detayCiz(){
       <div class="durum-sec"><span class="su-durum">${esc(i.durum)}</span><button type="button" data-bekle aria-pressed="${!!i.beklemede}">${i.beklemede?"Beklemede (müşteriden) ✓":"Beklemeye al"}</button></div>
     </section>
 
+    ${(()=>{const u=isUyari(i);return u.length?`<section class="kart ozet-kart detay">${u.map(x=>`<div class="oz-satir d${x.d}"><i></i><span><small>${esc(x.m)}</small></span></div>`).join("")}</section>`:""})()}
     <section class="kart blok ${i.beklemede?"kilit":""}"><h3>Aşamalar <small>dokun: işaretle / geri al</small></h3>
       ${i.durum===ADAY?`<p class="ipucu" style="margin:0 0 12px">Muhtemel müşteri. İşe başlayınca “Teze başlandı”ya dokun; iş aktif olur ve toplamlara girer.</p>`:""}
       <div class="zc">${(()=>{const A=asamaT(i);
@@ -1044,6 +1092,7 @@ document.addEventListener("click",async e=>{
   if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
   if(ds.f){filtre=ds.f;uiSakla();ciz();return}
   if(ds.ay){ayKaydir(+ds.ay);return}
+  if(ds.ozettum!==undefined){ozetAcik=!ozetAcik;ciz();return}
   if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
   if(ds.logsil){arkada(logSil(ds.logsil));toast("Not silindi");return}
   if(t.id==="ekleBtn"){formAc();return}
@@ -1074,7 +1123,7 @@ document.addEventListener("click",async e=>{
   if(i.beklemede&&(ds.duzen!==undefined||ds.durum||ds.oduz!==undefined||ds.odsil!==undefined||ds.hizli)){kilitUyari();return}
   if(ds.duzen!==undefined){formAc(i);return}
   if(ds.hizli){HIZLI={oran:ds.horan,deger:+ds.hizli};$("#o-pb-"+(ds.hpb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(+ds.hizli);$("#o-tutar").focus();onizle();return}
-  if(ds.bekle!==undefined){const b=!i.beklemede;arkada(isYaz({...i,beklemede:b}),log(i,b?"Beklemeye alındı (müşteriden)":"Beklemeden çıkarıldı"));toast(b?"Beklemede":"Beklemeden çıkarıldı");return}
+  if(ds.bekle!==undefined){const b=!i.beklemede;arkada(isYaz({...i,beklemede:b,bekleT:b?new Date().toISOString():null}),log(i,b?"Beklemeye alındı (müşteriden)":"Beklemeden çıkarıldı"));toast(b?"Beklemede":"Beklemeden çıkarıldı");return}
   if(ds.durum){const {y,ac}=asamaDegis(i,ds.durum);arkada(isYaz(y),log(i,`Aşama ${ac?"işaretlendi":"geri alındı"}: ${ds.durum}`));toast(ac?ds.durum+" ✓":ds.durum+" geri alındı");return}
   if(ds.asama){const s=new Set(i.asamalar||[]),v2=!s.has(ds.asama);v2?s.add(ds.asama):s.delete(ds.asama);
     arkada(isYaz({...i,asamalar:ASAMALAR.filter(a=>s.has(a))}),log(i,`Aşama ${v2?"tamamlandı":"geri alındı"}: ${ds.asama}`));if(v2&&s.size===ASAMALAR.length)toast("Tüm aşamalar tamamlandı");return}
