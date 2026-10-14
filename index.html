@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=25"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=26"></script><base target="_top">
 <style>.tur-sec{display:flex;flex-direction:column;gap:6px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px 10px}
 .tur-bas{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .tur-dugmeler{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
@@ -610,7 +610,7 @@ function gAlinan(){
   const gruplar=[];tum.forEach(o=>{const a=o.tarih.slice(0,7);let g=gruplar.find(x=>x.a===a);if(!g){g={a,l:[],t:0};gruplar.push(g)}g.l.push(o);g.t+=oTL(o)});
   const ayAdi=a=>new Date(a+"-01T00:00").toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
   const satir=o=>`<button type="button" class="odeme alinan" data-ac="${o.i.id}"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span>
-      <span class="o"><b>${para(o.tutar,o.pb)}${o.pb==="USD"&&+o.alinanTL>0?`<span class="ust-tl"> · ${tl(o.alinanTL)}</span>`:""} <span class="kim">${esc(o.i.musteri||"—")}</span></b>${odemeEk(o)}
+      <span class="o"><b>${anaTutar(o)} <span class="kim">${esc(o.i.musteri||"—")}</span></b>${odemeEk(o)}
       <small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</span></button>`;
   return`<section class="kart blok ozet3" style="margin-top:16px">
       <div><span>Toplam tahsilat</span><b data-sayac="topTahsil" data-deger="${topTL}">${tl(topTL)}</b></div><div><span>Bu ay</span><b>${tl(aylar[5].t)}</b></div><div><span>Ödeme sayısı</span><b>${tum.length}</b></div></section>
@@ -712,7 +712,7 @@ function detayCiz(){
         <div><span>Kalan alacak</span><b style="color:var(--yakin)">${usd(k)} × ${nf(KUR.usd,2)} = ${tl(kTL)}</b></div>
         <p>Alınan her ödeme kendi gününün piyasa kuruyla dolara çevrilip sabitlenir. Kalan dolar güncel kurla (${esc(KUR.kaynak||"")}: ${nf(KUR.usd,4)}, ${tarih(KUR.tarih,1)}) TL'ye çevrilir; kur değiştikçe alacağın TL tutarı da değişir.</p>
       </div>`:""}
-      ${(i.odemeler||[]).length?`<div class="alt-baslik">Alınan ödemeler · ${i.odemeler.length}</div><div class="odeme-liste" style="margin-top:4px">${i.odemeler.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${o.pb==="USD"&&+o.alinanTL>0?`<span class="ust-tl"> · ${tl(o.alinanTL)}</span>`:""}${U&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}</b>${odemeEk(o)}<small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</div><button type="button" class="mini-btn" data-oduz="${n}">${ODZ===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`:""}
+      ${(i.odemeler||[]).length?`<div class="alt-baslik">Alınan ödemeler · ${i.odemeler.length}</div><div class="odeme-liste" style="margin-top:4px">${i.odemeler.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${anaTutar(o)}${U&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}</b>${odemeEk(o)}<small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</div><button type="button" class="mini-btn" data-oduz="${n}">${ODZ===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`:""}
       ${ODZ===null&&!odemeAcik?`<button type="button" class="yeni-odeme-btn" data-yeniodeme>+ Yeni ödeme ekle</button>`:`<div class="yeni-odeme ${ODZ!==null?"duzen":""}"><div class="yo-bas"><b>${ODZ!==null?"Ödemeyi düzenle":"Yeni ödeme"}</b>${ODZ===null?`<button type="button" class="yo-kapa" data-yenikapa aria-label="Kapat">✕</button>`:""}</div>
       <form id="odemeForm" class="izgara">
         <div class="tur-sec tam" role="group" aria-label="Ödeme türü"><span class="tur-bas">1 · Ödeme türü</span><div class="tur-dugmeler">${["Kapora","Ara ödeme","Son ödeme"].map(x=>`<button type="button" class="tur" data-tur="o" data-turdeger="${x}" aria-pressed="false">${x}</button>`).join("")}</div></div>
@@ -816,8 +816,10 @@ function turDoldur(p,o){const n=(o.not||"").trim();let tur="",kalanMetin=n;
   for(const t of ODEME_TURLERI){if(n.toLocaleLowerCase("tr").startsWith(t.toLocaleLowerCase("tr"))){tur=t;kalanMetin=n.slice(t.length).replace(/^[\s\-–—:,.·]+/,"");break}}
   $("#"+p+"-not").value=tur;const ek=[kalanMetin,o.ekNot||""].filter(Boolean).join(" · ");$("#"+p+"-ek").value=ek;$("#"+p+"-ek").hidden=!ek;turGoster(p)}
 /* Dolar ödemenin TL karşılığı: elle yazılan "alındı", yoksa o günün kuruyla tahmini */
+/* Ana tutar: elime geçen TL varsa o (TL ödemelerle aynı vurgu), yoksa ödemenin kendisi */
+const anaTutar=o=>o.pb==="USD"&&+o.alinanTL>0?tl(o.alinanTL):para(o.tutar,o.pb);
 function odemeEk(o){if(o.pb!=="USD")return"";const d=(+o.tutar||0)*oKur(o),al=+o.alinanTL||0,f=al-d;
-  return`<span class="kurla">O günün kuruyla <strong>${tl(d)}</strong>${al&&Math.abs(f)>=1?` · <strong class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</strong>`:""}</span>`}
+  return`<span class="kurla">${al?`<strong>${usd(o.tutar)}</strong> · `:""}O günün kuruyla <strong>${tl(d)}</strong>${al&&Math.abs(f)>=1?` · <strong class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</strong>`:""}</span>`}
 /* Dolar ödemede: elime geçen TL ile o günün kuru karşılaştırması */
 function alinanGoster(p,t,pb,kr){const a=$("#"+p+"-alinanAlan");if(!a)return;a.hidden=pb!=="USD";if(pb!=="USD")return;
   const al=sayi($("#"+p+"-alinan").value),deger=t*kr,tr=$("#"+p+"-tarih")?.value,ne=tr===bugun()?"Bugünkü kurla":"O günün kuruyla";
@@ -923,7 +925,7 @@ const fPb=()=>$("#f-pb-1")?.checked?"USD":"TRY";
 function fOdemeCiz(){
   const el=$("#fo-liste");if(!el)return;const g={pb:fPb(),ucret:sayi($("#f-ucret").value),odemeler:FORM.odm};
   $("#fo-ozet").textContent=`Ödenen ${para(odenen(g),g.pb)} · Kalan ${para(kalan(g),g.pb)}`;
-  el.innerHTML=FORM.odm.length?`<div class="odeme-liste" style="margin-top:0">${FORM.odm.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${o.pb==="USD"&&+o.alinanTL>0?`<span class="ust-tl"> · ${tl(o.alinanTL)}</span>`:""}${g.pb==="USD"&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}${o._yeni?` <small style="display:inline;color:var(--para)">· yeni</small>`:""}</b>${odemeEk(o)}<small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</div><button type="button" class="mini-btn" data-fduz="${n}">${FORM.duz===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`
+  el.innerHTML=FORM.odm.length?`<div class="odeme-liste" style="margin-top:0">${FORM.odm.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${anaTutar(o)}${g.pb==="USD"&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}${o._yeni?` <small style="display:inline;color:var(--para)">· yeni</small>`:""}</b>${odemeEk(o)}<small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</div><button type="button" class="mini-btn" data-fduz="${n}">${FORM.duz===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`
     :`<p class="ipucu" style="margin:0 0 4px">Henüz ödeme yok.</p>`;
   fOnizle();
 }
