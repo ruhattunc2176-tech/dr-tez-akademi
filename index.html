@@ -1,6 +1,13 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=20"></script><base target="_top">
-<style>.alindi{display:inline-flex;align-items:center;background:#fff4e0;color:#8a4200;border-radius:10px;padding:3px 10px;font-weight:800;font-size:16px;width:fit-content;margin:3px 0 2px}
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=21"></script><base target="_top">
+<style>.alt-baslik{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:16px}
+.yeni-odeme-btn{width:100%;margin-top:16px;padding:15px;border-radius:16px;border:2px dashed #0fa86f;background:#f0faf5;color:#0b6e4c;font:inherit;font-weight:800;font-size:17px;cursor:pointer}
+.yeni-odeme{margin-top:18px;border-radius:18px;padding:14px;background:#f3f8ff;border:2px solid #cfe0f7}
+.yeni-odeme.duzen{background:#fff7ec;border-color:#f3d2a6}
+.yo-bas{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.yo-bas b{font-size:18px;font-weight:800}
+.yo-kapa{border:0;background:#fff;border-radius:10px;width:36px;height:36px;font-size:16px;font-weight:800;color:var(--muted);cursor:pointer}
+@media (prefers-color-scheme:dark){.yeni-odeme{background:#16233a;border-color:#2a3d5c}.yeni-odeme.duzen{background:#2e2414;border-color:#5c4626}.yeni-odeme-btn{background:#12261d}}
+.alindi{display:inline-flex;align-items:center;background:#fff4e0;color:#8a4200;border-radius:10px;padding:3px 10px;font-weight:800;font-size:16px;width:fit-content;margin:3px 0 2px}
 .alindi.tahmini{background:transparent;padding:0;color:var(--muted);font-weight:700;font-size:15px}
 .eknot{display:inline-block;background:var(--line);border-radius:8px;padding:3px 8px;font-size:13px;font-weight:700;color:var(--ink);margin-top:4px;width:fit-content;max-width:100%;overflow-wrap:anywhere}
 .ek-btn{background:transparent!important;border:2px dashed var(--line)!important;color:var(--muted)!important}
@@ -637,8 +644,8 @@ function logListe(l,adli){
 /* ===== detay ===== */
 function ekranAc(t,h){ekranTur=t;const e=$("#ekran");e.hidden=false;e.innerHTML=h;e.scrollTop=0;document.body.style.overflow="hidden"}
 function ekranKapa(){ekranTur=null;acikId=null;const e=$("#ekran");e.hidden=true;e.innerHTML="";document.body.style.overflow=""}
-let ODZ=null;
-function detayAc(id,mod){acikId=id;ODZ=null;ekranAc("detay","");detayCiz();mod==="yok"?0:mod==="degistir"?navDegistir():navIt()}
+let ODZ=null,odemeAcik=false;
+function detayAc(id,mod){if(acikId!==id)odemeAcik=false;acikId=id;ODZ=null;ekranAc("detay","");detayCiz();mod==="yok"?0:mod==="degistir"?navDegistir():navIt()}
 /* ===== Canlı rakamlar: değer değişince sayaç gibi akar ===== */
 const SAYAC={};
 function sayaclariOynat(){
@@ -696,7 +703,8 @@ function detayCiz(){
         <div><span>Kalan alacak</span><b style="color:var(--yakin)">${usd(k)} × ${nf(KUR.usd,2)} = ${tl(kTL)}</b></div>
         <p>Alınan her ödeme kendi gününün piyasa kuruyla dolara çevrilip sabitlenir. Kalan dolar güncel kurla (${esc(KUR.kaynak||"")}: ${nf(KUR.usd,4)}, ${tarih(KUR.tarih,1)}) TL'ye çevrilir; kur değiştikçe alacağın TL tutarı da değişir.</p>
       </div>`:""}
-      ${(i.odemeler||[]).length?`<div class="odeme-liste">${i.odemeler.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${U&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}</b>${odemeEk(o)}<small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</div><button type="button" class="mini-btn" data-oduz="${n}">${ODZ===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`:""}
+      ${(i.odemeler||[]).length?`<div class="alt-baslik">Alınan ödemeler · ${i.odemeler.length}</div><div class="odeme-liste" style="margin-top:4px">${i.odemeler.map((o,n)=>`<div class="odeme"><span class="ik ${o.pb==="USD"?"usd":""}">${o.pb==="USD"?"$":"₺"}</span><div class="o"><b>${para(o.tutar,o.pb)}${U&&o.pb!=="USD"?` <small style="display:inline">= ${usd(oUSD(o))}</small>`:""}</b>${odemeEk(o)}<small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</div><button type="button" class="mini-btn" data-oduz="${n}">${ODZ===n?"Düzenleniyor":"Düzenle"}</button></div>`).join("")}</div>`:""}
+      ${ODZ===null&&!odemeAcik?`<button type="button" class="yeni-odeme-btn" data-yeniodeme>+ Yeni ödeme ekle</button>`:`<div class="yeni-odeme ${ODZ!==null?"duzen":""}"><div class="yo-bas"><b>${ODZ!==null?"Ödemeyi düzenle":"Yeni ödeme"}</b>${ODZ===null?`<button type="button" class="yo-kapa" data-yenikapa aria-label="Kapat">✕</button>`:""}</div>
       <form id="odemeForm" class="izgara">
         <div class="secim tam" role="group" aria-label="Ödeme para birimi">
           <label><input type="radio" id="o-pb-try" name="pb" value="TRY" checked><span>₺ TL aldım</span></label>
@@ -712,7 +720,7 @@ function detayCiz(){
         <input id="o-ek" class="tam" placeholder="Ek not (ör. havale ile geldi)" aria-label="Ek not" hidden>
         <button class="btn para tam" type="submit">${ODZ!==null?"Değişikliği kaydet":"Ödeme ekle"}</button>
         ${ODZ!==null?`<div class="eylem tam"><button type="button" class="btn" data-oduzvaz>Vazgeç</button><button type="button" class="btn sil" data-odsil="${ODZ}">Bu ödemeyi sil</button></div>`:""}
-      </form>
+      </form></div>`}
     </section>
 
     <section class="kart blok"><h3>Tez aşamaları <small>${d.size}/${ASAMALAR.length}</small></h3>
@@ -954,6 +962,8 @@ document.addEventListener("click",async e=>{
     FORM.duzeltilen=FORM.duzeltilen.filter(([,y])=>y!==x);fGirisTemizle();fOdemeCiz();toast("Kaldırıldı · Kaydet'e bas");return}
   if(ds.fnot){$("#fo-not").value=ds.fnot;$("#fo-tutar").focus();return}
   if(ds.onot){$("#o-not").value=ds.onot;$("#o-tutar").focus();return}
+  if(ds.yeniodeme!==undefined){odemeAcik=true;detayCiz();setTimeout(()=>{$("#odemeForm")?.scrollIntoView({behavior:"smooth",block:"start"});$("#o-tutar")?.focus()},30);kurTarihten();return}
+  if(ds.yenikapa!==undefined){odemeAcik=false;detayCiz();return}
   if(ds.eknot){const e=$("#"+ds.eknot+"-ek");if(e){e.hidden=false;e.focus()}return}
   if(ds.kopya){try{await navigator.clipboard.writeText(ds.kopya);toast("Kopyalandı")}catch(_){toast(ds.kopya)}return}
   const i=isler.find(x=>x.id===acikId);if(!i)return;
@@ -965,9 +975,9 @@ document.addEventListener("click",async e=>{
   if(ds.oduz!==undefined){const n=+ds.oduz,o=i.odemeler[n];if(!o)return;ODZ=n;detayCiz();
     $("#o-pb-"+(o.pb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(o.tutar);tarihYaz("o-tarih",o.tarih);$("#o-kur").value=oKur(o);$("#o-not").value=o.not||"";$("#o-alinan").value=o.alinanTL?fmtGiris(o.alinanTL):"";$("#o-ek").value=o.ekNot||"";$("#o-ek").hidden=!o.ekNot;
     $("#kurNot").textContent="Bu ödemede kaydedilen kur. Tarihi değiştirirsen o günün kuru gelir.";onizle();$("#odemeForm").scrollIntoView({behavior:"smooth",block:"center"});return}
-  if(ds.oduzvaz!==undefined){ODZ=null;detayCiz();$("#odemeForm").reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();return}
+  if(ds.oduzvaz!==undefined){ODZ=null;odemeAcik=false;kurElle.o=false;HIZLI=null;detayCiz();return}
   if(ds.odsil!==undefined){if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";setTimeout(()=>{if(t.isConnected){t.classList.remove("emin");t.textContent="Bu ödemeyi sil"}},4000);return}
-    ODZ=null;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);arkada(isYaz({...i,odemeler:o}),log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`));toast("Ödeme silindi");return}
+    ODZ=null;odemeAcik=false;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);arkada(isYaz({...i,odemeler:o}),log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`));toast("Ödeme silindi");return}
   if(ds.issil!==undefined){
     if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Silmek için tekrar dokun";setTimeout(()=>{t.classList.remove("emin");t.textContent="Bu işi sil"},4000);return}
     arkada(log(i,"İş silindi"),isSil(i.id));navGeri(ekranKapa);toast("İş silindi")}
@@ -993,7 +1003,7 @@ document.addEventListener("submit",async e=>{
     if(!o.tutar)return;const arr=[...(i.odemeler||[])],dz=ODZ,eski=dz!==null?arr[dz]:null;
     if(dz!==null)arr[dz]=o;else arr.push(o);
     const od=arr.sort((a,b)=>a.tarih.localeCompare(b.tarih));
-    ODZ=null;kurElle.o=false;HIZLI=null;e.target.reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();
+    ODZ=null;odemeAcik=false;kurElle.o=false;HIZLI=null;e.target.reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();
     const n={...i,odemeler:od};const p1=isYaz(n);
     if(eski){arkada(p1,log(i,`Ödeme düzeltildi: ${para(eski.tutar,eski.pb)} (${tarih(eski.tarih,1)}) → ${para(o.tutar,o.pb)} (${tarih(o.tarih,1)})${i.pb==="USD"&&o.pb!=="USD"?` · kur ${nf(o.kur,4)} = ${usd(oUSD(o))}`:""}`));toast("Ödeme güncellendi")}
     else{arkada(p1,log(i,odemeLogMetni(i,o)));kutla(para(o.tutar,o.pb)+(o.alinanTL?" · "+tl(o.alinanTL):""),esc(i.musteri||"")+(kalan(n)<=0.01?" · borç kapandı":" · kalan "+para(kalan(n),n.pb)))}
