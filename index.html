@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=16"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=17"></script><base target="_top">
 <style>.kutu b{text-align:left;line-height:1.25}
 .sekmeler{display:flex;gap:6px;background:var(--card);border-radius:16px;padding:5px;margin-top:16px;box-shadow:var(--shadow)}
 .sekmeler button{flex:1;border:0;background:transparent;font:inherit;font-weight:800;font-size:16px;padding:11px 8px;border-radius:12px;color:var(--muted);cursor:pointer}
@@ -619,9 +619,21 @@ function logListe(l,adli){
 function ekranAc(t,h){ekranTur=t;const e=$("#ekran");e.hidden=false;e.innerHTML=h;e.scrollTop=0;document.body.style.overflow="hidden"}
 function ekranKapa(){ekranTur=null;acikId=null;const e=$("#ekran");e.hidden=true;e.innerHTML="";document.body.style.overflow=""}
 let ODZ=null;
-function detayAc(id){acikId=id;ODZ=null;ekranAc("detay","");detayCiz()}
+function detayAc(id,mod){acikId=id;ODZ=null;ekranAc("detay","");detayCiz();mod==="yok"?0:mod==="degistir"?navDegistir():navIt()}
+/* ===== Telefonun geri tuşu: her ekran geçişi tarayıcı geçmişine yazılır ===== */
+let gecmisDerin=0,popIsleniyor=false;
+function navDurum(){return{v,os:odemeSekme,e:ekranTur,id:acikId,d:gecmisDerin}}
+function navIt(){if(popIsleniyor)return;try{gecmisDerin++;history.pushState(navDurum(),"")}catch(_){}}
+function navDegistir(){if(popIsleniyor)return;try{history.replaceState(navDurum(),"")}catch(_){}}
+function navGeri(yedek){if(gecmisDerin>0){try{history.back();return}catch(_){}}yedek();navDegistir()}
+window.addEventListener("popstate",e=>{const s=e.state||{v:"isler",d:0};popIsleniyor=true;
+  try{gecmisDerin=s.d||0;v=s.v||"isler";odemeSekme=s.os||"alinan";secGun=null;kurDuzen=false;
+    const var_=s.id&&isler.some(x=>x.id===s.id);
+    if((s.e==="detay"||s.e==="form")&&var_){if(!(ekranTur==="detay"&&acikId===s.id))detayAc(s.id,"yok")}
+    else if(ekranTur)ekranKapa();
+    ciz()}finally{popIsleniyor=false}});
 function detayCiz(){
-  const i=isler.find(x=>x.id===acikId);if(!i){ekranKapa();return}
+  const i=isler.find(x=>x.id===acikId);if(!i){ekranKapa();navDegistir();return}
   const e=$("#ekran"),st=e.scrollTop,deger={};e.querySelectorAll("input[id],textarea[id]").forEach(x=>{deger[x.id]=x.type==="radio"?x.checked:x.value});
   const s=sureMetni(i),f=fark(i.teslim),d=new Set(i.asamalar||[]),wa=telNorm(i.iletisim),k=kalan(i),U=i.pb==="USD";
   const kTL=U?k*KUR.usd:k;
@@ -750,7 +762,7 @@ function onizle(){
 }
 
 /* ===== form ===== */
-function formAc(eski){
+function formAc(eski){setTimeout(navIt,0);
   const yeni=!eski,i=eski?{...eski}:{id:yeniId("t"),durum:"Devam ediyor",tur:"Yüksek lisans",pb:"TRY",baslangic:bugun(),odemeler:[],asamalar:[]};
   const radyo=(ad,liste,sec,stil,etiket)=>`<div class="secim">${liste.map((x,n)=>`<label ${stil?`style="${stil(x)}"`:""}><input type="radio" id="f-${ad}-${n}" name="${ad}" value="${x}" ${x===sec?"checked":""}><span>${etiket?etiket(x):x}</span></label>`).join("")}</div>`;
   ekranAc("form",`
@@ -820,7 +832,7 @@ function formAc(eski){
     for(const o of silinen)islem.push(log(n,`Ödeme kaydı silindi: ${para(o.tutar,o.pb)} (${tarih(o.tarih)})`));
     const sonHal=new Map();for(const [e1,y] of duzeltilen)sonHal.set(JSON.stringify(e1),[e1,y]);
     for(const [e1,y] of sonHal.values())islem.push(log(n,`Ödeme düzeltildi: ${para(e1.tutar,e1.pb)} (${tarih(e1.tarih,1)}) → ${para(y.tutar,y.pb)} (${tarih(y.tarih,1)})`));
-    toast(yeni?"İş eklendi":"Kaydedildi");detayAc(n.id);
+    toast(yeni?"İş eklendi":"Kaydedildi");if(yeni)detayAc(n.id,"degistir");else navGeri(()=>detayAc(n.id,"degistir"));
     Promise.all(islem).catch(()=>hata());
   };
   setTimeout(()=>$(yeni?"#f-musteri":"#f-konu")?.focus(),50);
@@ -866,8 +878,8 @@ function ucretOn(){const el=$("#ucretTL");if(!el)return;const u=$("#f-pb-1")?.ch
 /* ===== olaylar ===== */
 document.addEventListener("click",async e=>{
   const t=e.target.closest("button,[data-ac],a");if(!t)return;const ds=t.dataset;
-  if(ds.v){v=ds.v;secGun=null;kurDuzen=false;ciz();window.scrollTo(0,0);return}
-  if(ds.osekme){odemeSekme=ds.osekme;ciz();return}
+  if(ds.v){if(ds.v===v)return;v=ds.v;secGun=null;kurDuzen=false;ciz();window.scrollTo(0,0);navIt();return}
+  if(ds.osekme){odemeSekme=ds.osekme;ciz();navDegistir();return}
   if(ds.kur!==undefined){kurDuzen=!kurDuzen;ciz();if(kurDuzen)$("#kur-deger")?.focus();return}
   if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
   if(ds.f){filtre=ds.f;uiSakla();ciz();return}
@@ -875,11 +887,11 @@ document.addEventListener("click",async e=>{
   if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
   if(ds.logsil){arkada(logSil(ds.logsil));toast("Not silindi");return}
   if(t.id==="ekleBtn"){formAc();return}
-  if(ds.git){if(ds.git==="yeni"){formAc();return}if(ds.git==="takvim"||ds.git==="gecmis"){v=ds.git;secGun=null;ciz();window.scrollTo(0,0);return}
-    if(ds.git==="alinan"||ds.git==="bekleyen"){v="odemeler";odemeSekme=ds.git;secGun=null;ciz();window.scrollTo(0,0);return}
+  if(ds.git){if(ds.git==="yeni"){formAc();return}if(ds.git==="takvim"||ds.git==="gecmis"){v=ds.git;secGun=null;ciz();window.scrollTo(0,0);navIt();return}
+    if(ds.git==="alinan"||ds.git==="bekleyen"){v="odemeler";odemeSekme=ds.git;secGun=null;ciz();window.scrollTo(0,0);navIt();return}
   if(ds.git==="odeme"){const ak=isler.filter(aktif);if(ak.length===1){detayAc(ak[0].id);setTimeout(()=>{$("#odemeForm")?.scrollIntoView({behavior:"smooth",block:"center"});$("#o-tutar")?.focus()},50)}else{filtre="Aktif";ciz();toast(ak.length?"Ödeme alacağın işe dokun":"Önce bir iş ekle")}return}}
-  if(ds.geri!==undefined){ekranKapa();return}
-  if(ds.vazgec!==undefined){acikId?detayAc(acikId):ekranKapa();return}
+  if(ds.geri!==undefined){navGeri(ekranKapa);return}
+  if(ds.vazgec!==undefined){navGeri(()=>acikId?detayAc(acikId,"yok"):ekranKapa());return}
   if(ds.sure){const b=$("#f-bas").value||bugun(),d=new Date(b+"T00:00");d.setDate(d.getDate()+ +ds.sure);tarihYaz("f-teslim",iso(d));return}
   if(ds.fekle!==undefined){fOdemeEkle();return}
   if(ds.fduz!==undefined){fOdemeDuzenle(+ds.fduz);return}
@@ -905,7 +917,7 @@ document.addEventListener("click",async e=>{
     ODZ=null;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);arkada(isYaz({...i,odemeler:o}),log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`));toast("Ödeme silindi");return}
   if(ds.issil!==undefined){
     if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Silmek için tekrar dokun";setTimeout(()=>{t.classList.remove("emin");t.textContent="Bu işi sil"},4000);return}
-    arkada(log(i,"İş silindi"),isSil(i.id));ekranKapa();toast("İş silindi")}
+    arkada(log(i,"İş silindi"),isSil(i.id));navGeri(ekranKapa);toast("İş silindi")}
 });
 document.addEventListener("input",e=>{
   if(e.target.id==="ara"){q=e.target.value;ciz()}
@@ -955,6 +967,7 @@ function yenile(zorla){
   }).catch(e=>{$("#depo").textContent="Sunucuya ulaşılamadı"+(API?" (…"+API.slice(-14,-5)+")":"")+": "+(e&&e.message||e)});
 }
 document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim().toLocaleLowerCase("tr").replace(/ı/g,"i");if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
+try{history.replaceState(navDurum(),"")}catch(_){}
 if(!sifreAl())sifreEkrani(false);else yenile();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
 setInterval(async()=>{if(document.visibilityState!=="visible"||!sifreAl())return;try{const b=await sr("canliKur");if(b&&b.usd&&!(KUR.kaynak==="Elle girildi"&&KUR.tarih===bugun())){KUR={usd:b.usd,tarih:bugun(),kaynak:b.kaynak,zaman:new Date().toISOString()};if(ekranTur!=="form"&&!kullaniciYaziyor())ciz()}}catch(_){}},300000);
