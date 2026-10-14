@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=44"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=45"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -282,6 +282,11 @@ textarea{resize:vertical;min-height:84px}
 .satir-is .ch .bk{background:#fff1cc;color:#8a5a00}
 .su-durum{background:#fff;color:var(--cb);border-radius:999px;padding:7px 12px;font-size:.82rem;font-weight:800}
 .durum-sec button[data-bekle][aria-pressed="true"]{background:#ffd75e;color:#5a3c00}
+.kilit{opacity:.45;filter:grayscale(.6)}
+.kilit-btn{opacity:.4}
+.kilit-bant{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:#fff1cc;color:#5a3c00;border:2px solid #ffd75e;border-radius:18px;padding:14px 16px;margin-top:14px}
+.kilit-bant b{font-weight:800;width:100%}.kilit-bant span{flex:1;min-width:160px;font-weight:600;font-size:.92rem}
+.kilit-bant button{border:0;background:#b37400;color:#fff;border-radius:12px;padding:9px 14px;font:inherit;font-weight:800;cursor:pointer}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -414,6 +419,7 @@ const DURUMLAR=Object.keys(DURUM);
 const durumlar=i=>DURUMLAR.filter(d=>d!==ADAY&&(d!==MAKALE_ASAMA||i.makale));
 const ESKI_DURUM={"Devam ediyor":"Teze başlandı","Görüşme":ADAY};
 function durumAta(i,yeni){const g=[...(i.gecmis||[])];if(!g.length&&i.durum)g.push({d:i.durum,t:(i.baslangic||bugun())+"T00:00:00"});g.push({d:yeni,t:new Date().toISOString()});return{...i,durum:yeni,gecmis:g}}
+const kilitUyari=()=>toast("İş beklemede · önce beklemeden çıkar");
 function asamaT(i){if(i.asamaT)return i.asamaT;const L=DURUMLAR,ci=L.indexOf(ESKI_DURUM[i.durum]||i.durum),o={};if(ci<1)return o;
   const son=d=>[...(i.gecmis||[])].reverse().find(e=>e.d===d);
   L.forEach((d,n)=>{if(n>ci||(d==="İptal"&&n!==ci))return;const e=son(d);if(e)o[d]=e.t});
@@ -744,7 +750,7 @@ function detayCiz(){
   const s=sureMetni(i),f=fark(i.teslim),d=new Set(i.asamalar||[]),wa=telNorm(i.iletisim),k=kalan(i),U=i.pb==="USD";
   const kTL=U?k*KUR.usd:k;
   e.innerHTML=`
-  <div class="ekran-ust"><button type="button" data-geri>‹ Geri</button><span class="ort">${esc(i.musteri)}</span><button type="button" data-duzen>Düzenle</button></div>
+  <div class="ekran-ust"><button type="button" data-geri>‹ Geri</button><span class="ort">${esc(i.musteri)}</span><button type="button" data-duzen ${i.beklemede?`class="kilit-btn"`:""}>Düzenle</button></div>
   <div class="ic" style="${renk(i.durum)}">
     <section class="kart kahraman">
       <span class="tur">${esc(i.tur||"")}${U?" · Dolar":""}${i.makale?" · Makale":""}</span>
@@ -753,14 +759,15 @@ function detayCiz(){
       <div class="durum-sec"><span class="su-durum">${esc(i.durum)}</span><button type="button" data-bekle aria-pressed="${!!i.beklemede}">${i.beklemede?"Beklemede (müşteriden) ✓":"Beklemeye al"}</button></div>
     </section>
 
-    <section class="kart blok"><h3>Aşamalar <small>dokun: işaretle / geri al</small></h3>
+    ${i.beklemede?`<div class="kilit-bant"><b>İş beklemede (müşteriden)</b><span>Aşama, ödeme ve düzenleme kilitli.</span><button type="button" data-bekle>Beklemeden çıkar</button></div>`:""}
+    <section class="kart blok ${i.beklemede?"kilit":""}"><h3>Aşamalar <small>dokun: işaretle / geri al</small></h3>
       ${i.durum===ADAY?`<p class="ipucu" style="margin:0 0 12px">Muhtemel müşteri. İşe başlayınca “Teze başlandı”ya dokun; iş aktif olur ve toplamlara girer.</p>`:""}
       <div class="zc">${(()=>{const A=asamaT(i);
         return durumlar(i).map(d=>{const t=A[d],su=d===i.durum;
           return`<button type="button" class="zc-s ${t?"ok":""} ${su?"su":""} ${d==="İptal"?"ip":""}" data-durum="${d}" aria-pressed="${!!t}" style="${renk(d)}"><span class="nk">${t?"✓":""}</span><span class="m"><b>${d}</b>${t?`<small>${tarih(t.slice(0,10))}${/T00:00:00$/.test(t)?"":" · "+saat(t)}</small>`:""}</span></button>`}).join("")})()}</div>
     </section>
 
-    <section class="kart blok"><h3>Ödemeler <small>${(i.odemeler||[]).length} ödeme</small></h3>
+    <section class="kart blok ${i.beklemede?"kilit":""}"><h3>Ödemeler <small>${(i.odemeler||[]).length} ödeme</small></h3>
       <div class="para-ust"><div class="halka" style="--p:${yuzde(i)}"><span>%${yuzde(i)}</span></div>
         <dl><dt>Ücret</dt><dd>${para(i.ucret,i.pb)}</dd>
         <dt>Ödenen</dt><dd style="color:var(--para)">${para(odenen(i),i.pb)}${U&&odenenTL(i)?`<small>${tl(odenenTL(i))} alındı</small>`:""}</dd>
@@ -1040,12 +1047,14 @@ document.addEventListener("click",async e=>{
     FORM.duzeltilen=FORM.duzeltilen.filter(([,y])=>y!==x);fGirisTemizle();fOdemeCiz();toast("Kaldırıldı · Kaydet'e bas");return}
   if(ds.fnot){$("#fo-not").value=ds.fnot;$("#fo-tutar").focus();return}
   if(ds.onot){$("#o-not").value=ds.onot;$("#o-tutar").focus();return}
+  if(ds.yeniodeme!==undefined&&isler.find(x=>x.id===acikId)?.beklemede){kilitUyari();return}
   if(ds.yeniodeme!==undefined){odemeAcik=true;detayCiz();setTimeout(()=>{$("#odemeForm")?.scrollIntoView({behavior:"smooth",block:"start"});$("#o-tutar")?.focus()},30);kurTarihten();return}
   if(ds.yenikapa!==undefined){odemeAcik=false;detayCiz();return}
   if(ds.tur){const h=$("#"+ds.tur+"-not");if(h){h.value=ds.turdeger;turGoster(ds.tur);t.closest(".tur-sec")?.classList.remove("eksik");setTimeout(()=>$("#"+ds.tur+"-tutar")?.focus(),30)}return}
   if(ds.eknot){const e=$("#"+ds.eknot+"-ek");if(e){e.hidden=false;e.focus()}return}
   if(ds.kopya){try{await navigator.clipboard.writeText(ds.kopya);toast("Kopyalandı")}catch(_){toast(ds.kopya)}return}
   const i=isler.find(x=>x.id===acikId);if(!i)return;
+  if(i.beklemede&&(ds.duzen!==undefined||ds.durum||ds.oduz!==undefined||ds.odsil!==undefined||ds.hizli)){kilitUyari();return}
   if(ds.duzen!==undefined){formAc(i);return}
   if(ds.hizli){HIZLI={oran:ds.horan,deger:+ds.hizli};$("#o-pb-"+(ds.hpb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(+ds.hizli);$("#o-tutar").focus();onizle();return}
   if(ds.bekle!==undefined){const b=!i.beklemede;arkada(isYaz({...i,beklemede:b}),log(i,b?"Beklemeye alındı (müşteriden)":"Beklemeden çıkarıldı"));toast(b?"Beklemede":"Beklemeden çıkarıldı");return}
@@ -1078,7 +1087,7 @@ document.addEventListener("submit",async e=>{
   if(e.target.id==="kurForm"){e.preventDefault();const u=kurSayi(new FormData(e.target).get("usd"));if(!u)return;const eski=KUR.usd;kurDuzen=false;
     arkada(kurYaz({usd:u,tarih:bugun(),kaynak:"Elle girildi",zaman:new Date().toISOString()}),log(null,`Kur güncellendi: ${nf(eski,4)} → ${nf(u,4)} ₺`));toast("Kur kaydedildi");return}
   const i=isler.find(x=>x.id===acikId);if(!i)return;
-  if(e.target.id==="odemeForm"){e.preventDefault();if(!turVarMi("o"))return;const f=new FormData(e.target);
+  if(e.target.id==="odemeForm"){e.preventDefault();if(isler.find(x=>x.id===acikId)?.beklemede){kilitUyari();return}if(!turVarMi("o"))return;const f=new FormData(e.target);
     const o={tarih:f.get("tarih"),tutar:sayi(f.get("tutar")),pb:f.get("pb")||"TRY",kur:kurSayi(f.get("kur"))||KUR.usd,not:(f.get("not")||"").trim()};{const al=sayi($("#o-alinan")?.value),ek=($("#o-ek")?.value||"").trim();if(o.pb==="USD"&&al>0)o.alinanTL=al;if(ek)o.ekNot=ek}
     if(!o.tutar)return;const arr=[...(i.odemeler||[])],dz=ODZ,eski=dz!==null?arr[dz]:null;
     if(dz!==null)arr[dz]=o;else arr.push(o);
