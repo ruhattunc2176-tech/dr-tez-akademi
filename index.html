@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=40"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=41"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -302,6 +302,7 @@ textarea{resize:vertical;min-height:84px}
 .odeme .o b{display:block;font-family:var(--f-head);font-weight:800;font-size:1.12em;letter-spacing:-.01em}.odeme .o b .kim{font-weight:600;font-size:.85em;letter-spacing:0}
 .odeme .o small{color:var(--muted);font-weight:600}
 .x{border:0;background:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:8px;font-size:1.2rem;line-height:1}
+.tutar-yan{display:flex;flex-direction:column;justify-content:center;line-height:1.2;min-width:0}.tutar-yan b{font-size:20px;font-weight:800;color:var(--ink);white-space:nowrap}.tutar-yan small{font-size:13px;font-weight:700;color:var(--muted)}
 .izgara{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
 .tam{grid-column:1/-1}
 .tsec{display:flex;gap:6px}
@@ -737,6 +738,7 @@ function detayCiz(){
           <label><input type="radio" id="o-pb-try" name="pb" value="TRY" checked><span>₺ TL aldım</span></label>
           <label><input type="radio" id="o-pb-usd" name="pb" value="USD"><span>$ Dolar aldım</span></label></div>
         <input id="o-tutar" name="tutar" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Tutar" required>
+        <div class="tutar-yan" id="o-yan"></div>
         <div class="tam">${tarihSec("o-tarih","tarih",bugun(),true)}</div>
         <label class="tam" id="kurAlan" ${U?"":"hidden"}>O günün kuru (1 $ kaç ₺)<input id="o-kur" name="kur" type="text" inputmode="decimal" autocomplete="off" value="${kurBul(bugun())?.v||KUR.usd}"><small class="ipucu" id="kurNot">${kurNotu(bugun())}</small></label>
         <label class="tam" id="o-alinanAlan" hidden>Elime geçen TL (isteğe bağlı)<input id="o-alinan" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Örn. 47.000"><small class="ipucu" id="o-alinanNot"></small></label>
@@ -838,11 +840,12 @@ const anaTutar=o=>o.pb==="USD"&&+o.alinanTL>0?`${usd(o.tutar)} · ${tl(o.alinanT
 function odemeEk(o){if(o.pb!=="USD")return"";const d=(+o.tutar||0)*oKur(o),al=+o.alinanTL||0,f=al-d;
   return`<span class="kurla">O günün kuruyla <strong>${tl(d)}</strong>${al&&Math.abs(f)>=1?` · <strong class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</strong>`:""}</span>`}
 /* Dolar ödemede: elime geçen TL ile o günün kuru karşılaştırması */
-function alinanGoster(p,t,pb,kr){const a=$("#"+p+"-alinanAlan");if(!a)return;a.hidden=pb!=="USD";if(pb!=="USD")return;
-  const al=sayi($("#"+p+"-alinan").value),deger=t*kr,tr=$("#"+p+"-tarih")?.value,ne=tr===bugun()?"Bugünkü kurla":"O günün kuruyla";
+function alinanGoster(p,t,pb,kr){const a=$("#"+p+"-alinanAlan");if(!a)return;a.hidden=pb!=="USD";const y=$("#"+p+"-yan");if(y)y.innerHTML="";if(pb!=="USD")return;
+  const al=sayi($("#"+p+"-alinan").value),deger=t*kr,tr=$("#"+p+"-tarih")?.value,ne=tr===bugun()?"bugünkü kurla":"o günün kuruyla";
   const n=$("#"+p+"-alinanNot");if(!t){n.textContent="";return}
-  if(!al){n.innerHTML=`${ne} ${usd(t)} = <b>${tl(deger)}</b> ediyor`;return}
-  const f=al-deger;n.innerHTML=`${ne} ${usd(t)} = <b>${tl(deger)}</b> ediyordu`+(Math.abs(f)<1?" · tam":` · <b class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</b> aldın`)}
+  if(y)y.innerHTML=`<b>= ${tl(deger)}</b><small>${ne}</small>`;
+  if(!al){n.textContent="";return}
+  const f=al-deger;n.innerHTML=(Math.abs(f)<1?"Tam o kurdan":`${tl(deger)} ediyordu`)+(Math.abs(f)<1?"":` · <b class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</b> aldın`)}
 function onizle(){
   const el=$("#onizle");if(!el)return;const i=isler.find(x=>x.id===acikId);if(!i)return;
   const t=sayi($("#o-tutar").value),pb=$("#o-pb-usd").checked?"USD":"TRY",kr=kurSayi($("#o-kur").value)||KUR.usd;
@@ -889,6 +892,7 @@ function formAc(eski){setTimeout(navIt,0);
           <label><input type="radio" id="fo-pb-try" name="fo_pb" value="TRY" checked><span>₺ TL aldım</span></label>
           <label><input type="radio" id="fo-pb-usd" name="fo_pb" value="USD"><span>$ Dolar aldım</span></label></div>
         <input id="fo-tutar" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Tutar" aria-label="Ödeme tutarı">
+        <div class="tutar-yan" id="fo-yan"></div>
         <div class="tam">${tarihSec("fo-tarih","",bugun(),true)}</div>
         <label class="tam" id="fo-kurAlan" hidden>O günün kuru (1 $ kaç ₺)<input id="fo-kur" type="text" inputmode="decimal" autocomplete="off" value="${kurBul(bugun())?.v||KUR.usd}"><small class="ipucu" id="fo-kurNot">${kurNotu(bugun())}</small></label>
         <label class="tam" id="fo-alinanAlan" hidden>Elime geçen TL (isteğe bağlı)<input id="fo-alinan" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Örn. 47.000"><small class="ipucu" id="fo-alinanNot"></small></label>
