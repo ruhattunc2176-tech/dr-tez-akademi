@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=11"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=12"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -603,7 +603,7 @@ function detayCiz(){
         <div class="tam">${tarihSec("o-tarih","tarih",bugun(),true)}</div>
         <label class="tam" id="kurAlan" ${U?"":"hidden"}>O günün kuru (1 $ kaç ₺)<input id="o-kur" name="kur" type="number" inputmode="decimal" step="0.0001" min="1" value="${kurBul(bugun())?.v||KUR.usd}" required><small class="ipucu" id="kurNot">${kurNotu(bugun())}</small></label>
         <div class="onizle tam" id="onizle" hidden></div>
-        ${k?`<div class="hizli tam"><button type="button" class="mini-btn" data-hizli="${Math.round(kTL)}">Kalanın tamamı · ${tl(kTL)}</button>${kTL>1?`<button type="button" class="mini-btn" data-hizli="${Math.round(kTL/2)}">Yarısı · ${tl(kTL/2)}</button>`:""}</div>`:""}
+        <div class="hizli tam" id="hizliAlan"></div>
         <div class="hizli tam">${["Kapora","Ara ödeme","Son ödeme"].map(x=>`<button type="button" class="mini-btn" data-onot="${x}">${x}</button>`).join("")}</div>
         <input id="o-not" name="not" class="tam" placeholder="Açıklama: kapora, ara ödeme, EFT…">
         <button class="btn para tam" type="submit">${ODZ!==null?"Değişikliği kaydet":"Ödeme ekle"}</button>
@@ -666,9 +666,25 @@ function tazeKurDoldur(on){
 document.addEventListener("focusin",e=>{const id=e.target&&e.target.id;
   if(id==="o-tutar"&&$("#o-tarih")?.value===bugun())tazeKurDoldur("o");
   if(id==="fo-tutar"&&$("#fo-tarih")?.value===bugun())tazeKurDoldur("fo")});
+/* Hızlı tutar düğmeleri: kalan borcu, formdaki kurla ve seçili para biriminde gösterir.
+   Bir ödeme düzenleniyorsa o ödeme hariç kalan hesaplanır (düzenlenen ödeme onun yerine geçeceği için). */
+function hizliCiz(i,pb,kr){
+  const hz=$("#hizliAlan");if(!hz)return;
+  const baz=ODZ!==null?{...i,odemeler:(i.odemeler||[]).filter((_,n)=>n!==ODZ)}:i;
+  const kk=kalan(baz);if(!(kk>0.009)){hz.hidden=true;hz.innerHTML="";return}
+  const U=i.pb==="USD";
+  const tut=pb==="USD"?(U?kk:kk/kr):(U?kk*kr:kk);
+  const yaz=v=>pb==="USD"?usd(v):tl(v);
+  const ek=U&&pb!=="USD"?` (${usd(kk)} × ${nf(kr,2)})`:!U&&pb==="USD"?` (${tl(kk)} ÷ ${nf(kr,2)})`:"";
+  const yuv=v=>pb==="USD"?Math.round(v*100)/100:Math.round(v);
+  hz.hidden=false;
+  hz.innerHTML=`<small class="ipucu" style="flex-basis:100%;margin:0">${ODZ!==null?"Bu ödeme hariç kalan borç":"Kalan borç"}${ek}:</small>`+
+    `<button type="button" class="mini-btn" data-hizli="${yuv(tut)}" data-hpb="${pb}">Tamamı · ${yaz(tut)}</button>`+
+    (tut>1?`<button type="button" class="mini-btn" data-hizli="${yuv(tut/2)}" data-hpb="${pb}">Yarısı · ${yaz(tut/2)}</button>`:"")}
 function onizle(){
   const el=$("#onizle");if(!el)return;const i=isler.find(x=>x.id===acikId);if(!i)return;
   const t=sayi($("#o-tutar").value),pb=$("#o-pb-usd").checked?"USD":"TRY",kr=+$("#o-kur").value||KUR.usd;
+  hizliCiz(i,pb,kr);
   $("#kurAlan").hidden=!(i.pb==="USD"||pb==="USD");
   if(!t||(i.pb!=="USD"&&pb!=="USD")){el.hidden=true;return}
   el.hidden=false;el.textContent=i.pb==="USD"
@@ -818,7 +834,7 @@ document.addEventListener("click",async e=>{
   if(ds.kopya){try{await navigator.clipboard.writeText(ds.kopya);toast("Kopyalandı")}catch(_){toast(ds.kopya)}return}
   const i=isler.find(x=>x.id===acikId);if(!i)return;
   if(ds.duzen!==undefined){formAc(i);return}
-  if(ds.hizli){$("#o-pb-try").checked=true;$("#o-tutar").value=fmtGiris(+ds.hizli);$("#o-tutar").focus();onizle();return}
+  if(ds.hizli){$("#o-pb-"+(ds.hpb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(+ds.hizli);$("#o-tutar").focus();onizle();return}
   if(ds.durum&&ds.durum!==i.durum){arkada(isYaz({...i,durum:ds.durum}),log(i,`Durum: ${i.durum} → ${ds.durum}`));toast(ds.durum);return}
   if(ds.asama){const s=new Set(i.asamalar||[]),v2=!s.has(ds.asama);v2?s.add(ds.asama):s.delete(ds.asama);
     arkada(isYaz({...i,asamalar:ASAMALAR.filter(a=>s.has(a))}),log(i,`Aşama ${v2?"tamamlandı":"geri alındı"}: ${ds.asama}`));if(v2&&s.size===ASAMALAR.length)toast("Tüm aşamalar tamamlandı");return}
