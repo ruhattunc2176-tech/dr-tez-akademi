@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=6"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=7"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -839,6 +839,7 @@ function yenile(){
   if(!sifreAl())return Promise.resolve();
   return sr("hepsi").then(d=>{
     if(bekleyen>0)return;
+    if(d.surum)SON_SURUM=d.surum;
     isler=d.isler||[];loglar=d.loglar||[];KURLAR=d.kurlar||{};
     if(d.kur&&d.kur.usd){KUR=d.kur;try{localStorage.setItem("tez-defteri-kur",JSON.stringify(KUR))}catch(_){}}
     lsYaz();if(ekranTur!=="form")ciz();
@@ -847,7 +848,14 @@ function yenile(){
 }
 document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim().toLocaleLowerCase("tr").replace(/ı/g,"i");if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
 if(!sifreAl())sifreEkrani(false);else yenile();
-setInterval(()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()},30000);
+setInterval(()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()},60000);
+let SON_SURUM=null,kontrolde=false;
+async function degisiklikVarMi(){
+  if(kontrolde||document.visibilityState!=="visible"||ekranTur==="form"||bekleyen>0||(API&&!sifreAl())||!sifreAl())return;
+  kontrolde=true;
+  try{const v=await sr("surum");if(SON_SURUM!==null&&v!==SON_SURUM)await yenile();else if(SON_SURUM===null)SON_SURUM=v}catch(_){}
+  finally{kontrolde=false}}
+setInterval(degisiklikVarMi,5000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&ekranTur!=="form")yenile()});
 </script>
 
