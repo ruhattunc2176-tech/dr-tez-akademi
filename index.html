@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=10"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=11"></script><base target="_top">
 <style>#kilit{position:fixed;inset:0;z-index:100;background:#f2f5f3;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .kilit-kart{background:#fff;border-radius:26px;padding:28px 24px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 40px rgba(11,110,76,.12);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#15201b}
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
@@ -421,6 +421,8 @@ function gasCagir(fn,a){const s=sifreAl();if(!s){sifreEkrani(false);return Promi
     if(d&&d.sifre){sifreYaz("");sifreEkrani(true);throw new Error("Şifre yanlış")}
     if(!d||!d.ok)throw new Error(d&&d.hata||"Sunucu hatası");return d.r})}
 const sr=(fn,...a)=>API?apiCagir(fn,a):gasCagir(fn,a);
+/* Kaydı arka planda gönder; ekran beklemez, hata olursa uyarı çıkar */
+function arkada(...p){Promise.all(p).catch(()=>hata())}
 /* Yazma kuyruğu: aynı anda yapılan kayıtlar tek istekte gönderilir */
 let KUYRUK=[],kuyrukZaman=null;
 const yazSr=(fn,...a)=>{bekleyen++;return new Promise((ok,no)=>{KUYRUK.push({fn,a,ok,no});if(!kuyrukZaman)kuyrukZaman=setTimeout(kuyrukGonder,0)})};
@@ -797,7 +799,7 @@ document.addEventListener("click",async e=>{
   if(ds.f){filtre=ds.f;uiSakla();ciz();return}
   if(ds.ay){ayGor.m+=+ds.ay;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}secGun=null;ciz();return}
   if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
-  if(ds.logsil){try{await logSil(ds.logsil);toast("Not silindi")}catch(_){hata()}return}
+  if(ds.logsil){arkada(logSil(ds.logsil));toast("Not silindi");return}
   if(t.id==="ekleBtn"){formAc();return}
   if(ds.git){if(ds.git==="yeni"){formAc();return}if(ds.git==="takvim"||ds.git==="gecmis"){v=ds.git;secGun=null;ciz();window.scrollTo(0,0);return}
     if(ds.git==="odeme"){const ak=isler.filter(aktif);if(ak.length===1){detayAc(ak[0].id);setTimeout(()=>{$("#odemeForm")?.scrollIntoView({behavior:"smooth",block:"center"});$("#o-tutar")?.focus()},50)}else{filtre="Aktif";ciz();toast(ak.length?"Ödeme alacağın işe dokun":"Önce bir iş ekle")}return}}
@@ -817,18 +819,18 @@ document.addEventListener("click",async e=>{
   const i=isler.find(x=>x.id===acikId);if(!i)return;
   if(ds.duzen!==undefined){formAc(i);return}
   if(ds.hizli){$("#o-pb-try").checked=true;$("#o-tutar").value=fmtGiris(+ds.hizli);$("#o-tutar").focus();onizle();return}
-  if(ds.durum&&ds.durum!==i.durum){try{await isYaz({...i,durum:ds.durum});await log(i,`Durum: ${i.durum} → ${ds.durum}`);toast(ds.durum)}catch(_){hata()}return}
+  if(ds.durum&&ds.durum!==i.durum){arkada(isYaz({...i,durum:ds.durum}),log(i,`Durum: ${i.durum} → ${ds.durum}`));toast(ds.durum);return}
   if(ds.asama){const s=new Set(i.asamalar||[]),v2=!s.has(ds.asama);v2?s.add(ds.asama):s.delete(ds.asama);
-    try{await isYaz({...i,asamalar:ASAMALAR.filter(a=>s.has(a))});await log(i,`Aşama ${v2?"tamamlandı":"geri alındı"}: ${ds.asama}`);if(v2&&s.size===ASAMALAR.length)toast("Tüm aşamalar tamamlandı")}catch(_){hata()}return}
+    arkada(isYaz({...i,asamalar:ASAMALAR.filter(a=>s.has(a))}),log(i,`Aşama ${v2?"tamamlandı":"geri alındı"}: ${ds.asama}`));if(v2&&s.size===ASAMALAR.length)toast("Tüm aşamalar tamamlandı");return}
   if(ds.oduz!==undefined){const n=+ds.oduz,o=i.odemeler[n];if(!o)return;ODZ=n;detayCiz();
     $("#o-pb-"+(o.pb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(o.tutar);tarihYaz("o-tarih",o.tarih);$("#o-kur").value=oKur(o);$("#o-not").value=o.not||"";
     $("#kurNot").textContent="Bu ödemede kaydedilen kur. Tarihi değiştirirsen o günün kuru gelir.";onizle();$("#odemeForm").scrollIntoView({behavior:"smooth",block:"center"});return}
   if(ds.oduzvaz!==undefined){ODZ=null;detayCiz();$("#odemeForm").reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();return}
   if(ds.odsil!==undefined){if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";setTimeout(()=>{if(t.isConnected){t.classList.remove("emin");t.textContent="Bu ödemeyi sil"}},4000);return}
-    ODZ=null;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);try{await isYaz({...i,odemeler:o});await log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`);toast("Ödeme silindi")}catch(_){hata()}return}
+    ODZ=null;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);arkada(isYaz({...i,odemeler:o}),log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`));toast("Ödeme silindi");return}
   if(ds.issil!==undefined){
     if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Silmek için tekrar dokun";setTimeout(()=>{t.classList.remove("emin");t.textContent="Bu işi sil"},4000);return}
-    try{await log(i,"İş silindi");await isSil(i.id);ekranKapa();toast("İş silindi")}catch(_){hata()}}
+    arkada(log(i,"İş silindi"),isSil(i.id));ekranKapa();toast("İş silindi")}
 });
 document.addEventListener("input",e=>{
   if(e.target.id==="ara"){q=e.target.value;ciz()}
@@ -844,7 +846,7 @@ document.addEventListener("change",e=>{if(e.target.id==="sirala"){sirala=e.targe
   if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
 document.addEventListener("submit",async e=>{
   if(e.target.id==="kurForm"){e.preventDefault();const u=+new FormData(e.target).get("usd");if(!u)return;const eski=KUR.usd;kurDuzen=false;
-    try{await kurYaz({usd:u,tarih:bugun(),kaynak:"Elle girildi",zaman:new Date().toISOString()});await log(null,`Kur güncellendi: ${nf(eski,4)} → ${nf(u,4)} ₺`);toast("Kur kaydedildi")}catch(_){hata()}return}
+    arkada(kurYaz({usd:u,tarih:bugun(),kaynak:"Elle girildi",zaman:new Date().toISOString()}),log(null,`Kur güncellendi: ${nf(eski,4)} → ${nf(u,4)} ₺`));toast("Kur kaydedildi");return}
   const i=isler.find(x=>x.id===acikId);if(!i)return;
   if(e.target.id==="odemeForm"){e.preventDefault();const f=new FormData(e.target);
     const o={tarih:f.get("tarih"),tutar:sayi(f.get("tutar")),pb:f.get("pb")||"TRY",kur:+f.get("kur")||KUR.usd,not:(f.get("not")||"").trim()};
@@ -852,11 +854,11 @@ document.addEventListener("submit",async e=>{
     if(dz!==null)arr[dz]=o;else arr.push(o);
     const od=arr.sort((a,b)=>a.tarih.localeCompare(b.tarih));
     ODZ=null;e.target.reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();
-    try{const n={...i,odemeler:od};await isYaz(n);
-      if(eski){await log(i,`Ödeme düzeltildi: ${para(eski.tutar,eski.pb)} (${tarih(eski.tarih,1)}) → ${para(o.tutar,o.pb)} (${tarih(o.tarih,1)})${i.pb==="USD"&&o.pb!=="USD"?` · kur ${nf(o.kur,4)} = ${usd(oUSD(o))}`:""}`);toast("Ödeme güncellendi")}
-      else{await log(i,odemeLogMetni(i,o));toast(kalan(n)<=0.01?"Ödeme tamamlandı":"Ödeme eklendi")}
-      detayCiz()}catch(_){hata()}}
-  if(e.target.id==="notForm"){e.preventDefault();const m=(new FormData(e.target).get("metin")||"").trim();if(!m)return;e.target.reset();try{await log(i,m,"not");toast("Günlüğe eklendi")}catch(_){hata()}}
+    const n={...i,odemeler:od};const p1=isYaz(n);
+    if(eski){arkada(p1,log(i,`Ödeme düzeltildi: ${para(eski.tutar,eski.pb)} (${tarih(eski.tarih,1)}) → ${para(o.tutar,o.pb)} (${tarih(o.tarih,1)})${i.pb==="USD"&&o.pb!=="USD"?` · kur ${nf(o.kur,4)} = ${usd(oUSD(o))}`:""}`));toast("Ödeme güncellendi")}
+    else{arkada(p1,log(i,odemeLogMetni(i,o)));toast(kalan(n)<=0.01?"Ödeme tamamlandı":"Ödeme eklendi")}
+    detayCiz()}
+  if(e.target.id==="notForm"){e.preventDefault();const m=(new FormData(e.target).get("metin")||"").trim();if(!m)return;e.target.reset();arkada(log(i,m,"not"));toast("Günlüğe eklendi")}
 });
 
 /* ===== başlat ===== */
