@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=15"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=16"></script><base target="_top">
 <style>.kutu b{text-align:left;line-height:1.25}
 .sekmeler{display:flex;gap:6px;background:var(--card);border-radius:16px;padding:5px;margin-top:16px;box-shadow:var(--shadow)}
 .sekmeler button{flex:1;border:0;background:transparent;font:inherit;font-weight:800;font-size:16px;padding:11px 8px;border-radius:12px;color:var(--muted);cursor:pointer}
@@ -190,7 +190,7 @@ textarea{resize:vertical;min-height:84px}
 .bos b{display:block;color:var(--ink);font-family:var(--f-head);font-size:1.05rem;margin-bottom:4px}
 
 /* alt gezinme */
-.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(4,1fr);gap:4px;z-index:4;box-shadow:0 -4px 16px rgba(20,40,80,.06)}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(3,1fr);gap:4px;z-index:4;box-shadow:0 -4px 16px rgba(20,40,80,.06)}
 .nav button{border:0;background:none;color:var(--muted);font:inherit;font-size:.72rem;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;border-radius:12px}
 .nav button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 .nav svg{width:22px;height:22px}
@@ -327,7 +327,6 @@ window.addEventListener("error",function(e){try{var g=document.getElementById("g
   <button type="button" data-v="isler" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>İşler</button>
   <button type="button" data-v="takvim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Takvim</button>
   <button type="button" data-v="odemeler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h4"/></svg>Ödemeler</button>
-  <button type="button" data-v="gecmis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Geçmiş</button>
 </nav>
 <div class="ekran" id="ekran" hidden></div>
 <div class="toast" id="toast" hidden></div>
