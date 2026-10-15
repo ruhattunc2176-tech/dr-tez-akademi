@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=60"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=61"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -338,6 +338,8 @@ textarea{resize:vertical;min-height:84px}
 .zc-s.fz:has(input:checked) .m b{color:var(--ink)}
 .zc-s.fz:has(input:checked):not(:last-child)::before{background:var(--cb)}
 .zc-s.fz .m{padding-top:2px}
+.cz-satir{display:flex;flex-direction:column;padding:10px 0;border-top:1px solid var(--line)}.cz-satir:first-of-type{border-top:0}.cz-satir b{font-weight:700}.cz-satir small{color:var(--muted);font-weight:600}
+.cz-bu{background:#dcf5e8;color:#0b6e4c;border-radius:999px;padding:1px 8px;font-size:.75rem;font-weight:800;margin-left:4px}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -628,6 +630,14 @@ const API=window.TEZ_API||"";
 function sifreAl(){try{return localStorage.getItem("tez-sifre")||SIFRE_BELLEK||""}catch(_){return SIFRE_BELLEK||""}}
 let SIFRE_BELLEK="";
 function sifreYaz(v){SIFRE_BELLEK=v;try{v?localStorage.setItem("tez-sifre",v):localStorage.removeItem("tez-sifre")}catch(_){}}
+function cihazId(){try{let c=localStorage.getItem("tez-cihaz");if(!c){c=Math.random().toString(36).slice(2,10);localStorage.setItem("tez-cihaz",c)}return c}catch(_){return"?"}}
+function cihazAdi(){const u=navigator.userAgent||"";const os=/iPhone/.test(u)?"iPhone":/iPad/.test(u)?"iPad":/Android/.test(u)?"Android telefon":/Windows/.test(u)?"Windows bilgisayar":/Mac OS/.test(u)?"Mac":/Linux/.test(u)?"Linux":"Cihaz";
+  const tr=/Edg\//.test(u)?"Edge":/SamsungBrowser/.test(u)?"Samsung İnternet":/OPR\//.test(u)?"Opera":/Firefox/.test(u)?"Firefox":/Chrome\//.test(u)?"Chrome":/Safari/.test(u)?"Safari":"tarayıcı";
+  let uy=false;try{uy=matchMedia("(display-mode: standalone)").matches}catch(_){}return os+" · "+tr+(uy?" (ana ekran uygulaması)":"")}
+function girisKaydet(){try{log(null,"Giriş · "+cihazAdi()+" #"+cihazId(),"giris").catch(()=>{})}catch(_){}}
+function gCihazlar(){const g={};loglar.filter(l=>l.tur==="giris").forEach(l=>{const m=(l.metin||"").match(/^Giriş · (.*) #(\w+)$/);if(!m)return;const k=m[2];if(!g[k]||g[k].z<l.zaman)g[k]={ad:m[1],z:l.zaman,bu:k===cihazId()}});
+  const L=Object.values(g).sort((a,b)=>b.z.localeCompare(a.z));
+  return`<section class="kart blok" style="margin-top:14px"><h3>Giriş yapılan cihazlar <small>${L.length}</small></h3>${L.length?L.map(x=>`<div class="cz-satir"><b>${esc(x.ad)}${x.bu?` <span class="cz-bu">bu cihaz</span>`:""}</b><small>Son giriş ${tarih(x.z.slice(0,10))} · ${saat(x.z)}</small></div>`).join(""):`<p class="ipucu" style="margin:0">Henüz kayıt yok. Cihazlar şifreyle giriş yaptıkça burada görünür.</p>`}<p class="ipucu" style="margin:8px 0 0">Liste, şifreyle giriş yapılan cihazları gösterir. Şifre değişirse hepsinden yeniden giriş istenir.</p></section>`}
 function kilitDurum(t,tur){const h=$("#kilitHata");if(!h)return;h.hidden=!t;h.textContent=t||"";h.className="kilit-durum "+(tur||"hata");if(tur==="hata"){const k=$("#kilitForm");k.classList.remove("titre");void k.offsetWidth;k.classList.add("titre")}}
 function sifreEkrani(hatali){const k=$("#kilit");if(!k)return;k.hidden=false;kilitDurum(hatali?"Şifre yanlış, tekrar dene.":"",hatali?"hata":"");setTimeout(()=>{const i=$("#kilitSifre");if(i){i.focus();i.select()}},50)}
 document.addEventListener("input",e=>{if(e.target.id==="kilitSifre"){const n=e.target.value.length;$("#kilitSay").textContent=n+" karakter";if(!$("#kilitHata").classList.contains("bekle"))kilitDurum("")}});
@@ -675,7 +685,7 @@ function ciz(){
   {const n=isler.reduce((a,i)=>a+isUyari(i).filter(u=>u.d===3).length,0),e=document.getElementById("navOzet");if(e){e.hidden=!n;e.textContent=n}}
   $("#ekleBtn").hidden=true;
   const g=$("#gorunum"),a=document.activeElement?.id,p=document.activeElement?.selectionStart;g.className="v-"+v;
-  g.innerHTML=hero()+(v==="isler"?gIsler():v==="takvim"?gTakvim():v==="ozet"?gOzet(true):v==="odemeler"?gOdemeler():gGecmis());
+  g.innerHTML=hero()+(v==="isler"?gIsler():v==="takvim"?gTakvim():v==="ozet"?gOzet(true)+gCihazlar():v==="odemeler"?gOdemeler():gGecmis());
   if(a){const x=document.getElementById(a);if(x&&g.contains(x)){x.focus();try{x.setSelectionRange(p,p)}catch(_){}}}
   sayaclariOynat();
   if(ekranTur==="detay")detayCiz();
@@ -1244,10 +1254,12 @@ function yenile(zorla){
 }
 document.addEventListener("submit",async e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim().toLocaleLowerCase("tr").replace(/ı/g,"i");if(!v)return;
   const b=$("#kilitBtn");b.disabled=true;b.textContent="Kontrol ediliyor…";kilitDurum("Kontrol ediliyor…","bekle");sifreYaz(v);
-  try{await sr("surum");kilitDurum("✓ Şifre doğru, açılıyor…","dogru");b.textContent="Açılıyor…";setTimeout(()=>{$("#kilit").hidden=true;yenile()},650)}
+  try{await sr("surum");try{localStorage.setItem("tez-sifre-v",SIFRE_SURUM)}catch(_){}girisKaydet();kilitDurum("✓ Şifre doğru, açılıyor…","dogru");b.textContent="Açılıyor…";setTimeout(()=>{$("#kilit").hidden=true;yenile()},650)}
   catch(err){if(/Şifre yanlış/.test(err&&err.message||""))kilitDurum("✕ Şifre yanlış, tekrar dene.","hata");else{kilitDurum("Sunucuya ulaşılamadı. İnternetini kontrol edip tekrar dene.","hata");$("#kilitSifre").value=v}}
   finally{setTimeout(()=>{b.disabled=false;b.textContent="Giriş yap"},650)}},true);
 try{history.replaceState(navDurum(),"")}catch(_){}
+const SIFRE_SURUM="2";
+try{if(localStorage.getItem("tez-sifre-v")!==SIFRE_SURUM){sifreYaz("")}}catch(_){}
 if(!sifreAl())sifreEkrani(false);else yenile();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
 /* kur 5 dakikadan eskiyse (ör. uygulama arka plandan dönünce) hemen tazele */
