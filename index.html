@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=87"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=88"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -515,7 +515,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .kur-elle-btn.acik{color:var(--muted)}
 .kur-elle{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:700;color:var(--muted)}
 .fazla-uyari{background:#fdecea;color:#b3261e;border-radius:12px;padding:10px 12px;font-weight:700;font-size:15px}
-.yeni-odeme .tur-sec{scroll-margin-top:72px}
+.yeni-odeme .tur-sec{scroll-margin-top:72px}.yeni-odeme{scroll-margin-top:76px}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -1291,7 +1291,7 @@ function fOdemeDuzenle(n){
   const o=FORM.odm[n];if(!o)return;FORM.duz=n;fKutu(true,true);
   $("#fo-pb-"+(o.pb==="USD"?"usd":"try")).checked=true;$("#fo-tutar").value=fmtGiris(o.tutar);tarihYaz("fo-tarih",o.tarih);$("#fo-kur").value=oKur(o);$("#fo-alinan").value=o.alinanTL?fmtGiris(o.alinanTL):"";turDoldur("fo",o);
   $("#fo-kurNot").textContent=`Bu ödemede kaydedilen kur: 1 $ = ${nf(oKur(o),2)} ₺`;kurElle.fo=false;kurGoster("fo");
-  $("#fo-ekle").textContent="Değişikliği uygula";$("#fo-duzAraclar").hidden=false;fOdemeCiz();$("#fo-tutar").scrollIntoView({behavior:"smooth",block:"center"});
+  $("#fo-ekle").textContent="Değişikliği uygula";$("#fo-duzAraclar").hidden=false;fOdemeCiz();$("#fo-kutu").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function ucretOn(){const el=$("#ucretTL");if(!el)return;const u=$("#f-pb-1")?.checked,t=sayi($("#f-ucret").value);
   el.textContent=u&&t?`Bugünkü kur ${nf(KUR.usd,2)}. Her ödeme kendi gününün kuruyla dolardan düşülür.`:"";const y=$("#ucretYan");if(y)y.innerHTML=u&&t?`<b>= ${tl(t*KUR.usd)}</b><small>bugünkü kurla</small>`:""}
@@ -1360,7 +1360,7 @@ document.addEventListener("click",async e=>{
     arkada(isYaz({...i,asamalar:ASAMALAR.filter(a=>s.has(a))}),log(i,`Aşama ${v2?"tamamlandı":"geri alındı"}: ${ds.asama}`));if(v2&&s.size===ASAMALAR.length)toast("Tüm aşamalar tamamlandı");return}
   if(ds.oduz!==undefined){const n=+ds.oduz,o=i.odemeler[n];if(!o)return;ODZ=n;detayCiz();
     $("#o-pb-"+(o.pb==="USD"?"usd":"try")).checked=true;$("#o-tutar").value=fmtGiris(o.tutar);tarihYaz("o-tarih",o.tarih);$("#o-kur").value=oKur(o);$("#o-alinan").value=o.alinanTL?fmtGiris(o.alinanTL):"";turDoldur("o",o);
-    $("#kurNot").textContent=`Bu ödemede kaydedilen kur: 1 $ = ${nf(oKur(o),2)} ₺`;kurElle.o=false;kurGoster("o");onizle();$("#odemeForm").scrollIntoView({behavior:"smooth",block:"center"});return}
+    $("#kurNot").textContent=`Bu ödemede kaydedilen kur: 1 $ = ${nf(oKur(o),2)} ₺`;kurElle.o=false;kurGoster("o");onizle();$(".yeni-odeme")?.scrollIntoView({behavior:"smooth",block:"start"});return}
   if(ds.oduzvaz!==undefined){ODZ=null;odemeAcik=false;kurElle.o=false;HIZLI=null;detayCiz();return}
   if(ds.odsil!==undefined){if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";setTimeout(()=>{if(t.isConnected){t.classList.remove("emin");t.textContent="Bu ödemeyi sil"}},4000);return}
     ODZ=null;odemeAcik=false;kurElle.o=false;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);arkada(isYaz({...i,odemeler:o}),log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`));toast("Ödeme silindi");return}
