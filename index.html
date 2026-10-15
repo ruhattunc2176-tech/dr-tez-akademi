@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=66"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=67"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -365,6 +365,7 @@ textarea{resize:vertical;min-height:84px}
 #kilitCaps[aria-pressed="true"]{border-color:#e3b505;background:#fff3c4;color:#5a3c00}
 .caps-ik{font-size:16px}
 .otp-btn span{white-space:nowrap}.otp-btn span b{display:inline!important;font-weight:800}
+#ucretYan{align-self:end;padding-bottom:10px}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -1081,7 +1082,7 @@ function formAc(eski){setTimeout(navIt,0);
       <div class="alan"><span>Ücret hangi para biriminde?</span>${radyo("pb",["TRY","USD"],i.pb||"TRY",null,x=>x==="USD"?"$ Dolar":"₺ Türk lirası")}</div>
       <div class="izgara" style="margin:0">
         <label>Toplam ücret<input id="f-ucret" name="ucret" type="text" inputmode="decimal" class="para-in" autocomplete="off" value="${i.ucret?fmtGiris(i.ucret):""}" required></label>
-        <span></span>
+        <div class="tutar-yan" id="ucretYan"></div>
         <p class="ipucu tam" id="ucretTL" style="margin:0"></p>
         <div class="alan tam"><span id="f-basEt">Başlangıç</span>${tarihSec("f-bas","baslangic",i.baslangic,false,true)}</div>
         <div class="alan tam" id="f-teslimAlan"><span>Tahmini teslim</span>${tarihSec("f-teslim","teslim",i.teslim,false,true)}</div>
@@ -1185,7 +1186,7 @@ function fOdemeDuzenle(n){
   $("#fo-ekle").textContent="Değişikliği uygula";$("#fo-duzAraclar").hidden=false;fOdemeCiz();$("#fo-tutar").scrollIntoView({behavior:"smooth",block:"center"});
 }
 function ucretOn(){const el=$("#ucretTL");if(!el)return;const u=$("#f-pb-1")?.checked,t=sayi($("#f-ucret").value);
-  el.textContent=u&&t?`≈ ${tl(t*KUR.usd)} (bugünkü kur ${nf(KUR.usd,2)}). Her ödeme kendi gününün kuruyla dolardan düşülür.`:""}
+  el.textContent=u&&t?`Bugünkü kur ${nf(KUR.usd,2)}. Her ödeme kendi gününün kuruyla dolardan düşülür.`:"";const y=$("#ucretYan");if(y)y.innerHTML=u&&t?`<b>= ${tl(t*KUR.usd)}</b><small>bugünkü kurla</small>`:""}
 
 /* ===== olaylar ===== */
 document.addEventListener("click",async e=>{
