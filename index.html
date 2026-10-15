@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=56"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=57"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
 .cb-sar{display:flex;flex-direction:column;gap:6px}.cb-ust{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#c9f2dd}.cb-ust b{color:#8ef0be;font-weight:800}
-.uc2{gap:8px!important;grid-template-columns:1.5fr 1fr 1.25fr!important}.uc2>div{background:rgba(255,255,255,.1);border-radius:14px;padding:10px 10px;min-width:0}
+.uc2{gap:8px!important;grid-template-columns:1.6fr 1fr 1.25fr 1.25fr!important}
+@media (max-width:520px){.uc2{grid-template-columns:1fr 1fr!important}}.uc2>div{background:rgba(255,255,255,.1);border-radius:14px;padding:10px 10px;min-width:0}
 .uc2 b{display:block;font-size:18px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kutular4{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;flex:1 1 100%!important;align-self:start}
 @media(min-width:700px){.kutular4{gap:14px!important}.kutular4 .kutu{flex-direction:row;justify-content:center;padding:16px 12px;gap:12px}.kutular4 .kutu b{font-size:15px}}
@@ -318,6 +319,12 @@ textarea{resize:vertical;min-height:84px}
 .oz-satir.d3 small{color:#b3261e}.ozet-kart.detay .oz-satir small{font-size:.95rem;color:var(--ink)}
 .oz-tum{border:0;background:var(--soft);border-radius:12px;padding:10px;font:inherit;font-weight:800;color:var(--accent);cursor:pointer;margin-top:6px}
 .satir-is .ch .uy-r{color:#fff}.satir-is .ch .uy-r.d3{background:#d6336c}.satir-is .ch .uy-r.d2{background:#f08c00}.satir-is .ch .uy-r.d1{background:#e3b505;color:#3a2c00}
+.zc-s.fz[hidden]{display:none!important}
+.zc-s.fz{cursor:pointer;user-select:none;display:flex!important;flex-direction:row!important;align-items:center!important;gap:12px!important;font-weight:inherit;color:inherit}
+.zc-s.fz:has(input:checked) .nk{background:var(--cb);border-color:var(--cb)}
+.zc-s.fz:has(input:checked) .m b{color:var(--ink)}
+.zc-s.fz:has(input:checked):not(:last-child)::before{background:var(--cb)}
+.zc-s.fz .m{padding-top:2px}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -658,7 +665,7 @@ function gIsler(){
     <section class="bakiye" aria-label="Alacak özeti">
       <div style="display:flex;flex-direction:column;gap:6px"><span class="e">TOPLAM ALACAK</span><b class="b num" data-sayac="alacak" data-deger="${kal}">${tl(kal)}</b><div class="kirilim">${kalUSD?`<span><small>Dolar alacak</small><b>${usd(kalUSD)}</b><em>× ${nf(KUR.usd,2)}</em></span>`:""}${kalTRY?`<span><small>TL alacak</small><b>${tl(kalTRY)}</b></span>`:""}</div></div>
       <div class="cb-sar"><div class="cb-ust"><span>Tahsilat</span><b>%${p}</b></div><div class="cb" role="img" aria-label="Tahsilat yüzde ${p}"><i style="width:${p}%"></i></div></div>
-      <div class="uc uc2"><div><span>Tahsil</span><b data-sayac="tahsil" data-deger="${tah}">${tl(tah)}</b></div><div><span>Aktif iş</span><b>${ak.length}</b></div><div><span>Yakın teslim</span><b>${yf===null?"—":yf<0?`${-yf} gün gecikti`:yf===0?"Bugün":yf+" gün"}</b></div></div>
+      <div class="uc uc2"><div><span>Tahsil</span><b data-sayac="tahsil" data-deger="${tah}">${tl(tah)}</b></div><div><span>Yakın teslim</span><b>${yf===null?"—":yf<0?`${-yf} gün gecikti`:yf===0?"Bugün":yf+" gün"}</b></div><div><span>Aktif iş</span><b>${ak.length}</b></div><div><span>Ön görüşme</span><b>${isler.filter(x=>x.durum===ADAY||x.durum==="Görüşme").length}</b></div></div>
     </section>
     <section class="kutular kutular4 kutular3">
       <button type="button" class="kutu k-sari" data-git="yeni"><span class="ik"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><b>Yeni iş</b></button>
@@ -979,7 +986,8 @@ function formAc(eski){setTimeout(navIt,0);
       <div class="alan"><span>Makale de yapılacak mı?</span><div class="secim mk-sec"><label><input type="radio" id="f-makale-0" name="makale" value="1" ${i.makale?"checked":""}><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg> Makale var</span></label><label><input type="radio" id="f-makale-1" name="makale" value="" ${i.makale?"":"checked"}><span>Yok</span></label></div></div>
     </section>
     <section class="kart blok" style="display:flex;flex-direction:column;gap:14px">
-      ${yeni?`<div class="alan"><span>Hangi aşamada başlıyoruz?</span>${radyo("durum",DURUMLAR.filter(x=>!["Teslim edildi","İptal"].includes(x)),i.durum,renk,x=>x===ADAY?"Ön görüşme (muhtemel müşteri)":x)}<small class="ipucu" id="f-asamaNot"></small></div>`:""}
+      ${yeni?`<div class="alan"><span>İş durumu</span><div class="secim fd-sec"><label><input type="radio" name="fdurum" id="f-fd-0" value="aday"><span>Ön görüşme</span></label><label><input type="radio" name="fdurum" id="f-fd-1" value="tez" checked><span>Teze başlandı</span></label></div></div>
+      <div class="alan" id="f-asamaAlan"><span>Tamamlanan aşamalar · dokunarak işaretle</span><div class="zc">${DURUMLAR.filter(x=>x!==ADAY&&!["Teslim edildi","İptal"].includes(x)).map(d=>`<label class="zc-s fz" data-fz="${d}" style="${renk(d)}"><input type="checkbox" name="fasama" value="${d}" ${d==="Teze başlandı"?"checked":""} hidden><span class="nk">✓</span><span class="m"><b>${d}</b></span></label>`).join("")}</div><small class="ipucu">İşaretlenenler teze başlangıç tarihiyle kaydedilir.</small></div>`:""}
       <div class="alan"><span>Ücret hangi para biriminde?</span>${radyo("pb",["TRY","USD"],i.pb||"TRY",null,x=>x==="USD"?"$ Dolar":"₺ Türk lirası")}</div>
       <div class="izgara" style="margin:0">
         <label>Toplam ücret<input id="f-ucret" name="ucret" type="text" inputmode="decimal" class="para-in" autocomplete="off" value="${i.ucret?fmtGiris(i.ucret):""}" required></label>
@@ -1019,7 +1027,7 @@ function formAc(eski){setTimeout(navIt,0);
   $("#isForm").onsubmit=async ev=>{
     ev.preventDefault();if(sayi($("#fo-tutar").value)&&fOdemeEkle(true)===false)return;else if(FORM.duz!==null)fGirisTemizle();
     const f=new FormData(ev.target),n={...i};
-    ["musteri","konu","baslangic","teslim","tur","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");if(yeni){n.durum=f.get("durum")||"Teze başlandı";if(!n.makale&&n.durum===MAKALE_ASAMA)n.durum="Tez yazımına başlandı";const z=new Date().toISOString(),bt=(n.baslangic||bugun())+"T00:00:00";if(n.durum===ADAY){n.asamaT={};n.teslim=""}else{const L=durumlar(n),k=L.indexOf(n.durum);n.asamaT={};L.slice(0,k).filter(x=>!["Revizyonda",MAKALE_ASAMA].includes(x)).forEach(x=>n.asamaT[x]=bt);n.asamaT[n.durum]=k>0?z:bt}n.gecmis=[{d:n.durum,t:z}]}else n.durum=durumTuret(n,asamaT(n));
+    ["musteri","konu","baslangic","teslim","tur","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");if(yeni){const z=new Date().toISOString(),bt=(n.baslangic||bugun())+"T00:00:00";n.asamaT={};if(f.get("fdurum")==="aday"){n.durum=ADAY;n.teslim=""}else{let sec=f.getAll("fasama").filter(x=>x!==MAKALE_ASAMA||n.makale);if(!sec.length)sec=["Teze başlandı"];sec.forEach(x=>n.asamaT[x]=bt);n.durum=durumTuret(n,n.asamaT)}n.gecmis=[{d:n.durum,t:z}]}else n.durum=durumTuret(n,asamaT(n));
     n.ucret=sayi(f.get("ucret"));if(yeni)n.olusturma=new Date().toISOString();
     const yeniOd=FORM.odm.filter(o=>o._yeni),silinen=FORM.silinen;
     const duzeltilen=FORM.duzeltilen.filter(([,y])=>FORM.odm.includes(y)&&!y._yeni);
@@ -1064,10 +1072,10 @@ function fOnizle(){
   if(!t||pb==="USD"||jp!=="USD"){el.hidden=true;return}
   el.hidden=false;el.textContent=`${tl(t)} = ${usd(t/kr)}`;
 }
-function fAday(){const sec=$('input[name="durum"]:checked'),d=sec?sec.value:(FORM&&FORM.durum0)||"";const a=d===ADAY;
+function fAday(){const sec=$('input[name="fdurum"]:checked'),a=sec?sec.value==="aday":(FORM&&FORM.durum0)===ADAY;
   const e=$("#f-basEt");if(!e)return;e.textContent=a?"Ön görüşme tarihi":"Teze başlangıç tarihi";$("#f-teslimAlan").hidden=a;$("#f-sureAlan").hidden=a;
-  const n=$("#f-asamaNot");if(n){const L=DURUMLAR.filter(x=>x!==ADAY),k=L.indexOf(d);n.textContent=a?"Muhtemel müşteri: teslim tarihi sonra, işe başlayınca girilir.":k>0?`Önceki aşamalar da tiklenir: ${L.slice(0,k).filter(x=>!["Revizyonda",MAKALE_ASAMA].includes(x)).join(", ")}.`:""}}
-function mkAsama(){fAday();const x=$("#f-durum-"+DURUMLAR.indexOf(MAKALE_ASAMA));if(!x)return;const m=$("#f-makale-0")?.checked;x.closest("label").hidden=!m;if(!m&&x.checked){const t=$("#f-durum-"+DURUMLAR.indexOf("Tez yazımına başlandı"));if(t)t.checked=true}}
+  const al=$("#f-asamaAlan");if(al)al.hidden=a}
+function mkAsama(){fAday();const x=document.querySelector('.fz[data-fz="'+MAKALE_ASAMA+'"]');if(!x)return;const m=$("#f-makale-0")?.checked;x.hidden=!m;if(!m)x.querySelector("input").checked=false}
 function fKutu(ac,duz){const k=$("#fo-kutu"),b=$("#fo-ac");if(!k)return;k.hidden=!ac;b.hidden=!!ac;k.classList.toggle("duzen",!!duz);$("#fo-baslik").textContent=duz?"Ödemeyi düzenle":"Yeni ödeme"}
 function fGirisTemizle(){fKutu(false);FORM.duz=null;kurElle.fo=false;$("#fo-tutar").value="";$("#fo-not").value="";$("#fo-alinan").value="";$("#fo-ek").value="";$("#fo-ek").hidden=true;tarihYaz("fo-tarih",bugun());const k=kurBul(bugun());if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(bugun());tazeKurDoldur("fo");$("#fo-pb-try").checked=true;
   $("#fo-ekle").textContent="Ödeme ekle";$("#fo-duzAraclar").hidden=true;const s=$("[data-fsil]");s.classList.remove("emin");s.textContent="Bu ödemeyi sil"}
@@ -1157,7 +1165,7 @@ document.addEventListener("input",e=>{
 document.addEventListener("change",e=>{if(e.target.id==="sirala"){sirala=e.target.value;uiSakla();ciz()}
   if(e.target.id==="o-pb-try"||e.target.id==="o-pb-usd")onizle();if(e.target.id==="o-tarih")kurTarihten();
   if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value);if(e.target.value===bugun())tazeKurDoldur("fo")}
-  if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-makale")||e.target.name==="durum")mkAsama();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
+  if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-makale")||e.target.name==="fdurum")mkAsama();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
 document.addEventListener("submit",async e=>{
   if(e.target.id==="kurForm"){e.preventDefault();const u=kurSayi(new FormData(e.target).get("usd"));if(!u)return;const eski=KUR.usd;kurDuzen=false;
     arkada(kurYaz({usd:u,tarih:bugun(),kaynak:"Elle girildi",zaman:new Date().toISOString()}),log(null,`Kur güncellendi: ${nf(eski,4)} → ${nf(u,4)} ₺`));toast("Kur kaydedildi");return}
