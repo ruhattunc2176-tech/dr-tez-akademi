@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=84"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=85"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -514,6 +514,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .kur-elle-btn{border:1.5px solid var(--line);background:var(--card);color:var(--accent);font:inherit;font-size:13px;font-weight:800;border-radius:10px;padding:7px 10px;cursor:pointer;white-space:nowrap}
 .kur-elle-btn.acik{color:var(--muted)}
 .kur-elle{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:700;color:var(--muted)}
+.fazla-uyari{background:#fdecea;color:#b3261e;border-radius:12px;padding:10px 12px;font-weight:700;font-size:15px}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -1054,6 +1055,7 @@ function detayCiz(){
         <div class="tam kur-kutu" id="kurAlan"><div class="kur-sat"><span class="kur-not" id="kurNot">${kurNotu(bugun())}</span><button type="button" class="kur-elle-btn" data-kurelle="o">Kuru elle değiştir</button></div><label class="kur-elle" id="o-kurElle" hidden>Elle kur (1 $ kaç ₺)<input id="o-kur" name="kur" type="text" inputmode="decimal" autocomplete="off" value="${kurBul(bugun())?.v||KUR.usd}"></label></div>
         <label class="tam" id="o-alinanAlan" hidden>Elime geçen TL (isteğe bağlı)<input id="o-alinan" type="text" inputmode="decimal" class="para-in" autocomplete="off" placeholder="Örn. 47.000"><small class="ipucu" id="o-alinanNot"></small></label>
         <div class="onizle tam" id="onizle" hidden></div>
+        <div class="fazla-uyari tam" id="o-fazla" hidden></div>
         <div class="hizli tam"><button type="button" class="mini-btn ek-btn" data-eknot="o">+ Ek not</button></div>
         <input type="hidden" id="o-not" name="not">
         <input id="o-ek" class="tam" placeholder="Ek not (ör. havale ile geldi)" aria-label="Ek not" hidden>
@@ -1161,6 +1163,9 @@ function onizle(){
   $("#kurAlan").hidden=pb!=="USD";
   turGoster("o");
   alinanGoster("o",t,pb,kr);
+  {const fz=$("#o-fazla"),kk=kalan(ODZ!==null?{...i,odemeler:(i.odemeler||[]).filter((_,n)=>n!==ODZ)}:i),U=i.pb==="USD",
+     karsi=!t?0:U?(pb==="USD"?t:t/kr):(pb==="USD"?t*kr:t),fazla=karsi-kk;
+   if(fz){fz.hidden=!(t&&fazla>(U?0.5:5));if(!fz.hidden)fz.innerHTML=`Dikkat: kalan borçtan <b>${para(fazla,i.pb)}</b> fazla`}}
   if(!t||pb==="USD"||i.pb!=="USD"){el.hidden=true;return}
   el.hidden=false;el.textContent=`${tl(t)} = ${usd(t/kr)}`;
 }
