@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=59"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=60"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -74,9 +74,22 @@ button.odeme{width:100%;background:none;border:0;border-top:1px solid var(--line
 .kilit-logo{width:60px;height:60px;border-radius:18px;background:#0b6e4c;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
 .kilit-kart h1{margin:4px 0 0;font-size:26px;font-weight:800}.kilit-kart p{margin:0;color:#4f5f57;font-size:16px}
 .kilit-kart input{font:inherit;font-size:18px;padding:14px 16px;border:2px solid #d5e2db;border-radius:14px;outline:0}.kilit-kart input:focus{border-color:#0b6e4c}
-.kilit-hata{color:#b3261e!important;font-weight:700}
+#kilit{background:radial-gradient(circle at 20% 10%,#dff5ea 0,transparent 45%),radial-gradient(circle at 90% 90%,#fff3c4 0,transparent 40%),#f2f5f3}
+.kilit-alan{display:flex;align-items:center;gap:8px;border:2px solid #d5e2db;border-radius:16px;padding:0 6px 0 14px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.kilit-alan:focus-within{border-color:#0b6e4c;box-shadow:0 0 0 4px rgba(11,110,76,.12)}
+.kilit-ik{color:#6b7c74;flex:none}
+.kilit-kart .kilit-alan input{border:0!important;padding:14px 4px;flex:1;min-width:0;background:transparent;letter-spacing:.04em;box-shadow:none}
+.kilit-goz{border:0;background:#eef3f0;color:#4f5f57;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;cursor:pointer;flex:none}
+.kilit-goz.acik{background:#0b6e4c;color:#fff}
+.kilit-alan input:focus,.kilit-alan input:focus-visible{outline:0!important;border:0!important;box-shadow:none!important}
+.kilit-alt{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;color:#6b7c74;margin-top:-4px}
+.kilit-durum{margin:0;padding:10px 12px;border-radius:12px;font-weight:700;font-size:15px!important}
+.kilit-durum.hata{background:#ffe3e3;color:#b3261e!important}.kilit-durum.dogru{background:#dcf5e8;color:#0b6e4c!important}.kilit-durum.bekle{background:#eef3f0;color:#4f5f57!important}
+.kilit-btn:disabled{opacity:.7;cursor:default}
+.kilit-not{text-align:center;color:#6b7c74;font-size:13px;font-weight:600}
+.kilit-kart.titre{animation:titre .4s}
 .kilit-btn{font:inherit;font-size:18px;font-weight:800;border:0;border-radius:14px;padding:14px;background:#0b6e4c;color:#fff;cursor:pointer}
-@media (prefers-color-scheme:dark){#kilit{background:#0f1714}.kilit-kart{background:#18231e;color:#e8f1ec}.kilit-kart p{color:#a9bab1}.kilit-kart input{background:#0f1714;color:#e8f1ec;border-color:#2b3b33}}
+@media (prefers-color-scheme:dark){#kilit{background:#0f1714}.kilit-kart{background:#18231e;color:#e8f1ec}.kilit-kart p{color:#a9bab1}.kilit-kart input{background:#0f1714;color:#e8f1ec;border-color:#2b3b33}.kilit-alan{background:#0f1714;border-color:#2b3b33}.kilit-goz{background:#22312a;color:#cfe0d7}}
 html,body{margin:0}body{font:14px system-ui,sans-serif}[hidden]{display:none!important}img{max-width:100%}*{box-sizing:border-box}
 .ust-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:22px 0 4px}
 .ust-bar p{margin:0;color:var(--muted);font-weight:700;font-size:15px;letter-spacing:.02em}
@@ -291,7 +304,7 @@ textarea{resize:vertical;min-height:84px}
 .su-durum{background:#fff;color:var(--cb);border-radius:999px;padding:7px 12px;font-size:.82rem;font-weight:800}
 .durum-sec button[data-bekle][aria-pressed="true"]{background:#ffd75e;color:#5a3c00}
 .kilit{opacity:.45;filter:grayscale(.6)}
-.kilit-btn{opacity:.4}
+.kilitli-btn{opacity:.4}
 .kilit-bant{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:#fff1cc;color:#5a3c00;border:2px solid #ffd75e;border-radius:18px;padding:14px 16px;margin-top:14px}
 .kilit-bant b{font-weight:800;width:100%}.kilit-bant span{flex:1;min-width:160px;font-weight:600;font-size:.92rem}
 .kilit-bant button{border:0;background:#b37400;color:#fff;border-radius:12px;padding:9px 14px;font:inherit;font-weight:800;cursor:pointer}
@@ -444,10 +457,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
   <div class="kilit-logo">DT</div>
   <h1>Dr Tez Akademi</h1>
-  <p>Devam etmek için şifreyi gir. Bu cihaz şifreyi hatırlar.</p>
-  <input id="kilitSifre" name="sifre" type="password" autocomplete="current-password" placeholder="Şifre" required>
-  <p id="kilitHata" class="kilit-hata" hidden>Şifre yanlış, tekrar dene. (Büyük/küçük harf fark etmez.)</p>
-  <button type="submit" class="kilit-btn">Aç</button>
+  <p>Devam etmek için şifreni gir.</p>
+  <div class="kilit-alan"><svg class="kilit-ik" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><input id="kilitSifre" name="sifre" type="password" autocomplete="current-password" placeholder="Şifre" required><button type="button" class="kilit-goz" id="kilitGoz" aria-label="Şifreyi göster" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+  <div class="kilit-alt"><span id="kilitSay">0 karakter</span><span>Büyük/küçük harf fark etmez</span></div>
+  <p id="kilitHata" class="kilit-durum hata" role="alert" hidden>Şifre yanlış, tekrar dene.</p>
+  <button type="submit" class="kilit-btn" id="kilitBtn">Giriş yap</button>
+  <small class="kilit-not">Bu cihaz şifreyi hatırlar, bir daha sorulmaz.</small>
 </form></div>
 <script>
 window.addEventListener("error",function(e){try{var g=document.getElementById("gorunum");if(g)g.innerHTML='<div style="margin:20px 0;padding:14px;border-radius:12px;background:#ffe0e0;color:#a11;font:14px monospace;white-space:pre-wrap">Hata: '+(e.message||e)+'\nSatır: '+(e.lineno||"?")+'</div>'}catch(_){}});
@@ -613,7 +628,10 @@ const API=window.TEZ_API||"";
 function sifreAl(){try{return localStorage.getItem("tez-sifre")||SIFRE_BELLEK||""}catch(_){return SIFRE_BELLEK||""}}
 let SIFRE_BELLEK="";
 function sifreYaz(v){SIFRE_BELLEK=v;try{v?localStorage.setItem("tez-sifre",v):localStorage.removeItem("tez-sifre")}catch(_){}}
-function sifreEkrani(hatali){const k=$("#kilit");if(!k)return;k.hidden=false;$("#kilitHata").hidden=!hatali;setTimeout(()=>{const i=$("#kilitSifre");if(i){i.value="";i.focus()}},50)}
+function kilitDurum(t,tur){const h=$("#kilitHata");if(!h)return;h.hidden=!t;h.textContent=t||"";h.className="kilit-durum "+(tur||"hata");if(tur==="hata"){const k=$("#kilitForm");k.classList.remove("titre");void k.offsetWidth;k.classList.add("titre")}}
+function sifreEkrani(hatali){const k=$("#kilit");if(!k)return;k.hidden=false;kilitDurum(hatali?"Şifre yanlış, tekrar dene.":"",hatali?"hata":"");setTimeout(()=>{const i=$("#kilitSifre");if(i){i.focus();i.select()}},50)}
+document.addEventListener("input",e=>{if(e.target.id==="kilitSifre"){const n=e.target.value.length;$("#kilitSay").textContent=n+" karakter";if(!$("#kilitHata").classList.contains("bekle"))kilitDurum("")}});
+document.addEventListener("click",e=>{const g=e.target.closest("#kilitGoz");if(!g)return;const i=$("#kilitSifre"),ac=i.type==="password";i.type=ac?"text":"password";g.setAttribute("aria-pressed",ac);g.setAttribute("aria-label",ac?"Şifreyi gizle":"Şifreyi göster");g.classList.toggle("acik",ac);i.focus()});
 async function apiCagir(fn,a){
   const s=sifreAl();if(!s){sifreEkrani(false);throw new Error("Şifre gerekli")}
   const r=await fetch(API,{method:"POST",body:JSON.stringify({s,f:fn,a}),redirect:"follow"});
@@ -854,7 +872,7 @@ function detayCiz(){
   const s=sureMetni(i),f=fark(i.teslim),d=new Set(i.asamalar||[]),wa=telNorm(i.iletisim),k=kalan(i),U=i.pb==="USD";
   const kTL=U?k*KUR.usd:k;
   e.innerHTML=`
-  <div class="ekran-ust"><button type="button" data-geri>‹ Geri</button><span class="ort">${esc(i.musteri)}</span><button type="button" data-duzen ${i.beklemede?`class="kilit-btn"`:""}>Düzenle</button></div>
+  <div class="ekran-ust"><button type="button" data-geri>‹ Geri</button><span class="ort">${esc(i.musteri)}</span><button type="button" data-duzen ${i.beklemede?`class="kilitli-btn"`:""}>Düzenle</button></div>
   <div class="ic" style="${renk(i.durum)}">
     <section class="kart kahraman">
       <div class="k-ust"><div class="k-sol"><div class="ad">${esc(i.musteri)}</div><p class="konu">${esc(i.konu)}</p></div><div class="etiketler">${i.tur?`<span>${esc(i.tur)}</span>`:""}<span>${U?"$ Dolar":"₺ TL"}</span>${i.makale?`<span class="mk-e">Makale</span>`:""}</div></div>
@@ -1224,7 +1242,11 @@ function yenile(zorla){
     $("#depo").textContent="Kayıtlar Google E-Tablonda · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})+" itibarıyla güncel";
   }).catch(e=>{$("#depo").textContent="Sunucuya ulaşılamadı"+(API?" (…"+API.slice(-14,-5)+")":"")+": "+(e&&e.message||e)});
 }
-document.addEventListener("submit",e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim().toLocaleLowerCase("tr").replace(/ı/g,"i");if(!v)return;sifreYaz(v);$("#kilit").hidden=true;yenile()},true);
+document.addEventListener("submit",async e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim().toLocaleLowerCase("tr").replace(/ı/g,"i");if(!v)return;
+  const b=$("#kilitBtn");b.disabled=true;b.textContent="Kontrol ediliyor…";kilitDurum("Kontrol ediliyor…","bekle");sifreYaz(v);
+  try{await sr("surum");kilitDurum("✓ Şifre doğru, açılıyor…","dogru");b.textContent="Açılıyor…";setTimeout(()=>{$("#kilit").hidden=true;yenile()},650)}
+  catch(err){if(/Şifre yanlış/.test(err&&err.message||""))kilitDurum("✕ Şifre yanlış, tekrar dene.","hata");else{kilitDurum("Sunucuya ulaşılamadı. İnternetini kontrol edip tekrar dene.","hata");$("#kilitSifre").value=v}}
+  finally{setTimeout(()=>{b.disabled=false;b.textContent="Giriş yap"},650)}},true);
 try{history.replaceState(navDurum(),"")}catch(_){}
 if(!sifreAl())sifreEkrani(false);else yenile();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
