@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=73"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=74"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -504,6 +504,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .takvim-kart{transform-origin:50% 40%;position:relative}
 .tk-kom{position:absolute!important;top:0;left:0;right:0;pointer-events:none;margin:0}
 .tk-ust{box-shadow:-14px 0 30px rgba(0,0,0,.16)!important}
+
+.gb,.gb-ay{grid-template-columns:repeat(var(--n,6),minmax(0,1fr))}.gb .c i{max-width:56px}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -907,7 +909,9 @@ document.addEventListener("touchend",()=>{if(!oKay)return;const k=oKay;oKay=null
 document.addEventListener("touchcancel",()=>{if(oKay&&oKay.yon==="x")oGit(oKay.s,oKay.o);oKay=null});
 function gAlinan(){
   const tum=isler.flatMap(i=>(i.odemeler||[]).map((o,n)=>({...o,i,n}))).sort((a,b)=>b.tarih.localeCompare(a.tarih));
-  const aylar=[];const n=new Date();for(let k=5;k>=0;k--){const d=new Date(n.getFullYear(),n.getMonth()-k,1);aylar.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"short"}),t:0})}
+  const aylar=[];const n=new Date(),ilkO=tum.length?tum[tum.length-1].tarih:"";let fark=ilkO?(n.getFullYear()-+ilkO.slice(0,4))*12+n.getMonth()-(+ilkO.slice(5,7)-1):0;fark=Math.max(0,Math.min(11,fark));
+  for(let k=fark;k>=0;k--){const d=new Date(n.getFullYear(),n.getMonth()-k,1);aylar.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"short"}),t:0})}
+  const sonK=aylar.length-1;
   tum.forEach(o=>{const a=aylar.find(x=>o.tarih.startsWith(x.a));if(a)a.t+=oTL(o)});
   const mx=Math.max(...aylar.map(a=>a.t),1),topTL=tum.reduce((a,o)=>a+oTL(o),0);
   const gruplar=[];tum.forEach(o=>{const a=o.tarih.slice(0,7);let g=gruplar.find(x=>x.a===a);if(!g){g={a,l:[],t:0};gruplar.push(g)}g.l.push(o);g.t+=oTL(o)});
@@ -916,10 +920,10 @@ function gAlinan(){
       <span class="o"><b>${anaTutar(o)} <span class="kim">${esc(o.i.musteri||"—")}</span></b>${odemeEk(o)}
       <small>${tarih(o.tarih)}${o.not?" · "+esc(o.not):""}</small>${o.ekNot?`<span class="eknot">${esc(o.ekNot)}</span>`:""}</span></button>`;
   return`<section class="kart blok" style="margin-top:16px">
-    <div class="gb-ust"><div class="ana"><span>Toplam tahsilat</span><b data-sayac="topTahsil" data-deger="${topTL}">${tl(topTL)}</b></div><div><span>Bu ay</span><b>${tl(aylar[5].t)}</b></div><div><span>Ödeme</span><b>${tum.length}</b></div></div>
-    <h3 style="margin:18px 0 0">Son 6 ay</h3>
-    <div class="gb" role="img" aria-label="Son 6 ay tahsilat">${aylar.map((a,k)=>`<div class="c ${k===5?"bu":""} ${a.t?"":"sifir"}" title="${a.ad}: ${tl(a.t)}"><b>${a.t?tl(a.t):"0"}</b>${a.t?`<i style="height:${Math.max(4,a.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
-    <div class="gb-ay">${aylar.map((a,k)=>`<span class="${k===5?"bu":""}">${a.ad}</span>`).join("")}</div>
+    <div class="gb-ust"><div class="ana"><span>Toplam tahsilat</span><b data-sayac="topTahsil" data-deger="${topTL}">${tl(topTL)}</b></div><div><span>Bu ay</span><b>${tl(aylar[sonK].t)}</b></div><div><span>Ödeme</span><b>${tum.length}</b></div></div>
+    <h3 style="margin:18px 0 0">Aylara göre</h3>
+    <div class="gb" role="img" aria-label="Aylara göre tahsilat" style="--n:${aylar.length}">${aylar.map((a,k)=>`<div class="c ${k===sonK?"bu":""} ${a.t?"":"sifir"}" title="${a.ad}: ${tl(a.t)}"><b>${a.t?tl(a.t):"0"}</b>${a.t?`<i style="height:${Math.max(4,a.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
+    <div class="gb-ay" style="--n:${aylar.length}">${aylar.map((a,k)=>`<span class="${k===sonK?"bu":""}">${a.ad}</span>`).join("")}</div>
     <p class="ipucu" style="margin:10px 0 0">TL tutarlar ödemenin alındığı günün kuruyla hesaplanır.</p></section>
   ${gruplar.length?gruplar.map(g=>`<div class="bolum-baslik"><h2>${ayAdi(g.a)}</h2><small>${tl(g.t)} · ${g.l.length} ödeme</small></div>
   <section class="kart blok" style="padding-top:4px"><div class="odeme-liste" style="margin-top:0">${g.l.map(satir).join("")}</div></section>`).join("")
@@ -935,17 +939,17 @@ function gBekleyen(){
       <span class="cubuk"><i style="width:${p}%"></i></span>
       <span class="alt"><small>Ücret ${para(i.ucret,i.pb)} · %${p} ödendi<br>${son?`Son ödeme ${tarih(son.tarih,1)}`:"Henüz ödeme yok"}</small><small class="sure ${s.c}">${s.t}</small></span>
     </button>`};
-  const n=new Date(),buAy=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`,kova=[{ad:"Gecikmiş",gec:1,t:0}];
-  for(let k=0;k<4;k++){const d=new Date(n.getFullYear(),n.getMonth()+k,1);kova.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"short"}),bu:k===0,t:0})}
-  kova.push({ad:"Sonra",son:1,t:0});
-  l.forEach(i=>{const a=(i.teslim||"").slice(0,7),v=kalanTL(i);const x=!a?kova[5]:a<buAy?kova[0]:kova.find(k=>k.a===a)||kova[5];x.t+=v});
+  const n=new Date(),buAy=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`,kova=[{ad:"Gecikmiş",gec:1,t:0}],ayK={};let tarihsiz=0;
+  l.forEach(i=>{const a=(i.teslim||"").slice(0,7),v=kalanTL(i);if(!a)tarihsiz+=v;else if(a<buAy)kova[0].t+=v;else ayK[a]=(ayK[a]||0)+v});
+  Object.keys(ayK).sort().forEach(a=>kova.push({a,ad:new Date(a+"-01T00:00").toLocaleDateString("tr-TR",{month:"short"})+(a.slice(0,4)!==buAy.slice(0,4)?" ’"+a.slice(2,4):""),bu:a===buAy,t:ayK[a]}));
+  if(tarihsiz)kova.push({ad:"Tarihsiz",t:tarihsiz});
   const mx=Math.max(...kova.map(k=>k.t),1);
   return`<section class="kart blok" style="margin-top:16px">
     <div class="gb-ust kirmizi"><div class="ana"><span>Muhtemel ödeme</span><b data-sayac="topBekleyen" data-deger="${top}">${tl(top)}</b></div><div><span>Dolar alacak</span><b>${usd(usdT)}</b></div><div><span>TL alacak</span><b>${tl(tlT)}</b></div></div>
     <h3 style="margin:18px 0 0">Teslim ayına göre</h3>
-    <div class="gb kirmizi" role="img" aria-label="Teslim ayına göre bekleyen ödemeler">${kova.map(k=>`<div class="c ${k.bu?"bu":""} ${k.gec?"gec":""} ${k.t?"":"sifir"}" title="${k.ad}: ${tl(k.t)}"><b>${k.t?tl(k.t):"0"}</b>${k.t?`<i style="height:${Math.max(4,k.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
-    <div class="gb-ay kirmizi">${kova.map(k=>`<span class="${k.bu?"bu":""} ${k.gec?"gec":""}">${k.ad}</span>`).join("")}</div>
-    <p class="ipucu" style="margin:10px 0 0">Kalan ödemeler işin teslim tarihine göre dağıtıldı. Muhtemel ödeme, dolar alacakların her gün güncel kurla (1 $ = ${nf(KUR.usd,2)} ₺) TL'ye çevrilmesiyle hesaplanır. "Sonra": 4 aydan sonrası ve tarihsizler.</p></section>
+    <div class="gb kirmizi" style="--n:${kova.length}" role="img" aria-label="Teslim ayına göre bekleyen ödemeler">${kova.map(k=>`<div class="c ${k.bu?"bu":""} ${k.gec?"gec":""} ${k.t?"":"sifir"}" title="${k.ad}: ${tl(k.t)}"><b>${k.t?tl(k.t):"0"}</b>${k.t?`<i style="height:${Math.max(4,k.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
+    <div class="gb-ay kirmizi" style="--n:${kova.length}">${kova.map(k=>`<span class="${k.bu?"bu":""} ${k.gec?"gec":""}">${k.ad}</span>`).join("")}</div>
+    <p class="ipucu" style="margin:10px 0 0">Kalan ödemeler işin teslim tarihine göre dağıtıldı. Muhtemel ödeme, dolar alacakların her gün güncel kurla (1 $ = ${nf(KUR.usd,2)} ₺) TL'ye çevrilmesiyle hesaplanır.</p></section>
     
     ${l.length?`<div class="bekleyen-liste">${l.map(satir).join("")}</div>`:`<section class="kart blok"><p class="bos" style="padding:20px">Bekleyen ödeme yok. Hepsi tahsil edilmiş.</p></section>`}`;
 }
