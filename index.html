@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=61"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=62"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -340,6 +340,11 @@ textarea{resize:vertical;min-height:84px}
 .zc-s.fz .m{padding-top:2px}
 .cz-satir{display:flex;flex-direction:column;padding:10px 0;border-top:1px solid var(--line)}.cz-satir:first-of-type{border-top:0}.cz-satir b{font-weight:700}.cz-satir small{color:var(--muted);font-weight:600}
 .cz-bu{background:#dcf5e8;color:#0b6e4c;border-radius:999px;padding:1px 8px;font-size:.75rem;font-weight:800;margin-left:4px}
+.baslik-sat{display:flex;align-items:center;gap:10px}
+.kilitle-btn{border:0;background:var(--soft);color:var(--muted);border-radius:12px;height:36px;padding:0 10px;display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:.82rem;font-weight:800;cursor:pointer}
+.kilitle-btn:hover{color:var(--accent)}
+@media (max-width:520px){.kilitle-btn span{display:none}.kilitle-btn{width:36px;padding:0;justify-content:center}}
+.kilit-caps{margin:-4px 0 0;background:#fff3c4;color:#6b5000!important;border-radius:10px;padding:8px 10px;font-size:14px!important;font-weight:700}
 .zc{display:flex;flex-direction:column;position:relative;padding-left:4px}
 .zc-s{display:flex;align-items:flex-start;gap:12px;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0 0 14px;position:relative}
 .zc-s:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
@@ -462,6 +467,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <p>Devam etmek için şifreni gir.</p>
   <div class="kilit-alan"><svg class="kilit-ik" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><input id="kilitSifre" name="sifre" type="password" autocomplete="current-password" placeholder="Şifre" required><button type="button" class="kilit-goz" id="kilitGoz" aria-label="Şifreyi göster" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
   <div class="kilit-alt"><span id="kilitSay">0 karakter</span><span>Büyük/küçük harf fark etmez</span></div>
+  <p id="kilitCaps" class="kilit-caps" hidden>⇪ Caps Lock açık (sorun değil, büyük/küçük harf fark etmez)</p>
   <p id="kilitHata" class="kilit-durum hata" role="alert" hidden>Şifre yanlış, tekrar dene.</p>
   <button type="submit" class="kilit-btn" id="kilitBtn">Giriş yap</button>
   <small class="kilit-not">Bu cihaz şifreyi hatırlar, bir daha sorulmaz.</small>
@@ -640,7 +646,9 @@ function gCihazlar(){const g={};loglar.filter(l=>l.tur==="giris").forEach(l=>{co
   return`<section class="kart blok" style="margin-top:14px"><h3>Giriş yapılan cihazlar <small>${L.length}</small></h3>${L.length?L.map(x=>`<div class="cz-satir"><b>${esc(x.ad)}${x.bu?` <span class="cz-bu">bu cihaz</span>`:""}</b><small>Son giriş ${tarih(x.z.slice(0,10))} · ${saat(x.z)}</small></div>`).join(""):`<p class="ipucu" style="margin:0">Henüz kayıt yok. Cihazlar şifreyle giriş yaptıkça burada görünür.</p>`}<p class="ipucu" style="margin:8px 0 0">Liste, şifreyle giriş yapılan cihazları gösterir. Şifre değişirse hepsinden yeniden giriş istenir.</p></section>`}
 function kilitDurum(t,tur){const h=$("#kilitHata");if(!h)return;h.hidden=!t;h.textContent=t||"";h.className="kilit-durum "+(tur||"hata");if(tur==="hata"){const k=$("#kilitForm");k.classList.remove("titre");void k.offsetWidth;k.classList.add("titre")}}
 function sifreEkrani(hatali){const k=$("#kilit");if(!k)return;k.hidden=false;kilitDurum(hatali?"Şifre yanlış, tekrar dene.":"",hatali?"hata":"");setTimeout(()=>{const i=$("#kilitSifre");if(i){i.focus();i.select()}},50)}
-document.addEventListener("input",e=>{if(e.target.id==="kilitSifre"){const n=e.target.value.length;$("#kilitSay").textContent=n+" karakter";if(!$("#kilitHata").classList.contains("bekle"))kilitDurum("")}});
+const capsBak=e=>{if(e.target.id!=="kilitSifre")return;let c=false;try{c=e.getModifierState&&e.getModifierState("CapsLock")}catch(_){}const v=e.target.value;if(!c&&v.length>=2&&/[A-ZÇĞİÖŞÜ]/.test(v)&&v===v.toLocaleUpperCase("tr")&&v!==v.toLocaleLowerCase("tr"))c=true;const k=$("#kilitCaps");if(k)k.hidden=!c};
+document.addEventListener("keydown",capsBak);document.addEventListener("keyup",capsBak);
+document.addEventListener("input",e=>{capsBak(e);if(e.target.id==="kilitSifre"){const n=e.target.value.length;$("#kilitSay").textContent=n+" karakter";if(!$("#kilitHata").classList.contains("bekle"))kilitDurum("")}});
 document.addEventListener("click",e=>{const g=e.target.closest("#kilitGoz");if(!g)return;const i=$("#kilitSifre"),ac=i.type==="password";i.type=ac?"text":"password";g.setAttribute("aria-pressed",ac);g.setAttribute("aria-label",ac?"Şifreyi gizle":"Şifreyi göster");g.classList.toggle("acik",ac);i.focus()});
 async function apiCagir(fn,a){
   const s=sifreAl();if(!s){sifreEkrani(false);throw new Error("Şifre gerekli")}
@@ -693,7 +701,7 @@ function ciz(){
 function hero(){
   const s=new Date().getHours(),sel=s<6?"İyi geceler":s<12?"Günaydın":s<18?"İyi günler":"İyi akşamlar";
   return`<header class="ust-bar">
-    <div><p>${sel.toLocaleUpperCase("tr")} · ${new Date().toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"})}</p><h1>Dr Tez Akademi</h1></div>
+    <div><p>${sel.toLocaleUpperCase("tr")} · ${new Date().toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"})}</p><div class="baslik-sat"><h1>Dr Tez Akademi</h1><button type="button" class="kilitle-btn" data-kilitle aria-label="Uygulamayı kilitle" title="Kilitle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><span>Kilitle</span></button></div></div>
     <button type="button" class="kur2" data-kur aria-label="Dolar kurunu değiştir"><small>${esc(KUR.kaynak||"Kur")} · ${tarih(KUR.tarih,1)}${KUR.zaman&&KUR.tarih===bugun()?" "+new Date(KUR.zaman).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}):""}</small><b>1 $ = ${nf(KUR.usd,2)} ₺</b></button>
   </header>
   ${kurDuzen?`<form class="kur-form2" id="kurForm"><input id="kur-deger" name="usd" type="text" inputmode="decimal" autocomplete="off" value="${KUR.usd}" required aria-label="1 dolar kaç TL"><button class="btn ana" type="submit">Kaydet</button>
@@ -1160,6 +1168,7 @@ document.addEventListener("click",async e=>{
   if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
   if(ds.f){filtre=ds.f;uiSakla();ciz();return}
   if(ds.ay){ayKaydir(+ds.ay);return}
+  if(ds.kilitle!==undefined){sifreYaz("");sifreEkrani(false);kilitDurum("🔒 Kilitlendi. Girmek için şifreni yaz.","bekle");return}
   if(ds.ozettum!==undefined){ozetAcik=!ozetAcik;ciz();return}
   if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
   if(ds.logsil){arkada(logSil(ds.logsil));toast("Not silindi");return}
