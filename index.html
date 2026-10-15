@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=83"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=84"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -974,9 +974,9 @@ function logListe(l,adli){
 
 /* ===== detay ===== */
 function ekranAc(t,h){ekranTur=t;const e=$("#ekran");e.hidden=false;e.innerHTML=h;e.scrollTop=0;document.body.style.overflow="hidden"}
-function ekranKapa(){ekranTur=null;acikId=null;const e=$("#ekran");e.hidden=true;e.innerHTML="";document.body.style.overflow=""}
+function ekranKapa(){ekranTur=null;acikId=null;ODZ=null;odemeAcik=false;kurElle.o=false;HIZLI=null;const e=$("#ekran");e.hidden=true;e.innerHTML="";document.body.style.overflow=""}
 let ODZ=null,odemeAcik=false;
-function detayAc(id,mod){if(acikId!==id)odemeAcik=false;acikId=id;ODZ=null;ekranAc("detay","");detayCiz();mod==="yok"?0:mod==="degistir"?navDegistir():navIt()}
+function detayAc(id,mod){if(acikId!==id){odemeAcik=false;kurElle.o=false}acikId=id;ODZ=null;ekranAc("detay","");detayCiz();mod==="yok"?0:mod==="degistir"?navDegistir():navIt()}
 /* ===== Canlı rakamlar: değer değişince sayaç gibi akar ===== */
 const SAYAC={};
 function sayaclariOynat(){
@@ -1004,14 +1004,14 @@ function navIt(){if(popIsleniyor)return;try{gecmisDerin++;history.pushState(navD
 function navDegistir(){if(popIsleniyor)return;try{history.replaceState(navDurum(),"")}catch(_){}}
 function navGeri(yedek){if(gecmisDerin>0){try{history.back();return}catch(_){}}yedek();navDegistir()}
 window.addEventListener("popstate",e=>{const s=e.state||{v:"isler",d:0};popIsleniyor=true;
-  try{gecmisDerin=s.d||0;v=s.v||"isler";odemeSekme=s.os||"alinan";takvimSifirla();kurDuzen=false;
+  try{gecmisDerin=s.d||0;const eskiV=v;v=s.v||"isler";odemeSekme=s.os||"alinan";if(!(eskiV==="takvim"&&v==="takvim"))takvimSifirla();kurDuzen=false;
     const var_=s.id&&isler.some(x=>x.id===s.id);
     if((s.e==="detay"||s.e==="form")&&var_){if(!(ekranTur==="detay"&&acikId===s.id))detayAc(s.id,"yok")}
     else if(ekranTur)ekranKapa();
     ciz()}finally{popIsleniyor=false}});
 function detayCiz(){
   const i=isler.find(x=>x.id===acikId);if(!i){ekranKapa();navDegistir();return}
-  const e=$("#ekran"),st=e.scrollTop,deger={};e.querySelectorAll("input[id],textarea[id]").forEach(x=>{deger[x.id]=x.type==="radio"?x.checked:x.value});
+  const e=$("#ekran"),st=e.scrollTop,deger={},kurNot0=$("#kurNot")?.textContent;e.querySelectorAll("input[id],textarea[id]").forEach(x=>{deger[x.id]=x.type==="radio"?x.checked:x.value});
   const s=sureMetni(i),f=fark(i.teslim),d=new Set(i.asamalar||[]),wa=telNorm(i.iletisim),k=kalan(i),U=i.pb==="USD";
   const kTL=U?k*KUR.usd:k;
   e.innerHTML=`
@@ -1075,6 +1075,7 @@ function detayCiz(){
   </div>`;
   Object.entries(deger).forEach(([k2,v2])=>{const x=e.querySelector("#"+CSS.escape(k2));if(x){x.type==="radio"?x.checked=v2:x.value=v2}});
   e.querySelectorAll(".tsec").forEach(w=>tsSync(w.dataset.for));
+  if(kurNot0&&$("#kurNot"))$("#kurNot").textContent=kurNot0;kurGoster("o");
   onizle();e.scrollTop=st;
 }
 function kurBul(t){
@@ -1124,7 +1125,7 @@ document.addEventListener("focusin",e=>{const id=e.target&&e.target.id;
    Bir ödeme düzenleniyorsa o ödeme hariç kalan hesaplanır (düzenlenen ödeme onun yerine geçeceği için). */
 function hizliCiz(i,pb,kr){
   const hz=$("#hizliAlan");if(!hz)return;
-  const kk=kalan(i),U=i.pb==="USD";
+  const kk=kalan(ODZ!==null?{...i,odemeler:(i.odemeler||[]).filter((_,n)=>n!==ODZ)}:i),U=i.pb==="USD";
   if(!(kk>0.009)){hz.hidden=false;hz.innerHTML=`<div class="kalan-bilgi tamam">Borç kalmadı</div>`;return}
   const bilgi=`<div class="kalan-bilgi">Kalan borç: <b>${para(kk,i.pb)}</b>${U?` · güncel kurla <b>${tl(kk*KUR.usd)}</b>`:""}</div>`;
   if(ODZ!==null){hz.hidden=false;hz.innerHTML=bilgi;return}
@@ -1148,7 +1149,7 @@ function odemeEk(o){if(o.pb!=="USD")return"";const d=(+o.tutar||0)*oKur(o),al=+o
   return`<span class="kurla">O günün kuruyla <strong>${tl(d)}</strong>${al&&Math.abs(f)>=1?` · <strong class="${f<0?"uy-eksik":"uy-fazla"}">${tl(Math.abs(f))} ${f<0?"eksik":"fazla"}</strong>`:""}</span>`}
 /* Dolar ödemede: elime geçen TL ile o günün kuru karşılaştırması */
 function alinanGoster(p,t,pb,kr){const a=$("#"+p+"-alinanAlan");if(!a)return;a.hidden=pb!=="USD";const y=$("#"+p+"-yan");if(y)y.innerHTML="";if(pb!=="USD")return;
-  const al=sayi($("#"+p+"-alinan").value),deger=t*kr,tr=$("#"+p+"-tarih")?.value,ne=kurElle[p]?"elle girilen kurla":tr===bugun()&&kurBul(tr)?.d===tr?"canlı kurla":tr===bugun()?"son kurla":"o günün kuruyla";
+  const al=sayi($("#"+p+"-alinan").value),deger=t*kr,tr=$("#"+p+"-tarih")?.value,ne=kurElle[p]?"elle girilen kurla":(p==="o"?ODZ!==null:FORM?.duz!=null)?"kayıtlı kurla":tr===bugun()&&kurBul(tr)?.d===tr?"canlı kurla":tr===bugun()?"son kurla":"o günün kuruyla";
   const n=$("#"+p+"-alinanNot");if(!t){n.textContent="";return}
   if(y)y.innerHTML=`<b>= ${tl(deger)}</b><small>${ne}</small>`;
   if(!al){n.textContent="";return}
@@ -1214,7 +1215,7 @@ function formAc(eski){setTimeout(navIt,0);
       </div></div>
     </section>
   </form>`);
-  FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null,durum0:i.durum};mkAsama();
+  FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null,durum0:i.durum,yeni};mkAsama();
   ucretOn();fOdemeCiz();
   $("#isForm").onsubmit=async ev=>{
     ev.preventDefault();if(sayi($("#fo-tutar").value)&&fOdemeEkle(true)===false)return;else if(FORM.duz!==null)fGirisTemizle();
@@ -1292,7 +1293,10 @@ function ucretOn(){const el=$("#ucretTL");if(!el)return;const u=$("#f-pb-1")?.ch
 /* ===== olaylar ===== */
 /* Para birimi değişince tutar sıfırlanır (TL tutarı dolara taşınmasın) */
 document.addEventListener("change",e=>{const id=e.target.id;const on=/^o-pb-/.test(id)?"o":/^fo-pb-/.test(id)?"fo":null;if(!on)return;
-  const t=$("#"+on+"-tutar"),a=$("#"+on+"-alinan");if(t)t.value="";if(a)a.value="";if(on==="o")HIZLI=null},true);
+  const t=$("#"+on+"-tutar"),a=$("#"+on+"-alinan");if(t)t.value="";if(a)a.value="";if(on==="o")HIZLI=null;
+  if(kurElle[on]){kurElle[on]=false;const d=$("#"+on+"-tarih")?.value,k=kurBul(d);if(k)$("#"+on+"-kur").value=k.v;const n=$("#"+(on==="o"?"kurNot":"fo-kurNot"));if(n)n.textContent=kurNotu(d);kurGoster(on)}},true);
+/* Yeni işte ücret birimi değişince ücret sıfırlanır */
+document.addEventListener("change",e=>{if(!/^f-pb-/.test(e.target.id)||!FORM?.yeni)return;const u=$("#f-ucret");if(u){u.value="";try{ucretOn()}catch(_){}}},true);
 /* TL aldım / Dolar aldım seçilince klavye tutarda açılsın */
 document.addEventListener("click",e=>{const r=e.target.closest("label")?.querySelector('input[type=radio]');if(!r)return;
   const on=/^o-pb-/.test(r.id)?"o":/^fo-pb-/.test(r.id)?"fo":null;if(!on)return;const t=$("#"+on+"-tutar");if(t){t.focus({preventScroll:true});const n=t.value.length;try{t.setSelectionRange(n,n)}catch(_){}}});
@@ -1331,7 +1335,7 @@ document.addEventListener("click",async e=>{
   if(ds.onot){$("#o-not").value=ds.onot;$("#o-tutar").focus();return}
   if(ds.yeniodeme!==undefined&&isler.find(x=>x.id===acikId)?.beklemede){kilitUyari();return}
   if(ds.yeniodeme!==undefined){odemeAcik=true;detayCiz();$("#o-tutar")?.focus({preventScroll:true});kurTarihten();setTimeout(()=>{$("#odemeForm")?.scrollIntoView({behavior:"smooth",block:"start"});if(document.activeElement?.id!=="o-tutar")$("#o-tutar")?.focus({preventScroll:true})},30);return}
-  if(ds.yenikapa!==undefined){odemeAcik=false;detayCiz();return}
+  if(ds.yenikapa!==undefined){odemeAcik=false;kurElle.o=false;HIZLI=null;detayCiz();return}
   if(ds.tur){const h=$("#"+ds.tur+"-not");if(h){h.value=ds.turdeger;turGoster(ds.tur);t.closest(".tur-sec")?.classList.remove("eksik");setTimeout(()=>$("#"+ds.tur+"-tutar")?.focus(),30)}return}
   if(ds.eknot){const e=$("#"+ds.eknot+"-ek");if(e){e.hidden=false;e.focus()}return}
   if(ds.kopya){try{await navigator.clipboard.writeText(ds.kopya);toast("Kopyalandı")}catch(_){toast(ds.kopya)}return}
@@ -1348,7 +1352,7 @@ document.addEventListener("click",async e=>{
     $("#kurNot").textContent=`Bu ödemede kaydedilen kur: 1 $ = ${nf(oKur(o),2)} ₺`;kurElle.o=false;kurGoster("o");onizle();$("#odemeForm").scrollIntoView({behavior:"smooth",block:"center"});return}
   if(ds.oduzvaz!==undefined){ODZ=null;odemeAcik=false;kurElle.o=false;HIZLI=null;detayCiz();return}
   if(ds.odsil!==undefined){if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";setTimeout(()=>{if(t.isConnected){t.classList.remove("emin");t.textContent="Bu ödemeyi sil"}},4000);return}
-    ODZ=null;odemeAcik=false;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);arkada(isYaz({...i,odemeler:o}),log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`));toast("Ödeme silindi");return}
+    ODZ=null;odemeAcik=false;kurElle.o=false;$("#odemeForm")?.reset();tsSync("o-tarih");const o=[...i.odemeler],[x]=o.splice(+ds.odsil,1);arkada(isYaz({...i,odemeler:o}),log(i,`Ödeme kaydı silindi: ${para(x.tutar,x.pb)} (${tarih(x.tarih)})`));toast("Ödeme silindi");return}
   if(ds.issil!==undefined){
     if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Silmek için tekrar dokun";setTimeout(()=>{t.classList.remove("emin");t.textContent="Bu işi sil"},4000);return}
     arkada(log(i,"İş silindi"),isSil(i.id));navGeri(ekranKapa);toast("İş silindi")}
@@ -1371,7 +1375,7 @@ document.addEventListener("submit",async e=>{
   const i=isler.find(x=>x.id===acikId);if(!i)return;
   if(e.target.id==="odemeForm"){e.preventDefault();if(isler.find(x=>x.id===acikId)?.beklemede){kilitUyari();return}if(!turVarMi("o"))return;const f=new FormData(e.target);
     const o={tarih:f.get("tarih"),tutar:sayi(f.get("tutar")),pb:f.get("pb")||"TRY",kur:kurSayi(f.get("kur"))||KUR.usd,not:(f.get("not")||"").trim()};{const al=sayi($("#o-alinan")?.value),ek=($("#o-ek")?.value||"").trim();if(o.pb==="USD"&&al>0)o.alinanTL=al;if(ek)o.ekNot=ek}
-    if(!o.tutar)return;const arr=[...(i.odemeler||[])],dz=ODZ,eski=dz!==null?arr[dz]:null;
+    if(!o.tutar){toast("Tutar gir");$("#o-tutar")?.focus();return}const arr=[...(i.odemeler||[])],dz=ODZ,eski=dz!==null?arr[dz]:null;
     if(dz!==null)arr[dz]=o;else arr.push(o);
     const od=arr.sort((a,b)=>a.tarih.localeCompare(b.tarih));
     ODZ=null;odemeAcik=false;kurElle.o=false;HIZLI=null;e.target.reset();tsSync("o-tarih");tarihYaz("o-tarih",bugun());kurTarihten();
