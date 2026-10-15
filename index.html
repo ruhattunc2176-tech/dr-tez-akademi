@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=74"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=75"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -923,8 +923,7 @@ function gAlinan(){
     <div class="gb-ust"><div class="ana"><span>Toplam tahsilat</span><b data-sayac="topTahsil" data-deger="${topTL}">${tl(topTL)}</b></div><div><span>Bu ay</span><b>${tl(aylar[sonK].t)}</b></div><div><span>Ödeme</span><b>${tum.length}</b></div></div>
     <h3 style="margin:18px 0 0">Aylara göre</h3>
     <div class="gb" role="img" aria-label="Aylara göre tahsilat" style="--n:${aylar.length}">${aylar.map((a,k)=>`<div class="c ${k===sonK?"bu":""} ${a.t?"":"sifir"}" title="${a.ad}: ${tl(a.t)}"><b>${a.t?tl(a.t):"0"}</b>${a.t?`<i style="height:${Math.max(4,a.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
-    <div class="gb-ay" style="--n:${aylar.length}">${aylar.map((a,k)=>`<span class="${k===sonK?"bu":""}">${a.ad}</span>`).join("")}</div>
-    <p class="ipucu" style="margin:10px 0 0">TL tutarlar ödemenin alındığı günün kuruyla hesaplanır.</p></section>
+    <div class="gb-ay" style="--n:${aylar.length}">${aylar.map((a,k)=>`<span class="${k===sonK?"bu":""}">${a.ad}</span>`).join("")}</div></section>
   ${gruplar.length?gruplar.map(g=>`<div class="bolum-baslik"><h2>${ayAdi(g.a)}</h2><small>${tl(g.t)} · ${g.l.length} ödeme</small></div>
   <section class="kart blok" style="padding-top:4px"><div class="odeme-liste" style="margin-top:0">${g.l.map(satir).join("")}</div></section>`).join("")
   :`<section class="kart blok"><p class="bos" style="padding:20px">Henüz ödeme yok.</p></section>`}`;
