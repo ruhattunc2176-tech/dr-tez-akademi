@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=55"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=56"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -460,7 +460,7 @@ function uyariHesapla(i,bugun,A,kalanMetin){
   const durum=i.durum==="Devam ediyor"?"Teze başlandı":i.durum==="Görüşme"?"Ön görüşme":i.durum;
   A=A||i.asamaT||{};
   if(durum==="İptal")return out;
-  if(durum==="Ön görüşme"){const t=i.olusturma||(i.gecmis&&i.gecmis[0]&&i.gecmis[0].t)||i.baslangic;const g=t?G(t,bugun):0;if(g>=7)ek(1,"Ön görüşme "+g+" gündür bekliyor · dönüş yap");return out}
+  if(durum==="Ön görüşme"){const t=i.baslangic||i.olusturma||(i.gecmis&&i.gecmis[0]&&i.gecmis[0].t);const g=t?G(t,bugun):0;if(g>=7)ek(1,"Ön görüşme "+g+" gündür bekliyor · dönüş yap");return out}
   if(durum==="Teslim edildi"){if(kalanMetin)ek(2,"Teslim edildi, "+kalanMetin+" alacak kaldı");return out}
   if(i.beklemede){const g=i.bekleT?G(i.bekleT,bugun):0;if(g>=10)ek(2,g+" gündür müşteriden dönüş bekleniyor");return out}
   const kg=i.teslim?G(bugun,i.teslim):null,ileri=SONRA.some(s=>A[s]);
@@ -491,7 +491,8 @@ function asamaT(i){if(i.asamaT)return i.asamaT;const L=DURUMLAR,ci=L.indexOf(ESK
   if(!o[L[ci]])o[L[ci]]=(i.baslangic||bugun())+"T00:00:00";return o}
 function durumTuret(i,a){if(a["İptal"])return"İptal";const L=durumlar(i).filter(d=>d!=="İptal"&&a[d]);return L.length?L[L.length-1]:ADAY}
 function asamaDegis(i,d){const a={...asamaT(i)},ac=!a[d],z=new Date().toISOString();if(ac)a[d]=z;else delete a[d];
-  const y={...i,asamaT:a,gecmis:[...(i.gecmis||[]),ac?{d,t:z}:{d,t:z,geri:true}]};y.durum=durumTuret(y,a);return{y,ac}}
+  const y={...i,asamaT:a,gecmis:[...(i.gecmis||[]),ac?{d,t:z}:{d,t:z,geri:true}]};y.durum=durumTuret(y,a);
+  if(i.durum===ADAY&&y.durum!==ADAY){y.gorusme=i.gorusme||i.baslangic;y.baslangic=bugun();if(!y.teslim)setTimeout(()=>toast("İş başladı · teslim tarihini Düzenle’den gir"),400)}return{y,ac}}
 let gocYapildi=false;
 function gocEt(){if(gocYapildi)return;gocYapildi=true;isler.filter(i=>ESKI_DURUM[i.durum]).forEach(i=>{const y=ESKI_DURUM[i.durum];arkada(isYaz({...i,durum:y,gecmis:i.gecmis&&i.gecmis.length||y===ADAY?(i.gecmis||[]):[{d:y,t:(i.baslangic||bugun())+"T00:00:00"}]}))})}
 const TURLER=["Yüksek lisans","Doktora","Uzmanlık tezi","Lisans bitirme","Proje / Ödev","Diğer"];
@@ -874,8 +875,8 @@ function detayCiz(){
 
     <section class="kart blok"><h3>Bilgiler</h3><div class="bilgi">
       <div><span>Para birimi</span><b>${U?"Dolar ($)":"Türk lirası (₺)"}</b></div>
-      <div><span>Başlangıç</span><b>${tarih(i.baslangic)}</b></div>
-      <div><span>Teslim</span><b>${tarih(i.teslim)}</b></div>
+      ${i.durum===ADAY?`<div><span>Ön görüşme</span><b>${tarih(i.baslangic)}</b></div>`:`${i.gorusme?`<div><span>Ön görüşme</span><b>${tarih(i.gorusme)}</b></div>`:""}<div><span>Başlangıç</span><b>${tarih(i.baslangic)}</b></div>`}
+      ${i.durum===ADAY?"":`<div><span>Teslim</span><b>${tarih(i.teslim)}</b></div>`}
       ${i.baslangic&&i.teslim?`<div><span>Toplam süre</span><b>${Math.round((new Date(i.teslim)-new Date(i.baslangic))/864e5)} gün</b></div>`:""}
     </div></section>
 
@@ -978,16 +979,16 @@ function formAc(eski){setTimeout(navIt,0);
       <div class="alan"><span>Makale de yapılacak mı?</span><div class="secim mk-sec"><label><input type="radio" id="f-makale-0" name="makale" value="1" ${i.makale?"checked":""}><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg> Makale var</span></label><label><input type="radio" id="f-makale-1" name="makale" value="" ${i.makale?"":"checked"}><span>Yok</span></label></div></div>
     </section>
     <section class="kart blok" style="display:flex;flex-direction:column;gap:14px">
+      ${yeni?`<div class="alan"><span>Hangi aşamada başlıyoruz?</span>${radyo("durum",DURUMLAR.filter(x=>!["Teslim edildi","İptal"].includes(x)),i.durum,renk,x=>x===ADAY?"Ön görüşme (muhtemel müşteri)":x)}<small class="ipucu" id="f-asamaNot"></small></div>`:""}
       <div class="alan"><span>Ücret hangi para biriminde?</span>${radyo("pb",["TRY","USD"],i.pb||"TRY",null,x=>x==="USD"?"$ Dolar":"₺ Türk lirası")}</div>
       <div class="izgara" style="margin:0">
         <label>Toplam ücret<input id="f-ucret" name="ucret" type="text" inputmode="decimal" class="para-in" autocomplete="off" value="${i.ucret?fmtGiris(i.ucret):""}" required></label>
         <span></span>
         <p class="ipucu tam" id="ucretTL" style="margin:0"></p>
-        <div class="alan tam"><span>Başlangıç</span>${tarihSec("f-bas","baslangic",i.baslangic,false,true)}</div>
-        <div class="alan tam"><span>Tahmini teslim</span>${tarihSec("f-teslim","teslim",i.teslim,false,true)}</div>
+        <div class="alan tam"><span id="f-basEt">Başlangıç</span>${tarihSec("f-bas","baslangic",i.baslangic,false,true)}</div>
+        <div class="alan tam" id="f-teslimAlan"><span>Tahmini teslim</span>${tarihSec("f-teslim","teslim",i.teslim,false,true)}</div>
       </div>
-      <div class="hizli"><span class="ipucu" style="align-self:center">Teslim:</span>${[[30,"1 ay"],[60,"2 ay"],[90,"3 ay"],[180,"6 ay"]].map(([g,t])=>`<button type="button" class="mini-btn" data-sure="${g}">${t}</button>`).join("")}</div>
-      ${yeni?`<div class="alan"><span>Başlangıç</span>${radyo("durum",DURUMLAR,i.durum,renk,x=>x===ADAY?"Ön görüşme (muhtemel müşteri)":x)}</div>`:""}
+      <div class="hizli" id="f-sureAlan"><span class="ipucu" style="align-self:center">Teslim:</span>${[[30,"1 ay"],[60,"2 ay"],[90,"3 ay"],[180,"6 ay"]].map(([g,t])=>`<button type="button" class="mini-btn" data-sure="${g}">${t}</button>`).join("")}</div>
     </section>
     <section class="kart blok"><h3>Ödemeler <small id="fo-ozet"></small></h3>
       <div id="fo-liste"></div>
@@ -1013,12 +1014,12 @@ function formAc(eski){setTimeout(navIt,0);
       </div></div>
     </section>
   </form>`);
-  FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null};mkAsama();
+  FORM={odm:(i.odemeler||[]).map(o=>({...o})),silinen:[],duzeltilen:[],duz:null,durum0:i.durum};mkAsama();
   ucretOn();fOdemeCiz();
   $("#isForm").onsubmit=async ev=>{
     ev.preventDefault();if(sayi($("#fo-tutar").value)&&fOdemeEkle(true)===false)return;else if(FORM.duz!==null)fGirisTemizle();
     const f=new FormData(ev.target),n={...i};
-    ["musteri","konu","baslangic","teslim","tur","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");if(yeni){n.durum=f.get("durum")||"Teze başlandı";if(!n.makale&&n.durum===MAKALE_ASAMA)n.durum="Tez yazımına başlandı";const z=new Date().toISOString();n.asamaT=n.durum===ADAY?{}:{[n.durum]:z};n.gecmis=[{d:n.durum,t:z}]}else n.durum=durumTuret(n,asamaT(n));
+    ["musteri","konu","baslangic","teslim","tur","pb"].forEach(k=>n[k]=(f.get(k)||"").trim());n.makale=!!f.get("makale");if(yeni){n.durum=f.get("durum")||"Teze başlandı";if(!n.makale&&n.durum===MAKALE_ASAMA)n.durum="Tez yazımına başlandı";const z=new Date().toISOString(),bt=(n.baslangic||bugun())+"T00:00:00";if(n.durum===ADAY){n.asamaT={};n.teslim=""}else{const L=durumlar(n),k=L.indexOf(n.durum);n.asamaT={};L.slice(0,k).filter(x=>!["Revizyonda",MAKALE_ASAMA].includes(x)).forEach(x=>n.asamaT[x]=bt);n.asamaT[n.durum]=k>0?z:bt}n.gecmis=[{d:n.durum,t:z}]}else n.durum=durumTuret(n,asamaT(n));
     n.ucret=sayi(f.get("ucret"));if(yeni)n.olusturma=new Date().toISOString();
     const yeniOd=FORM.odm.filter(o=>o._yeni),silinen=FORM.silinen;
     const duzeltilen=FORM.duzeltilen.filter(([,y])=>FORM.odm.includes(y)&&!y._yeni);
@@ -1063,7 +1064,10 @@ function fOnizle(){
   if(!t||pb==="USD"||jp!=="USD"){el.hidden=true;return}
   el.hidden=false;el.textContent=`${tl(t)} = ${usd(t/kr)}`;
 }
-function mkAsama(){const x=$("#f-durum-"+DURUMLAR.indexOf(MAKALE_ASAMA));if(!x)return;const m=$("#f-makale-0")?.checked;x.closest("label").hidden=!m;if(!m&&x.checked){const t=$("#f-durum-"+DURUMLAR.indexOf("Tez yazımına başlandı"));if(t)t.checked=true}}
+function fAday(){const sec=$('input[name="durum"]:checked'),d=sec?sec.value:(FORM&&FORM.durum0)||"";const a=d===ADAY;
+  const e=$("#f-basEt");if(!e)return;e.textContent=a?"Ön görüşme tarihi":"Teze başlangıç tarihi";$("#f-teslimAlan").hidden=a;$("#f-sureAlan").hidden=a;
+  const n=$("#f-asamaNot");if(n){const L=DURUMLAR.filter(x=>x!==ADAY),k=L.indexOf(d);n.textContent=a?"Muhtemel müşteri: teslim tarihi sonra, işe başlayınca girilir.":k>0?`Önceki aşamalar da tiklenir: ${L.slice(0,k).filter(x=>!["Revizyonda",MAKALE_ASAMA].includes(x)).join(", ")}.`:""}}
+function mkAsama(){fAday();const x=$("#f-durum-"+DURUMLAR.indexOf(MAKALE_ASAMA));if(!x)return;const m=$("#f-makale-0")?.checked;x.closest("label").hidden=!m;if(!m&&x.checked){const t=$("#f-durum-"+DURUMLAR.indexOf("Tez yazımına başlandı"));if(t)t.checked=true}}
 function fKutu(ac,duz){const k=$("#fo-kutu"),b=$("#fo-ac");if(!k)return;k.hidden=!ac;b.hidden=!!ac;k.classList.toggle("duzen",!!duz);$("#fo-baslik").textContent=duz?"Ödemeyi düzenle":"Yeni ödeme"}
 function fGirisTemizle(){fKutu(false);FORM.duz=null;kurElle.fo=false;$("#fo-tutar").value="";$("#fo-not").value="";$("#fo-alinan").value="";$("#fo-ek").value="";$("#fo-ek").hidden=true;tarihYaz("fo-tarih",bugun());const k=kurBul(bugun());if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(bugun());tazeKurDoldur("fo");$("#fo-pb-try").checked=true;
   $("#fo-ekle").textContent="Ödeme ekle";$("#fo-duzAraclar").hidden=true;const s=$("[data-fsil]");s.classList.remove("emin");s.textContent="Bu ödemeyi sil"}
@@ -1153,7 +1157,7 @@ document.addEventListener("input",e=>{
 document.addEventListener("change",e=>{if(e.target.id==="sirala"){sirala=e.target.value;uiSakla();ciz()}
   if(e.target.id==="o-pb-try"||e.target.id==="o-pb-usd")onizle();if(e.target.id==="o-tarih")kurTarihten();
   if(e.target.id==="fo-tarih"){const k=kurBul(e.target.value);if(k)$("#fo-kur").value=k.v;$("#fo-kurNot").textContent=kurNotu(e.target.value);if(e.target.value===bugun())tazeKurDoldur("fo")}
-  if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-makale"))mkAsama();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
+  if(e.target.id?.startsWith("fo-"))fOnizle();if(e.target.id?.startsWith("f-makale")||e.target.name==="durum")mkAsama();if(e.target.id?.startsWith("f-pb")){ucretOn();fOdemeCiz()}if(e.target.id.startsWith("f-pb"))ucretOn()});
 document.addEventListener("submit",async e=>{
   if(e.target.id==="kurForm"){e.preventDefault();const u=kurSayi(new FormData(e.target).get("usd"));if(!u)return;const eski=KUR.usd;kurDuzen=false;
     arkada(kurYaz({usd:u,tarih:bugun(),kaynak:"Elle girildi",zaman:new Date().toISOString()}),log(null,`Kur güncellendi: ${nf(eski,4)} → ${nf(u,4)} ₺`));toast("Kur kaydedildi");return}
