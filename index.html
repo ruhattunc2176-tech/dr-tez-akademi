@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=68"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=69"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -480,6 +480,24 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   #gorunum.v-isler .isler{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px!important}
   #gorunum.v-ozet>.ozet-kart,#gorunum.v-odemeler>*:not(.ust-bar){max-width:980px}
 }
+
+/* Ödemeler sekme kaydırma */
+.osek{position:relative}
+.osek button{position:relative;z-index:1;transition:color .25s}
+.osek button[aria-selected="true"]{background:transparent}
+.osek-ind{position:absolute;top:5px;bottom:5px;left:5px;width:calc(50% - 8px);border-radius:12px;background:var(--accent);transition:transform .45s cubic-bezier(.22,.9,.24,1),background .3s}
+.osek.bek .osek-ind{background:var(--gec);transform:translateX(calc(100% + 6px))}
+.osa{position:relative;overflow-x:clip}
+.osp{transform-origin:50% 120px;background:var(--bg)}
+.osa:not(.kayiyor)[data-s="0"] .osp[data-i="1"],.osa:not(.kayiyor)[data-s="1"] .osp[data-i="0"]{display:none}
+.osa.kayiyor .osp[data-i="1"]{position:absolute;top:0;left:0;right:0;z-index:2;box-shadow:-14px 0 30px rgba(0,0,0,.16)}
+.osa.kayiyor[data-s="1"] .osp[data-i="1"]{position:relative}
+.osa.kayiyor[data-s="1"] .osp[data-i="0"]{position:absolute;top:0;left:0;right:0}
+@media (prefers-reduced-motion:reduce){.osp,.osek-ind{transition:none!important}}
+
+.gb-ust.kirmizi{grid-template-columns:1.3fr .85fr 1fr}.gb-ust.kirmizi .ana small{display:block;font-size:11px;color:#ffe1de;font-weight:600;margin-top:2px}.gb-ust.kirmizi .ana{background:var(--gec)}.gb-ust.kirmizi .ana span{color:#ffe1de}.gb-ust.kirmizi .ana b{color:#fff}
+.gb.kirmizi .c i{background:#e8837b}.gb.kirmizi .c.bu i{background:var(--gec)}.gb.kirmizi .c.gec i{background:#8f1d1d}
+.gb-ay.kirmizi .bu{color:var(--gec)}.gb-ay.kirmizi .gec{color:#8f1d1d}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -825,11 +843,37 @@ function gTakvim(){
 
 let odemeSekme="alinan";
 function gOdemeler(){
-  const sek=`<div class="sekmeler" role="tablist">
-    <button type="button" role="tab" data-osekme="alinan" aria-selected="${odemeSekme==="alinan"}">Alınan ödemeler</button>
-    <button type="button" role="tab" data-osekme="bekleyen" aria-selected="${odemeSekme==="bekleyen"}">Bekleyen ödemeler</button></div>`;
-  return sek+(odemeSekme==="bekleyen"?gBekleyen():gAlinan());
+  const b=odemeSekme==="bekleyen";
+  const sek=`<div class="sekmeler osek${b?" bek":""}" role="tablist"><i class="osek-ind" aria-hidden="true"></i>
+    <button type="button" role="tab" data-osekme="alinan" aria-selected="${!b}">Alınan ödemeler</button>
+    <button type="button" role="tab" data-osekme="bekleyen" aria-selected="${b}">Bekleyen ödemeler</button></div>`;
+  return sek+`<div class="osa" data-s="${b?1:0}"><div class="osp" data-i="0">${gAlinan()}</div><div class="osp" data-i="1">${gBekleyen()}</div></div>`;
 }
+/* Alınan ↔ Bekleyen: derinlikli kaydırma (B) */
+const OYAY="transform .45s cubic-bezier(.22,.9,.24,1),opacity .45s";
+function oParca(){const a=document.querySelector(".osa");if(!a)return null;return{a,p0:a.querySelector('[data-i="0"]'),p1:a.querySelector('[data-i="1"]'),sek:document.querySelector(".osek"),ind:document.querySelector(".osek-ind")}}
+function oGecis(o,acik){const v=acik?OYAY:"none";o.p0.style.transition=o.p1.style.transition=v;o.ind.style.transition=acik?"transform .45s cubic-bezier(.22,.9,.24,1),background .3s":"none"}
+function oCiz(o,p){const W=o.a.clientWidth,q=Math.max(0,Math.min(1,p));o.a.classList.add("kayiyor");
+  o.p1.style.transform=`translateX(${(1-p)*(W+30)}px)`;
+  o.p0.style.transform=`translateX(${-q*W*.18}px) scale(${1-q*.08})`;o.p0.style.opacity=String(1-q*.5);
+  o.ind.style.transform=`translateX(calc(${p*100}% + ${p*6}px))`;o.sek.classList.toggle("bek",q>=.5);
+  o.sek.querySelectorAll("button").forEach((b,k)=>b.setAttribute("aria-selected",String(k===(q>=.5?1:0))))}
+function oBitir(o,s){o.a.classList.remove("kayiyor");o.a.dataset.s=s;[o.p0,o.p1].forEach(x=>{x.style.transform=x.style.opacity=x.style.transition=""});
+  o.ind.style.transform=o.ind.style.transition="";const yeni=s?"bekleyen":"alinan";if(yeni!==odemeSekme){odemeSekme=yeni;navDegistir()}}
+function oGit(s,o=oParca()){if(!o)return;oGecis(o,true);requestAnimationFrame(()=>{oCiz(o,s);
+  let bitti=false;const son=()=>{if(bitti)return;bitti=true;oBitir(o,s)};const tb=e=>{if(e.target===o.p1){o.p1.removeEventListener("transitionend",tb);son()}};o.p1.addEventListener("transitionend",tb);setTimeout(son,520)})}
+let oKay=null;
+document.addEventListener("touchstart",e=>{const a=e.target.closest(".osa");if(!a||e.touches.length!==1){oKay=null;return}
+  const t=e.touches[0];oKay={x:t.clientX,y:t.clientY,yon:null,s:+a.dataset.s,p:+a.dataset.s,iz:[{x:t.clientX,t:e.timeStamp}]}},{passive:true});
+document.addEventListener("touchmove",e=>{if(!oKay)return;const t=e.touches[0],dx=t.clientX-oKay.x,dy=t.clientY-oKay.y;
+  if(!oKay.yon){if(Math.abs(dx)<8&&Math.abs(dy)<8)return;oKay.yon=Math.abs(dx)>Math.abs(dy)*1.2?"x":"y";if(oKay.yon==="x"){oKay.o=oParca();oGecis(oKay.o,false)}}
+  if(oKay.yon!=="x")return;e.preventDefault();
+  oKay.iz.push({x:t.clientX,t:e.timeStamp});if(oKay.iz.length>5)oKay.iz.shift();
+  let p=oKay.s-dx/oKay.o.a.clientWidth;if(p<0)p*=.3;if(p>1)p=1+(p-1)*.3;oKay.p=p;oCiz(oKay.o,p)},{passive:false});
+document.addEventListener("touchend",()=>{if(!oKay)return;const k=oKay;oKay=null;if(k.yon!=="x")return;
+  const a=k.iz[0],b=k.iz[k.iz.length-1],hiz=(b.x-a.x)/Math.max(1,b.t-a.t);
+  oGit(hiz<-.35?1:hiz>.35?0:(k.p>.5?1:0),k.o)});
+document.addEventListener("touchcancel",()=>{if(oKay&&oKay.yon==="x")oGit(oKay.s,oKay.o);oKay=null});
 function gAlinan(){
   const tum=isler.flatMap(i=>(i.odemeler||[]).map((o,n)=>({...o,i,n}))).sort((a,b)=>b.tarih.localeCompare(a.tarih));
   const aylar=[];const n=new Date();for(let k=5;k>=0;k--){const d=new Date(n.getFullYear(),n.getMonth()-k,1);aylar.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"short"}),t:0})}
@@ -860,11 +904,18 @@ function gBekleyen(){
       <span class="cubuk"><i style="width:${p}%"></i></span>
       <span class="alt"><small>Ücret ${para(i.ucret,i.pb)} · %${p} ödendi<br>${son?`Son ödeme ${tarih(son.tarih,1)}`:"Henüz ödeme yok"}</small><small class="sure ${s.c}">${s.t}</small></span>
     </button>`};
-  return`<section class="kart blok ozet3" style="margin-top:16px">
-      <div><span>Toplam bekleyen</span><b data-sayac="topBekleyen" data-deger="${top}">${tl(top)}</b></div>
-      <div><span>Dolar işlerden</span><b>${usd(usdT)}</b></div>
-      <div><span>TL işlerden</span><b>${tl(tlT)}</b></div></section>
-    ${usdT?`<p class="ipucu" style="margin:8px 4px 0">Dolar borçlar bugünkü kurla (1 $ = ${nf(KUR.usd,2)} ₺) TL'ye çevrildi. Teslim tarihi en yakın olan üstte.</p>`:""}
+  const n=new Date(),buAy=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`,kova=[{ad:"Gecikmiş",gec:1,t:0}];
+  for(let k=0;k<4;k++){const d=new Date(n.getFullYear(),n.getMonth()+k,1);kova.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"short"}),bu:k===0,t:0})}
+  kova.push({ad:"Sonra",son:1,t:0});
+  l.forEach(i=>{const a=(i.teslim||"").slice(0,7),v=kalanTL(i);const x=!a?kova[5]:a<buAy?kova[0]:kova.find(k=>k.a===a)||kova[5];x.t+=v});
+  const mx=Math.max(...kova.map(k=>k.t),1);
+  return`<section class="kart blok" style="margin-top:16px">
+    <div class="gb-ust kirmizi"><div class="ana"><span>Muhtemel ödeme</span><b data-sayac="topBekleyen" data-deger="${top}">${tl(top)}</b><small>1 $ = ${nf(KUR.usd,2)} ₺ ile</small></div><div><span>Dolar alacak</span><b>${usd(usdT)}</b></div><div><span>TL alacak</span><b>${tl(tlT)}</b></div></div>
+    <h3 style="margin:18px 0 0">Teslim ayına göre</h3>
+    <div class="gb kirmizi" role="img" aria-label="Teslim ayına göre bekleyen ödemeler">${kova.map(k=>`<div class="c ${k.bu?"bu":""} ${k.gec?"gec":""} ${k.t?"":"sifir"}" title="${k.ad}: ${tl(k.t)}"><b>${k.t?tl(k.t):"0"}</b>${k.t?`<i style="height:${Math.max(4,k.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
+    <div class="gb-ay kirmizi">${kova.map(k=>`<span class="${k.bu?"bu":""} ${k.gec?"gec":""}">${k.ad}</span>`).join("")}</div>
+    <p class="ipucu" style="margin:10px 0 0">Kalan ödemeler işin teslim tarihine göre dağıtıldı. Dolar alacaklar her gün güncel kurla yeniden hesaplanır. "Sonra": 4 aydan sonrası ve tarihsizler.</p></section>
+    
     ${l.length?`<div class="bekleyen-liste">${l.map(satir).join("")}</div>`:`<section class="kart blok"><p class="bos" style="padding:20px">Bekleyen ödeme yok. Hepsi tahsil edilmiş.</p></section>`}`;
 }
 
@@ -1195,7 +1246,7 @@ document.addEventListener("click",async e=>{
     if(ds.v==="isler"&&gecmisDerin>0){try{history.back();return}catch(_){}}
     v=ds.v;takvimSifirla();kurDuzen=false;ciz();window.scrollTo(0,0);
     if(ev==="isler"&&gecmisDerin===0)navIt();else navDegistir();return}
-  if(ds.osekme){odemeSekme=ds.osekme;ciz();navDegistir();return}
+  if(ds.osekme){if(document.querySelector(".osa")){oGit(ds.osekme==="bekleyen"?1:0)}else{odemeSekme=ds.osekme;ciz();navDegistir()}return}
   if(ds.kur!==undefined){kurDuzen=!kurDuzen;ciz();if(kurDuzen)$("#kur-deger")?.focus();return}
   if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
   if(ds.f){filtre=ds.f;uiSakla();ciz();return}
