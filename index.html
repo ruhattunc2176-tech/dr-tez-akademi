@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=57"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=58"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -511,6 +511,7 @@ const renk=d=>renkAd(DURUM[d]||"iptal");
 let isler=[],loglar=[],v="isler",filtre="Aktif",q="",sirala="teslim",kIs=null,kLog=null,kKur=null,acikId=null,ekranTur=null,kurDuzen=false;
 let KUR={usd:49.3681,tarih:"2026-10-13",kaynak:"TCMB döviz satış"},KURLAR={};
 let ayGor=(()=>{const d=new Date();return{y:d.getFullYear(),m:d.getMonth()}})(),secGun=null;
+function takvimSifirla(){const d=new Date();ayGor={y:d.getFullYear(),m:d.getMonth()};secGun=bugun()}
 try{const s=JSON.parse(localStorage.getItem("tez-defteri-ui")||"{}");if(s.sirala)sirala=s.sirala;if(s.filtre)filtre=s.filtre}catch(e){}
 try{const k=JSON.parse(localStorage.getItem("tez-defteri-kur")||"null");if(k&&k.usd)KUR=k}catch(e){}
 const uiSakla=()=>{try{localStorage.setItem("tez-defteri-ui",JSON.stringify({sirala,filtre}))}catch(e){}};
@@ -523,7 +524,7 @@ const usd=n=>{const r=Math.round((n||0)*100)/100;return"$"+nf(r,r%1?2:0)};
 const para=(n,pb)=>pb==="USD"?usd(n):tl(n);
 const tlKisa=n=>n>=1000?nf(Math.round(n/100)/10,1).replace(",0","")+"b":String(Math.round(n||0));
 const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
-const bugun=()=>iso(new Date());
+const bugun=()=>iso(new Date());secGun=bugun();
 const tarih=(s,kisa)=>s?new Date(s+"T00:00").toLocaleDateString("tr-TR",kisa?{day:"numeric",month:"short"}:{day:"numeric",month:"long",year:"numeric"}):"—";
 const fark=s=>s?Math.round((new Date(s+"T00:00")-new Date(bugun()+"T00:00"))/864e5):null;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -707,7 +708,7 @@ function kartIs(i){
   </button>`;
 }
 
-function ayKaydir(n){ayGor.m+=n;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}secGun=null;ciz();
+function ayKaydir(n){ayGor.m+=n;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}{const d=new Date();secGun=ayGor.y===d.getFullYear()&&ayGor.m===d.getMonth()?bugun():null}ciz();
   const k=document.querySelector(".takvim-kart");if(k){k.classList.remove("kay-s","kay-g");void k.offsetWidth;k.classList.add(n>0?"kay-s":"kay-g")}}
 let kayBas=null;
 document.addEventListener("touchstart",e=>{const k=e.target.closest(".takvim-kart");kayBas=k&&e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()}:null},{passive:true});
@@ -820,7 +821,7 @@ function navIt(){if(popIsleniyor)return;try{gecmisDerin++;history.pushState(navD
 function navDegistir(){if(popIsleniyor)return;try{history.replaceState(navDurum(),"")}catch(_){}}
 function navGeri(yedek){if(gecmisDerin>0){try{history.back();return}catch(_){}}yedek();navDegistir()}
 window.addEventListener("popstate",e=>{const s=e.state||{v:"isler",d:0};popIsleniyor=true;
-  try{gecmisDerin=s.d||0;v=s.v||"isler";odemeSekme=s.os||"alinan";secGun=null;kurDuzen=false;
+  try{gecmisDerin=s.d||0;v=s.v||"isler";odemeSekme=s.os||"alinan";takvimSifirla();kurDuzen=false;
     const var_=s.id&&isler.some(x=>x.id===s.id);
     if((s.e==="detay"||s.e==="form")&&var_){if(!(ekranTur==="detay"&&acikId===s.id))detayAc(s.id,"yok")}
     else if(ekranTur)ekranKapa();
@@ -1102,7 +1103,7 @@ document.addEventListener("click",async e=>{
   const t=e.target.closest("button,[data-ac],a");if(!t)return;const ds=t.dataset;
   if(ds.v){if(ds.v===v)return;const ev=v;
     if(ds.v==="isler"&&gecmisDerin>0){try{history.back();return}catch(_){}}
-    v=ds.v;secGun=null;kurDuzen=false;ciz();window.scrollTo(0,0);
+    v=ds.v;takvimSifirla();kurDuzen=false;ciz();window.scrollTo(0,0);
     if(ev==="isler"&&gecmisDerin===0)navIt();else navDegistir();return}
   if(ds.osekme){odemeSekme=ds.osekme;ciz();navDegistir();return}
   if(ds.kur!==undefined){kurDuzen=!kurDuzen;ciz();if(kurDuzen)$("#kur-deger")?.focus();return}
@@ -1113,7 +1114,7 @@ document.addEventListener("click",async e=>{
   if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
   if(ds.logsil){arkada(logSil(ds.logsil));toast("Not silindi");return}
   if(t.id==="ekleBtn"){formAc();return}
-  if(ds.git){if(ds.git==="yeni"){formAc();return}if(ds.git==="takvim"||ds.git==="gecmis"){v=ds.git;secGun=null;ciz();window.scrollTo(0,0);navIt();return}
+  if(ds.git){if(ds.git==="yeni"){formAc();return}if(ds.git==="takvim"||ds.git==="gecmis"){v=ds.git;takvimSifirla();ciz();window.scrollTo(0,0);navIt();return}
     if(ds.git==="alinan"||ds.git==="bekleyen"){v="odemeler";odemeSekme=ds.git;secGun=null;ciz();window.scrollTo(0,0);navIt();return}
   if(ds.git==="odeme"){const ak=isler.filter(aktif);if(ak.length===1){detayAc(ak[0].id);setTimeout(()=>{$("#odemeForm")?.scrollIntoView({behavior:"smooth",block:"center"});$("#o-tutar")?.focus()},50)}else{filtre="Aktif";ciz();toast(ak.length?"Ödeme alacağın işe dokun":"Önce bir iş ekle")}return}}
   if(ds.geri!==undefined){navGeri(ekranKapa);return}
