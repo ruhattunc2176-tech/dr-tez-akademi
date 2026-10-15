@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=70"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=71"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -495,7 +495,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .osa.kayiyor[data-s="1"] .osp[data-i="0"]{position:absolute;top:0;left:0;right:0}
 @media (prefers-reduced-motion:reduce){.osp,.osek-ind{transition:none!important}}
 
-.gb-ust.kirmizi{grid-template-columns:1.3fr .85fr 1fr}.gb-ust.kirmizi .ana small{display:block;font-size:11px;color:#ffe1de;font-weight:600;margin-top:2px}.gb-ust.kirmizi .ana{background:var(--gec)}.gb-ust.kirmizi .ana span{color:#ffe1de}.gb-ust.kirmizi .ana b{color:#fff}
+.gb-ust.kirmizi{display:flex}.gb-ust.kirmizi div{flex:1 1 auto}.gb-ust.kirmizi .ana{flex-grow:1.6}.gb-ust.kirmizi span{white-space:nowrap}.gb-ust.kirmizi b{font-size:clamp(15px,4.4vw,18px)}.gb-ust.kirmizi .ana small{display:block;font-size:11px;color:#ffe1de;font-weight:600;margin-top:2px}.gb-ust.kirmizi .ana{background:var(--gec)}.gb-ust.kirmizi .ana span{color:#ffe1de}.gb-ust.kirmizi .ana b{color:#fff}
 .gb.kirmizi .c i{background:#e8837b}.gb.kirmizi .c.bu i{background:var(--gec)}.gb.kirmizi .c.gec i{background:#8f1d1d}
 .gb-ay.kirmizi .bu{color:var(--gec)}.gb-ay.kirmizi .gec{color:#8f1d1d}
 
@@ -941,11 +941,11 @@ function gBekleyen(){
   l.forEach(i=>{const a=(i.teslim||"").slice(0,7),v=kalanTL(i);const x=!a?kova[5]:a<buAy?kova[0]:kova.find(k=>k.a===a)||kova[5];x.t+=v});
   const mx=Math.max(...kova.map(k=>k.t),1);
   return`<section class="kart blok" style="margin-top:16px">
-    <div class="gb-ust kirmizi"><div class="ana"><span>Muhtemel ödeme</span><b data-sayac="topBekleyen" data-deger="${top}">${tl(top)}</b><small>1 $ = ${nf(KUR.usd,2)} ₺ ile</small></div><div><span>Dolar alacak</span><b>${usd(usdT)}</b></div><div><span>TL alacak</span><b>${tl(tlT)}</b></div></div>
+    <div class="gb-ust kirmizi"><div class="ana"><span>Muhtemel ödeme</span><b data-sayac="topBekleyen" data-deger="${top}">${tl(top)}</b></div><div><span>Dolar alacak</span><b>${usd(usdT)}</b></div><div><span>TL alacak</span><b>${tl(tlT)}</b></div></div>
     <h3 style="margin:18px 0 0">Teslim ayına göre</h3>
     <div class="gb kirmizi" role="img" aria-label="Teslim ayına göre bekleyen ödemeler">${kova.map(k=>`<div class="c ${k.bu?"bu":""} ${k.gec?"gec":""} ${k.t?"":"sifir"}" title="${k.ad}: ${tl(k.t)}"><b>${k.t?tl(k.t):"0"}</b>${k.t?`<i style="height:${Math.max(4,k.t/mx*78)}%"></i>`:""}</div>`).join("")}</div>
     <div class="gb-ay kirmizi">${kova.map(k=>`<span class="${k.bu?"bu":""} ${k.gec?"gec":""}">${k.ad}</span>`).join("")}</div>
-    <p class="ipucu" style="margin:10px 0 0">Kalan ödemeler işin teslim tarihine göre dağıtıldı. Dolar alacaklar her gün güncel kurla yeniden hesaplanır. "Sonra": 4 aydan sonrası ve tarihsizler.</p></section>
+    <p class="ipucu" style="margin:10px 0 0">Kalan ödemeler işin teslim tarihine göre dağıtıldı. Muhtemel ödeme, dolar alacakların her gün güncel kurla (1 $ = ${nf(KUR.usd,2)} ₺) TL'ye çevrilmesiyle hesaplanır. "Sonra": 4 aydan sonrası ve tarihsizler.</p></section>
     
     ${l.length?`<div class="bekleyen-liste">${l.map(satir).join("")}</div>`:`<section class="kart blok"><p class="bos" style="padding:20px">Bekleyen ödeme yok. Hepsi tahsil edilmiş.</p></section>`}`;
 }
