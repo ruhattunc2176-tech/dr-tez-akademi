@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=79"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=80"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -1157,7 +1157,7 @@ function onizle(){
   const el=$("#onizle");if(!el)return;const i=isler.find(x=>x.id===acikId);if(!i)return;
   const t=sayi($("#o-tutar").value),pb=$("#o-pb-usd").checked?"USD":"TRY",kr=kurSayi($("#o-kur").value)||KUR.usd;
   hizliCiz(i,pb,kr);
-  $("#kurAlan").hidden=!(i.pb==="USD"||pb==="USD");
+  $("#kurAlan").hidden=pb!=="USD";
   turGoster("o");
   alinanGoster("o",t,pb,kr);
   if(!t||pb==="USD"||i.pb!=="USD"){el.hidden=true;return}
@@ -1257,7 +1257,7 @@ function fOdemeCiz(){
 }
 function fOnizle(){
   const el=$("#fo-onizle");if(!el)return;const jp=fPb(),t=sayi($("#fo-tutar").value),pb=$("#fo-pb-usd").checked?"USD":"TRY",kr=kurSayi($("#fo-kur").value)||KUR.usd;
-  $("#fo-kurAlan").hidden=!(jp==="USD"||pb==="USD");
+  $("#fo-kurAlan").hidden=pb!=="USD";
   turGoster("fo");alinanGoster("fo",t,pb,kr);
   {const kb=$("#fo-kalan");if(kb){const odm=FORM.duz!==null?FORM.odm.filter((_,n)=>n!==FORM.duz):FORM.odm,uc=sayi($("#f-ucret").value),kk=uc?kalan({pb:jp,ucret:uc,odemeler:odm}):0;
     kb.innerHTML=uc?`<div class="kalan-bilgi">Kalan borç: <b>${para(kk,jp)}</b>${jp==="USD"?` · güncel kurla <b>${tl(kk*KUR.usd)}</b>`:""}</div>`:""}}
