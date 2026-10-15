@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=86"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=87"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -515,7 +515,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .kur-elle-btn.acik{color:var(--muted)}
 .kur-elle{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:700;color:var(--muted)}
 .fazla-uyari{background:#fdecea;color:#b3261e;border-radius:12px;padding:10px 12px;font-weight:700;font-size:15px}
-.yeni-odeme .secim{scroll-margin-top:96px}
+.yeni-odeme .tur-sec{scroll-margin-top:72px}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -1306,7 +1306,7 @@ document.addEventListener("change",e=>{if(!/^f-pb-/.test(e.target.id)||!FORM?.ye
 /* TL aldım / Dolar aldım seçilince klavye tutarda açılsın */
 document.addEventListener("click",e=>{const r=e.target.closest("label")?.querySelector('input[type=radio]');if(!r)return;
   const on=/^o-pb-/.test(r.id)?"o":/^fo-pb-/.test(r.id)?"fo":null;if(!on)return;const t=$("#"+on+"-tutar");if(t){t.focus({preventScroll:true});const n=t.value.length;try{t.setSelectionRange(n,n)}catch(_){}}
-  klavyeUstu(r.closest(".secim"))});
+  klavyeUstu(r.closest(".yeni-odeme")?.querySelector(".tur-sec")||r.closest(".secim"))});
 /* Klavye açılınca TL/Dolar düğmeleri ve tutar kutusu klavyenin üstünde, ekranın üst kısmında kalsın */
 function klavyeUstu(el){if(!el)return;const kay=()=>el.scrollIntoView({behavior:"smooth",block:"start"});kay();
   const vv=window.visualViewport;if(vv){const f=()=>{vv.removeEventListener("resize",f);kay()};vv.addEventListener("resize",f);setTimeout(()=>vv.removeEventListener("resize",f),1200)}
@@ -1333,7 +1333,7 @@ document.addEventListener("click",async e=>{
   if(ds.geri!==undefined){navGeri(ekranKapa);return}
   if(ds.vazgec!==undefined){navGeri(()=>acikId?detayAc(acikId,"yok"):ekranKapa());return}
   if(ds.sure){const b=$("#f-bas").value||bugun(),d=new Date(b+"T00:00");d.setDate(d.getDate()+ +ds.sure);tarihYaz("f-teslim",iso(d));return}
-  if(ds.fac!==undefined){fKutu(true);$("#fo-tutar")?.focus({preventScroll:true});fOnizle();klavyeUstu($("#fo-kutu .secim"));tazeKurDoldur("fo");return}
+  if(ds.fac!==undefined){fKutu(true);$("#fo-tutar")?.focus({preventScroll:true});fOnizle();klavyeUstu($("#fo-kutu .tur-sec"));tazeKurDoldur("fo");return}
   if(ds.fkapa!==undefined){fGirisTemizle();fOdemeCiz();return}
   if(ds.fekle!==undefined){fOdemeEkle();return}
   if(ds.fduz!==undefined){fOdemeDuzenle(+ds.fduz);return}
@@ -1345,7 +1345,7 @@ document.addEventListener("click",async e=>{
   if(ds.fnot){$("#fo-not").value=ds.fnot;$("#fo-tutar").focus();return}
   if(ds.onot){$("#o-not").value=ds.onot;$("#o-tutar").focus();return}
   if(ds.yeniodeme!==undefined&&isler.find(x=>x.id===acikId)?.beklemede){kilitUyari();return}
-  if(ds.yeniodeme!==undefined){odemeAcik=true;detayCiz();$("#o-tutar")?.focus({preventScroll:true});kurTarihten();setTimeout(()=>{if(document.activeElement?.id!=="o-tutar")$("#o-tutar")?.focus({preventScroll:true});klavyeUstu($("#odemeForm .secim"))},30);return}
+  if(ds.yeniodeme!==undefined){odemeAcik=true;detayCiz();$("#o-tutar")?.focus({preventScroll:true});kurTarihten();setTimeout(()=>{if(document.activeElement?.id!=="o-tutar")$("#o-tutar")?.focus({preventScroll:true});klavyeUstu($("#odemeForm .tur-sec"))},30);return}
   if(ds.yenikapa!==undefined){odemeAcik=false;kurElle.o=false;HIZLI=null;detayCiz();return}
   if(ds.tur){const h=$("#"+ds.tur+"-not");if(h){h.value=ds.turdeger;turGoster(ds.tur);t.closest(".tur-sec")?.classList.remove("eksik");setTimeout(()=>$("#"+ds.tur+"-tutar")?.focus(),30)}return}
   if(ds.eknot){const e=$("#"+ds.eknot+"-ek");if(e){e.hidden=false;e.focus()}return}
