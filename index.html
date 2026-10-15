@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=64"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=65"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -1297,7 +1297,7 @@ document.addEventListener("submit",async e=>{if(e.target.id!=="kilitForm")return
   catch(err){if(/Şifre yanlış/.test(err&&err.message||""))kilitDurum("✕ Şifre yanlış, tekrar dene.","hata");else{kilitDurum("Sunucuya ulaşılamadı. İnternetini kontrol edip tekrar dene.","hata");$("#kilitSifre").value=v}}
   finally{setTimeout(()=>{b.disabled=false;b.textContent="Giriş yap"},650)}},true);
 try{history.replaceState(navDurum(),"")}catch(_){}
-const SIFRE_SURUM="2";
+const SIFRE_SURUM="3";
 try{if(localStorage.getItem("tez-sifre-v")!==SIFRE_SURUM){sifreYaz("")}}catch(_){}
 if(!sifreAl())sifreEkrani(false);else yenile();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
