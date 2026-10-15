@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=69"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=70"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -498,6 +498,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .gb-ust.kirmizi{grid-template-columns:1.3fr .85fr 1fr}.gb-ust.kirmizi .ana small{display:block;font-size:11px;color:#ffe1de;font-weight:600;margin-top:2px}.gb-ust.kirmizi .ana{background:var(--gec)}.gb-ust.kirmizi .ana span{color:#ffe1de}.gb-ust.kirmizi .ana b{color:#fff}
 .gb.kirmizi .c i{background:#e8837b}.gb.kirmizi .c.bu i{background:var(--gec)}.gb.kirmizi .c.gec i{background:#8f1d1d}
 .gb-ay.kirmizi .bu{color:var(--gec)}.gb-ay.kirmizi .gec{color:#8f1d1d}
+
+/* Takvim derinlikli kaydırma */
+.tk-alan{position:relative;overflow-x:clip}
+.takvim-kart{transform-origin:50% 40%;position:relative}
+.tk-kom{position:absolute!important;top:0;left:0;right:0;pointer-events:none;margin:0}
+.tk-ust{box-shadow:-14px 0 30px rgba(0,0,0,.16)!important}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -816,12 +822,37 @@ function kartIs(i){
   </button>`;
 }
 
-function ayKaydir(n){ayGor.m+=n;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}{const d=new Date();secGun=ayGor.y===d.getFullYear()&&ayGor.m===d.getMonth()?bugun():null}ciz();
-  const k=document.querySelector(".takvim-kart");if(k){k.classList.remove("kay-s","kay-g");void k.offsetWidth;k.classList.add(n>0?"kay-s":"kay-g")}}
-let kayBas=null;
-document.addEventListener("touchstart",e=>{const k=e.target.closest(".takvim-kart");kayBas=k&&e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()}:null},{passive:true});
-document.addEventListener("touchend",e=>{if(!kayBas)return;const t=e.changedTouches[0],dx=t.clientX-kayBas.x,dy=t.clientY-kayBas.y,sure=Date.now()-kayBas.t;kayBas=null;
-  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5&&sure<800){e.preventDefault();ayKaydir(dx<0?1:-1)}},{passive:false});
+function ayKaydir(n){ayGor.m+=n;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}{const d=new Date();secGun=ayGor.y===d.getFullYear()&&ayGor.m===d.getMonth()?bugun():null}ciz()}
+/* Takvim: derinlikli ay kaydırma (ödemelerdeki B stili) */
+function tkKomsu(d){const es={...ayGor},eg=secGun;ayKaydirSessiz(d);const h=gTakvim();ayGor.y=es.y;ayGor.m=es.m;secGun=eg;
+  const i=h.indexOf('<section class="kart takvim-kart"'),j=h.indexOf("</section>",i)+10;const t=document.createElement("div");t.innerHTML=h.slice(i,j);
+  const k=t.firstElementChild;k.classList.add("tk-kom");k.setAttribute("aria-hidden","true");return k}
+function ayKaydirSessiz(n){ayGor.m+=n;if(ayGor.m<0){ayGor.m=11;ayGor.y--}if(ayGor.m>11){ayGor.m=0;ayGor.y++}const d=new Date();secGun=ayGor.y===d.getFullYear()&&ayGor.m===d.getMonth()?bugun():null}
+function tkHazir(d,o){const k=document.querySelector(".takvim-kart:not(.tk-kom)");if(!k)return null;o=o||{k,W:k.offsetWidth};
+  if(o.d!==d){o.kom?.remove();o.kom=tkKomsu(d);o.d=d;k.parentNode.classList.add("tk-alan");k.after(o.kom);
+    if(d===1){o.kom.style.zIndex=2;k.style.zIndex=1}else{o.kom.style.zIndex=1;k.style.zIndex=2}}
+  return o}
+function tkGecis(o,acik){const v=acik?"transform .42s cubic-bezier(.22,.9,.24,1),opacity .42s":"none";o.k.style.transition=o.kom.style.transition=v}
+function tkCiz(o,q){const W=o.W;q=Math.max(0,Math.min(1,q));  // q: 0 = şimdiki ay, 1 = komşu ay
+  const ust=o.d===1?o.kom:o.k,alt=o.d===1?o.k:o.kom,u=o.d===1?q:1-q;   // u: alttaki kartın geri çekilme oranı
+  ust.style.transform=`translateX(${o.d===1?(1-q)*(W+30):q*(W+30)}px)`;ust.style.opacity="1";ust.classList.add("tk-ust");alt.classList.remove("tk-ust");
+  alt.style.transform=`translateX(${-u*W*.18}px) scale(${1-u*.08})`;alt.style.opacity=String(1-u*.5)}
+function tkBitir(o,q,d){tkGecis(o,true);requestAnimationFrame(()=>{tkCiz(o,q);let b=false;const son=()=>{if(b)return;b=true;
+  if(q===1)ayKaydir(d);else{o.kom.remove();o.k.style.transform=o.k.style.opacity=o.k.style.transition=o.k.style.zIndex="";o.k.classList.remove("tk-ust")}};
+  setTimeout(son,450)})}
+function tkGit(d){const o=tkHazir(d);if(!o){ayKaydir(d);return}tkGecis(o,false);tkCiz(o,0);void o.k.offsetWidth;tkBitir(o,1,d)}
+let tkKay=null;
+document.addEventListener("touchstart",e=>{const k=e.target.closest(".takvim-kart");tkKay=k&&!k.classList.contains("tk-kom")&&e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY,yon:null,iz:[]}:null},{passive:true});
+document.addEventListener("touchmove",e=>{if(!tkKay)return;const t=e.touches[0],dx=t.clientX-tkKay.x,dy=t.clientY-tkKay.y;
+  if(!tkKay.yon){if(Math.abs(dx)<8&&Math.abs(dy)<8)return;tkKay.yon=Math.abs(dx)>Math.abs(dy)*1.2?"x":"y"}
+  if(tkKay.yon!=="x")return;e.preventDefault();if(!dx)return;
+  const d=dx<0?1:-1;tkKay.o=tkHazir(d,tkKay.o);if(!tkKay.o)return;tkGecis(tkKay.o,false);
+  tkKay.iz.push({x:t.clientX,t:e.timeStamp});if(tkKay.iz.length>5)tkKay.iz.shift();
+  tkKay.q=Math.abs(dx)/tkKay.o.W;tkCiz(tkKay.o,tkKay.q)},{passive:false});
+document.addEventListener("touchend",()=>{if(!tkKay)return;const k=tkKay;tkKay=null;if(k.yon!=="x"||!k.o)return;
+  const a=k.iz[0],b=k.iz[k.iz.length-1],hiz=a?(b.x-a.x)/Math.max(1,b.t-a.t)*-k.o.d:0;
+  tkBitir(k.o,(k.q>.4||hiz>.35)&&hiz>-.2?1:0,k.o.d)});
+document.addEventListener("touchcancel",()=>{if(tkKay?.o)tkBitir(tkKay.o,0,tkKay.o.d);tkKay=null});
 function gTakvim(){
   const {y,m}=ayGor,ilk=new Date(y,m,1),bas=(ilk.getDay()+6)%7,gs=new Date(y,m+1,0).getDate(),ay=`${y}-${String(m+1).padStart(2,"0")}`;
   const olay={};const ekle=(t,o)=>(olay[t]=olay[t]||[]).push(o);
@@ -1250,7 +1281,7 @@ document.addEventListener("click",async e=>{
   if(ds.kur!==undefined){kurDuzen=!kurDuzen;ciz();if(kurDuzen)$("#kur-deger")?.focus();return}
   if(ds.ac&&!t.closest(".ekran")){detayAc(ds.ac);return}
   if(ds.f){filtre=ds.f;uiSakla();ciz();return}
-  if(ds.ay){ayKaydir(+ds.ay);return}
+  if(ds.ay){if(t.closest(".tk-kom"))return;tkGit(+ds.ay);return}
   if(ds.ozettum!==undefined){ozetAcik=!ozetAcik;ciz();return}
   if(ds.gun){secGun=secGun===ds.gun?null:ds.gun;ciz();return}
   if(ds.logsil){arkada(logSil(ds.logsil));toast("Not silindi");return}
