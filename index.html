@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=90"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=91"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -692,7 +692,15 @@ let bekleyen=0;
 const API=window.TEZ_API||"";
 function sifreAl(){try{return localStorage.getItem("tez-sifre")||SIFRE_BELLEK||""}catch(_){return SIFRE_BELLEK||""}}
 let SIFRE_BELLEK="";
-function sifreYaz(v){SIFRE_BELLEK=v;try{v?localStorage.setItem("tez-sifre",v):localStorage.removeItem("tez-sifre")}catch(_){}}
+function sifreYaz(v){SIFRE_BELLEK=v;try{v?localStorage.setItem("tez-sifre",v):localStorage.removeItem("tez-sifre")}catch(_){}if(!v)yedekYaz(null)}
+/* Şifre yedeği: telefon tarayıcı depolamasını temizlese bile girişi korumak için çerez + IndexedDB'de de tutulur */
+const YEDEK_AD="tezGiris";
+function yedekYaz(o){const val=o?encodeURIComponent(JSON.stringify(o)):"";
+  try{document.cookie=YEDEK_AD+"="+val+";path=/;max-age="+(o?31536000:0)+";SameSite=Strict"+(location.protocol==="https:"?";Secure":"")}catch(_){}
+  try{const r=indexedDB.open("drtez",1);r.onupgradeneeded=()=>r.result.createObjectStore("k");r.onsuccess=()=>{try{const tx=r.result.transaction("k","readwrite");o?tx.objectStore("k").put(o,"giris"):tx.objectStore("k").delete("giris")}catch(_){}}}catch(_){}}
+function yedekCerez(){try{const m=document.cookie.match(new RegExp("(?:^|; )"+YEDEK_AD+"=([^;]*)"));return m&&m[1]?JSON.parse(decodeURIComponent(m[1])):null}catch(_){return null}}
+function yedekIdb(){return new Promise(ok=>{try{const r=indexedDB.open("drtez",1);r.onupgradeneeded=()=>r.result.createObjectStore("k");
+  r.onsuccess=()=>{try{const q=r.result.transaction("k").objectStore("k").get("giris");q.onsuccess=()=>ok(q.result||null);q.onerror=()=>ok(null)}catch(_){ok(null)}};r.onerror=()=>ok(null)}catch(_){ok(null)}setTimeout(()=>ok(null),1500)})}
 function cihazId(){try{let c=localStorage.getItem("tez-cihaz");if(!c){c=Math.random().toString(36).slice(2,10);localStorage.setItem("tez-cihaz",c)}return c}catch(_){return"?"}}
 function cihazAdi(){const u=navigator.userAgent||"";const os=/iPhone/.test(u)?"iPhone":/iPad/.test(u)?"iPad":/Android/.test(u)?"Android telefon":/Windows/.test(u)?"Windows bilgisayar":/Mac OS/.test(u)?"Mac":/Linux/.test(u)?"Linux":"Cihaz";
   const tr=/Edg\//.test(u)?"Edge":/SamsungBrowser/.test(u)?"Samsung İnternet":/OPR\//.test(u)?"Opera":/Firefox/.test(u)?"Firefox":/Chrome\//.test(u)?"Chrome":/Safari/.test(u)?"Safari":"tarayıcı";
@@ -1420,13 +1428,20 @@ function yenile(zorla){
 }
 document.addEventListener("submit",async e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim();if(!v)return;
   const b=$("#kilitBtn");b.disabled=true;b.textContent="Kontrol ediliyor…";kilitDurum("Kontrol ediliyor…","bekle");sifreYaz(v);
-  try{await sr("surum");try{localStorage.setItem("tez-sifre-v",SIFRE_SURUM)}catch(_){}girisKaydet();kilitDurum("✓ Şifre doğru, açılıyor…","dogru");b.textContent="Açılıyor…";setTimeout(()=>{$("#kilit").hidden=true;yenile()},650)}
+  try{await sr("surum");try{localStorage.setItem("tez-sifre-v",SIFRE_SURUM)}catch(_){}yedekYaz({s:v,v:SIFRE_SURUM});girisKaydet();kilitDurum("✓ Şifre doğru, açılıyor…","dogru");b.textContent="Açılıyor…";setTimeout(()=>{$("#kilit").hidden=true;yenile()},650)}
   catch(err){if(/Şifre yanlış/.test(err&&err.message||""))kilitDurum("✕ Şifre yanlış, tekrar dene.","hata");else{kilitDurum("Sunucuya ulaşılamadı. İnternetini kontrol edip tekrar dene.","hata");$("#kilitSifre").value=v}}
   finally{setTimeout(()=>{b.disabled=false;b.textContent="Giriş yap"},650)}},true);
 try{history.replaceState(navDurum(),"")}catch(_){}
 const SIFRE_SURUM="3";
-try{if(localStorage.getItem("tez-sifre-v")!==SIFRE_SURUM){sifreYaz("")}}catch(_){}
-if(!sifreAl())sifreEkrani(false);else yenile();
+(async()=>{
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(_){}
+  let s="",sv=null;try{s=localStorage.getItem("tez-sifre")||"";sv=localStorage.getItem("tez-sifre-v")}catch(_){}
+  if(!s||sv!==SIFRE_SURUM){const y=yedekCerez()||await yedekIdb();   // depolama silinmişse yedekten geri yükle
+    if(y&&y.s&&y.v===SIFRE_SURUM){s=y.s;try{localStorage.setItem("tez-sifre",s);localStorage.setItem("tez-sifre-v",SIFRE_SURUM)}catch(_){}SIFRE_BELLEK=s;sv=SIFRE_SURUM}}
+  if(sv!==SIFRE_SURUM){sifreYaz("");s=""}
+  else if(s&&!yedekCerez())yedekYaz({s,v:SIFRE_SURUM});   // mevcut girişleri de yedeğe al
+  if(!s)sifreEkrani(false);else yenile();
+})();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
 /* kur 5 dakikadan eskiyse (ör. uygulama arka plandan dönünce) hemen tazele */
 async function kurTazeleGerekirse(){if(document.visibilityState!=="visible"||!sifreAl())return;if(KUR.zaman&&Date.now()-new Date(KUR.zaman)<300000)return;try{const b=await sr("canliKur");if(b&&b.usd&&!(KUR.kaynak==="Elle girildi"&&KUR.tarih===bugun())){KUR={usd:b.usd,tarih:bugun(),kaynak:b.kaynak,zaman:new Date().toISOString()};try{localStorage.setItem("tez-defteri-kur",JSON.stringify(KUR))}catch(_){}if(ekranTur!=="form"&&!kullaniciYaziyor())ciz()}}catch(_){}}
