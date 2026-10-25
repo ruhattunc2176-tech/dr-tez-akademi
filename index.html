@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=92"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=93"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -338,7 +338,16 @@ textarea{resize:vertical;min-height:84px}
 .zc-s.fz:has(input:checked) .m b{color:var(--ink)}
 .zc-s.fz:has(input:checked):not(:last-child)::before{background:var(--cb)}
 .zc-s.fz .m{padding-top:2px}
-.cz-satir{display:flex;flex-direction:column;padding:10px 0;border-top:1px solid var(--line)}.cz-satir:first-of-type{border-top:0}.cz-satir b{font-weight:700}.cz-satir small{color:var(--muted);font-weight:600}
+.cz-son{border-radius:18px;padding:16px;background:linear-gradient(135deg,#0f7f56,#0a5e41);color:#fff;display:flex;gap:14px;align-items:center;margin-bottom:6px}
+.cz-son .cz-ik{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.16);display:grid;place-items:center;flex:none}
+.cz-son .cz-o{min-width:0}.cz-son small{display:block;color:#bfe9d6;font-weight:700;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+.cz-son b{display:block;font-size:1.2rem;margin:2px 0}.cz-son .cz-o>span{color:#dff5ea;font-weight:600;font-size:.88rem}
+.cz-ok{display:inline-block;background:#ffd75e;color:#5a4300;border-radius:999px;padding:2px 9px;font-weight:800;font-size:.75rem;margin-left:6px;vertical-align:2px}
+.cz-satir{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.cz-satir .cz-ik{width:42px;height:42px;border-radius:12px;background:#eef3f0;color:#0b6e4c;display:grid;place-items:center;flex:none}
+.cz-satir .cz-ik.ios{background:#eef0f6;color:#334}.cz-satir .cz-ik.pc{background:#eef4fb;color:#1f5fa8}
+.cz-satir .cz-o{flex:1;min-width:0}.cz-satir b{display:block;font-weight:700}.cz-satir small{color:var(--muted);font-weight:600;font-size:.82rem}
+.cz-z{text-align:right;font-weight:800;font-size:.85rem;white-space:nowrap}.cz-z small{display:block;color:var(--muted);font-weight:600;font-size:.78rem}
 .cz-bu{background:#dcf5e8;color:#0b6e4c;border-radius:999px;padding:1px 8px;font-size:.75rem;font-weight:800;margin-left:4px}
 .baslik-sat{display:flex;align-items:center;gap:10px}
 .kilit-caps{margin:-4px 0 0;background:#fff3c4;color:#6b5000!important;border-radius:10px;padding:8px 10px;font-size:14px!important;font-weight:700}
@@ -705,10 +714,36 @@ function cihazId(){try{let c=localStorage.getItem("tez-cihaz");if(!c){c=Math.ran
 function cihazAdi(){const u=navigator.userAgent||"";const os=/iPhone/.test(u)?"iPhone":/iPad/.test(u)?"iPad":/Android/.test(u)?"Android telefon":/Windows/.test(u)?"Windows bilgisayar":/Mac OS/.test(u)?"Mac":/Linux/.test(u)?"Linux":"Cihaz";
   const tr=/Edg\//.test(u)?"Edge":/SamsungBrowser/.test(u)?"Samsung İnternet":/OPR\//.test(u)?"Opera":/Firefox/.test(u)?"Firefox":/Chrome\//.test(u)?"Chrome":/Safari/.test(u)?"Safari":"tarayıcı";
   let uy=false;try{uy=matchMedia("(display-mode: standalone)").matches}catch(_){}return os+" · "+tr+(uy?" (ana ekran uygulaması)":"")}
-function girisKaydet(){try{log(null,"Giriş · "+cihazAdi()+" #"+cihazId(),"giris").catch(()=>{})}catch(_){}}
+/* Telefon modeli (Chrome/Android verir; iPhone vermez) */
+let CIHAZ_MODEL=null;try{CIHAZ_MODEL=localStorage.getItem("tez-model")}catch(_){}
+const SAMSUNG={S90:"S22",S91:"S23",S92:"S24",S93:"S25",S94:"S26",S71:"S23 FE",S72:"S24 FE"};
+function modelAdi(m){m=(m||"").trim();if(!m||m==="K")return"";const s=m.match(/^SM-([A-Z])(\d)(\d)(\d)/);
+  if(s){const k=s[1]+s[2]+s[3];if(SAMSUNG[k])return"Samsung Galaxy "+SAMSUNG[k]+(s[4]==="8"?" Ultra":s[4]==="6"?"+":"");
+    if(s[1]==="A"||s[1]==="M")return"Samsung Galaxy "+s[1]+s[2]+s[3];return"Samsung Galaxy ("+m+")"}
+  return m}
+async function modelBul(){if(CIHAZ_MODEL)return CIHAZ_MODEL;let m="";
+  try{if(navigator.userAgentData&&navigator.userAgentData.getHighEntropyValues){const h=await navigator.userAgentData.getHighEntropyValues(["model"]);m=modelAdi(h.model)}}catch(_){}
+  if(!m){const a=(navigator.userAgent||"").match(/Android [\d.]+; ([^;)]+)[;)]/);if(a)m=modelAdi(a[1])}
+  CIHAZ_MODEL=m;try{if(m)localStorage.setItem("tez-model",m)}catch(_){}return m}
+async function cihazTamAd(){const m=await modelBul(),a=cihazAdi();return m?m+" · "+a.replace(/^Android telefon · /,""):a}
+function girisKaydet(){cihazTamAd().then(ad=>{try{localStorage.setItem("tez-cihaz-ad",ad)}catch(_){}return log(null,"Giriş · "+ad+" #"+cihazId(),"giris")}).catch(()=>{})}
+/* Cihaz adı değiştiyse (ör. model ilk kez öğrenildi) bir kez yeniden kaydet */
+function cihazAdGuncelle(){cihazTamAd().then(ad=>{let eski=null;try{eski=localStorage.getItem("tez-cihaz-ad")}catch(_){}if(eski!==ad&&sifreAl())girisKaydet()}).catch(()=>{})}
 function gCihazlar(){const g={};loglar.filter(l=>l.tur==="giris").forEach(l=>{const m=(l.metin||"").match(/^Giriş · (.*) #(\w+)$/);if(!m)return;const k=m[2];if(!g[k]||g[k].z<l.zaman)g[k]={ad:m[1],z:l.zaman,bu:k===cihazId()}});
   const L=Object.values(g).sort((a,b)=>b.z.localeCompare(a.z));
-  return`<section class="kart blok" style="margin-top:14px"><h3>Giriş yapılan cihazlar <small>${L.length}</small></h3>${L.length?L.map(x=>`<div class="cz-satir"><b>${esc(x.ad)}${x.bu?` <span class="cz-bu">bu cihaz</span>`:""}</b><small>Son giriş ${tarih(x.z.slice(0,10))} · ${saat(x.z)}</small></div>`).join(""):`<p class="ipucu" style="margin:0">Henüz kayıt yok. Cihazlar şifreyle giriş yaptıkça burada görünür.</p>`}<p class="ipucu" style="margin:8px 0 0">Liste, şifreyle giriş yapılan cihazları gösterir. Şifre değişirse hepsinden yeniden giriş istenir.</p></section>`}
+  const tur=ad=>/iPhone|iPad/.test(ad)?"ios":/Windows|Mac|Linux/.test(ad)?"pc":"tel";
+  const ik={tel:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',ios:'<rect x="7" y="2.5" width="10" height="19" rx="3"/><path d="M10.5 5h3"/>',pc:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'};
+  const svg=(t,c)=>`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${c||"currentColor"}" stroke-width="2" stroke-linecap="round" aria-hidden="true">${ik[t]}</svg>`;
+  const parca=ad=>{const p=ad.split(" · ");return{bas:p[0],alt:p.slice(1).join(" · ").replace(/\(ana ekran uygulaması\)/,"· Ana ekran uygulaması").replace(/\s+·\s+·/,"·")}};
+  const gunFark=z=>{const d=new Date(z),b=new Date();const a=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate());return Math.round((a(b)-a(d))/864e5)};
+  const goreli=z=>{const f=gunFark(z);return f<=0?"Bugün":f===1?"Dün":f<7?f+" gün önce":f<30?Math.floor(f/7)+" hafta önce":Math.floor(f/30)+" ay önce"};
+  const gunAd=z=>{const f=gunFark(z);return f<=0?"Bugün":f===1?"Dün":new Date(z).toLocaleDateString("tr-TR",{day:"numeric",month:"long"})};
+  if(!L.length)return`<section class="kart blok" style="margin-top:14px"><h3>Giriş yapılan cihazlar</h3><p class="ipucu" style="margin:0">Henüz kayıt yok. Cihazlar şifreyle giriş yaptıkça burada görünür.</p></section>`;
+  const s0=L[0],p0=parca(s0.ad);
+  return`<section class="kart blok" style="margin-top:14px"><h3>Giriş yapılan cihazlar <small>${L.length} cihaz</small></h3>
+    <div class="cz-son"><div class="cz-ik">${svg(tur(s0.ad),"#fff")}</div><div class="cz-o"><small>Son başarılı giriş</small><b>${gunAd(s0.z)} ${saat(s0.z)}${s0.bu?` <span class="cz-ok">✓ Bu cihaz</span>`:""}</b><span>${esc(p0.bas)}${p0.alt?" · "+esc(p0.alt):""}</span></div></div>
+    ${L.slice(1).map(x=>{const p=parca(x.ad);return`<div class="cz-satir"><div class="cz-ik ${tur(x.ad)}">${svg(tur(x.ad))}</div><div class="cz-o"><b>${esc(p.bas)}${x.bu?` <span class="cz-bu">bu cihaz</span>`:""}</b><small>${esc(p.alt)}</small></div><div class="cz-z">${goreli(x.z)}<small>${new Date(x.z).toLocaleDateString("tr-TR",{day:"numeric",month:"short"})} · ${saat(x.z)}</small></div></div>`}).join("")}
+    <p class="ipucu" style="margin:10px 0 0">Şifre değişirse tüm cihazlardan yeniden giriş istenir.</p></section>`}
 const SIFRE_UZUNLUK=9;
 function pinCiz(){const i=$("#kilitSifre"),p=$("#kilitPin"),y=$("#kilitSay");if(!i||!p)return;const v=i.value,n=v.length,N=SIFRE_UZUNLUK,goster=i.type==="text",odak=document.activeElement===i;
   p.innerHTML=Array.from({length:Math.max(N,n+(n<N?0:0))},(_,k)=>{const c=k<n?(goster?esc(v[k]):"•"):"";const cls=k<n?(n>N?"fazla":n===N?"tam":"dolu"):(odak&&k===n?"sira":"");return`<span class="${cls}">${c}</span>`}).join("");
@@ -1440,7 +1475,7 @@ const SIFRE_SURUM="3";
     if(y&&y.s&&y.v===SIFRE_SURUM){s=y.s;try{localStorage.setItem("tez-sifre",s);localStorage.setItem("tez-sifre-v",SIFRE_SURUM)}catch(_){}SIFRE_BELLEK=s;sv=SIFRE_SURUM}}
   if(sv!==SIFRE_SURUM){sifreYaz("");s=""}
   else if(s&&!yedekCerez())yedekYaz({s,v:SIFRE_SURUM});   // mevcut girişleri de yedeğe al
-  if(!s)sifreEkrani(false);else yenile();
+  if(!s)sifreEkrani(false);else{yenile();setTimeout(cihazAdGuncelle,3000)}
 })();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
 /* kur 5 dakikadan eskiyse (ör. uygulama arka plandan dönünce) hemen tazele */
