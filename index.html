@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=96"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=97"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -565,18 +565,19 @@ window.addEventListener("error",function(e){try{var g=document.getElementById("g
 /* ===== sabitler ===== */
 const MAKALE_ASAMA="Makale yazımına başlandı";
 const ADAY="Ön görüşme";
-const DURUM={[ADAY]:"gorusme","Teze başlandı":"devam","Etik kurula sunuldu":"devam","Etik onay alındı":"devam","Veri seti tamamlandı":"devam","İstatistiğe başlandı":"devam","Tez yazımına başlandı":"devam","Revizyonda":"revizyon",[MAKALE_ASAMA]:"makale","Teslim edildi":"teslim","İptal":"iptal"};
+const DURUM={[ADAY]:"gorusme","Teze başlandı":"devam","Etik kurul yazıldı":"devam","Etik kurula sunuldu":"devam","Etik onay alındı":"devam","Veri seti tamamlandı":"devam","İstatistiğe başlandı":"devam","Tez yazımına başlandı":"devam","Tez yazımı bitti":"devam","Okuması için gönderildi":"revizyon",[MAKALE_ASAMA]:"makale","Teslim edildi":"teslim","İptal":"iptal"};
 const DURUMLAR=Object.keys(DURUM);
-const durumlar=i=>DURUMLAR.filter(d=>d!==ADAY&&(d!==MAKALE_ASAMA||i.makale));
-const ESKI_DURUM={"Devam ediyor":"Teze başlandı","Görüşme":ADAY};
+const durumlar=i=>DURUMLAR.filter(d=>d!==ADAY&&d!=="İptal"&&(d!==MAKALE_ASAMA||i.makale));
+const ESKI_DURUM={"Devam ediyor":"Teze başlandı","Görüşme":ADAY,"Revizyonda":"Okuması için gönderildi"};
 function durumAta(i,yeni){const g=[...(i.gecmis||[])];if(!g.length&&i.durum)g.push({d:i.durum,t:(i.baslangic||bugun())+"T00:00:00"});g.push({d:yeni,t:new Date().toISOString()});return{...i,durum:yeni,gecmis:g}}
 /* ===== İş özeti kuralları (uygulama ve e-posta ortak) ===== */
 function uyariHesapla(i,bugun,A,kalanMetin){
   const G=(a,b)=>Math.round((new Date(String(b).slice(0,10)+"T00:00:00")-new Date(String(a).slice(0,10)+"T00:00:00"))/864e5);
-  const HEDEF=[["Etik kurula sunuldu",.15],["Etik onay alındı",.30],["Veri seti tamamlandı",.55],["İstatistiğe başlandı",.70],["Tez yazımına başlandı",.85]];
-  const SONRA=["Revizyonda","Makale yazımına başlandı","Teslim edildi"];
+  const HEDEF=[["Etik kurula sunuldu",.15],["Etik onay alındı",.30],["Veri seti tamamlandı",.55],["Tez yazımına başlandı",.70],["Tez yazımı bitti",.85],["Okuması için gönderildi",.90]];
+  const SONRA=["Makale yazımına başlandı","Teslim edildi"];
   const out=[],ek=(d,m)=>out.push({d:d,m:m});
-  const durum=i.durum==="Devam ediyor"?"Teze başlandı":i.durum==="Görüşme"?"Ön görüşme":i.durum;
+  const durum=i.durum==="Devam ediyor"?"Teze başlandı":i.durum==="Görüşme"?"Ön görüşme":i.durum==="Revizyonda"?"Okuması için gönderildi":i.durum;
+  if(A&&A["Revizyonda"]&&!A["Okuması için gönderildi"]){A={...A,"Okuması için gönderildi":A["Revizyonda"]}}
   A=A||i.asamaT||{};
   if(durum==="İptal")return out;
   if(durum==="Ön görüşme"){const t=i.baslangic||i.olusturma||(i.gecmis&&i.gecmis[0]&&i.gecmis[0].t);const g=t?G(t,bugun):0;if(g>=7)ek(1,"Ön görüşme "+g+" gündür bekliyor · dönüş yap");return out}
@@ -613,7 +614,10 @@ function asamaDegis(i,d){const a={...asamaT(i)},ac=!a[d],z=new Date().toISOStrin
   const y={...i,asamaT:a,gecmis:[...(i.gecmis||[]),ac?{d,t:z}:{d,t:z,geri:true}]};y.durum=durumTuret(y,a);
   if(i.durum===ADAY&&y.durum!==ADAY){y.gorusme=i.gorusme||i.baslangic;y.baslangic=bugun();if(!y.teslim)setTimeout(()=>toast("İş başladı · teslim tarihini Düzenle’den gir"),400)}return{y,ac}}
 let gocYapildi=false;
-function gocEt(){if(gocYapildi)return;gocYapildi=true;isler.filter(i=>ESKI_DURUM[i.durum]).forEach(i=>{const y=ESKI_DURUM[i.durum];arkada(isYaz({...i,durum:y,gecmis:i.gecmis&&i.gecmis.length||y===ADAY?(i.gecmis||[]):[{d:y,t:(i.baslangic||bugun())+"T00:00:00"}]}))})}
+function gocEt(){if(gocYapildi)return;gocYapildi=true;
+  /* "Revizyonda" aşaması kaldırıldı → "Okuması için gönderildi" */
+  isler.filter(i=>i.asamaT&&i.asamaT["Revizyonda"]).forEach(i=>{const a={...i.asamaT};if(!a["Okuması için gönderildi"])a["Okuması için gönderildi"]=a["Revizyonda"];delete a["Revizyonda"];const y={...i,asamaT:a};y.durum=durumTuret(y,a);arkada(isYaz(y))});
+  isler.filter(i=>ESKI_DURUM[i.durum]&&!(i.asamaT&&i.durum==="Revizyonda")).forEach(i=>{const y=ESKI_DURUM[i.durum];arkada(isYaz({...i,durum:y,gecmis:i.gecmis&&i.gecmis.length||y===ADAY?(i.gecmis||[]):[{d:y,t:(i.baslangic||bugun())+"T00:00:00"}]}))})}
 const TURLER=["Uzmanlık tezi","Yüksek lisans","Doktora","Lisans bitirme","Proje / Ödev","Diğer"];
 const ASAMALAR=["Konu ve plan","Literatür taraması","Yöntem","Etik kurul / izinler","Veri toplama","İstatistik / analiz","Bulgular ve tartışma","Son okuma ve format"];
 const renkAd=k=>`--c:var(--${k});--cs:var(--${k}-s);--cb:var(--${k}-b)`;
