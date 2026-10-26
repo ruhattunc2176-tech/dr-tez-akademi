@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=94"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=95"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -656,6 +656,7 @@ const yuzde=i=>{const u=+i.ucret||0;return u?Math.min(100,Math.round(odenen(i)/u
 function sureMetni(i){
   if(i.durum==="Teslim edildi")return{t:"Teslim edildi",c:"ok"};
   if(i.durum==="İptal")return{t:"İptal",c:""};
+  if(i.durum===ADAY)return{t:i.baslangic?"Görüşme "+tarih(i.baslangic,1):"Görüşme tarihi yok",c:""};
   const g=fark(i.teslim);if(g===null)return{t:"Tarih yok",c:""};
   if(g<0)return{t:`${-g} gün gecikti`,c:"gec"};if(g===0)return{t:"Bugün teslim",c:"gec"};if(g===1)return{t:"Yarın teslim",c:"yakin"};
   if(g<=7)return{t:`${g} gün kaldı`,c:"yakin"};return{t:`${g} gün kaldı`,c:""};
@@ -1065,7 +1066,7 @@ function detayCiz(){
   <div class="ic" style="${renk(i.durum)}">
     <section class="kart kahraman">
       <div class="k-ust"><div class="k-sol"><div class="ad">${esc(i.musteri)}</div><p class="konu">${esc(i.konu)}</p></div><div class="etiketler">${i.tur?`<span>${esc(i.tur)}</span>`:""}<span>${U?"$ Dolar":"₺ TL"}</span>${i.makale?`<span class="mk-e">Makale</span>`:""}</div></div>
-      <div class="geri-sayim">${aktif(i)&&f!==null?`<b class="num">${Math.abs(f)}</b><span>${f<0?"gün gecikti":f===0?"bugün teslim":"gün kaldı"}</span>`:`<span>${s.t}</span>`}<small>Teslim ${tarih(i.teslim)}</small></div>
+      <div class="geri-sayim">${i.durum!==ADAY&&aktif(i)&&f!==null?`<b class="num">${Math.abs(f)}</b><span>${f<0?"gün gecikti":f===0?"bugün teslim":"gün kaldı"}</span>`:`<span>${s.t}</span>`}${i.durum===ADAY?"":`<small>Teslim ${tarih(i.teslim)}</small>`}</div>
       <div class="durum-sec"><span class="su-durum">${esc(i.durum)}</span><button type="button" data-bekle aria-pressed="${!!i.beklemede}">${i.beklemede?"Beklemede (müşteriden) ✓":"Beklemeye al"}</button></div>
     </section>
 
