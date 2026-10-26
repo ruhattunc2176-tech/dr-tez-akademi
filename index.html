@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=95"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=96"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -637,7 +637,7 @@ const para=(n,pb)=>pb==="USD"?usd(n):tl(n);
 const tlKisa=n=>n>=1000?nf(Math.round(n/100)/10,1).replace(",0","")+"b":String(Math.round(n||0));
 const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const bugun=()=>iso(new Date());secGun=bugun();
-const tarih=(s,kisa)=>s?new Date(s+"T00:00").toLocaleDateString("tr-TR",kisa?{day:"numeric",month:"short"}:{day:"numeric",month:"long",year:"numeric"}):"—";
+const tarih=(s,kisa)=>s?new Date(s+"T00:00").toLocaleDateString("tr-TR",kisa?{day:"numeric",month:"long"}:{day:"numeric",month:"long",year:"numeric"}):"—";
 const fark=s=>s?Math.round((new Date(s+"T00:00")-new Date(bugun()+"T00:00"))/864e5):null;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const aktif=i=>!["Teslim edildi","İptal",ADAY,"Görüşme"].includes(i.durum);
@@ -744,7 +744,7 @@ function gCihazlar(){const g={};loglar.filter(l=>l.tur==="giris").forEach(l=>{co
   const s0=L[0],p0=parca(s0.ad);
   return`<section class="kart blok" style="margin-top:14px"><h3>Giriş yapılan cihazlar <small>${L.length} cihaz</small></h3>
     <div class="cz-son"><div class="cz-ik">${svg(tur(s0.ad),"#fff")}</div><div class="cz-o"><small>Son başarılı giriş</small><b>${gunAd(s0.z)} ${saat(s0.z)}${s0.bu?` <span class="cz-ok">✓ Bu cihaz</span>`:""}</b><span>${esc(p0.bas)}${p0.alt?" · "+esc(p0.alt):""}</span></div></div>
-    ${L.slice(1).map(x=>{const p=parca(x.ad);return`<div class="cz-satir"><div class="cz-ik ${tur(x.ad)}">${svg(tur(x.ad))}</div><div class="cz-o"><b>${esc(p.bas)}${x.bu?` <span class="cz-bu">bu cihaz</span>`:""}</b><small>${esc(p.alt)}</small></div><div class="cz-z">${goreli(x.z)}<small>${new Date(x.z).toLocaleDateString("tr-TR",{day:"numeric",month:"short"})} · ${saat(x.z)}</small>${x.bu?"":`<button type="button" class="cz-sil" data-czsil="${esc(x.k)}">Kaldır</button>`}</div></div>`}).join("")}
+    ${L.slice(1).map(x=>{const p=parca(x.ad);return`<div class="cz-satir"><div class="cz-ik ${tur(x.ad)}">${svg(tur(x.ad))}</div><div class="cz-o"><b>${esc(p.bas)}${x.bu?` <span class="cz-bu">bu cihaz</span>`:""}</b><small>${esc(p.alt)}</small></div><div class="cz-z">${goreli(x.z)}<small>${new Date(x.z).toLocaleDateString("tr-TR",{day:"numeric",month:"long"})} · ${saat(x.z)}</small>${x.bu?"":`<button type="button" class="cz-sil" data-czsil="${esc(x.k)}">Kaldır</button>`}</div></div>`}).join("")}
     <p class="ipucu" style="margin:10px 0 0">Şifre değişirse tüm cihazlardan yeniden giriş istenir.</p></section>`}
 const SIFRE_UZUNLUK=9;
 function pinCiz(){const i=$("#kilitSifre"),p=$("#kilitPin"),y=$("#kilitSay");if(!i||!p)return;const v=i.value,n=v.length,N=SIFRE_UZUNLUK,goster=i.type==="text",odak=document.activeElement===i;
@@ -965,7 +965,7 @@ document.addEventListener("touchcancel",()=>{if(oKay&&oKay.yon==="x")oGit(oKay.s
 function gAlinan(){
   const tum=isler.flatMap(i=>(i.odemeler||[]).map((o,n)=>({...o,i,n}))).sort((a,b)=>b.tarih.localeCompare(a.tarih));
   const aylar=[];const n=new Date(),ilkO=tum.length?tum[tum.length-1].tarih:"";let fark=ilkO?(n.getFullYear()-+ilkO.slice(0,4))*12+n.getMonth()-(+ilkO.slice(5,7)-1):0;fark=Math.max(0,Math.min(11,fark));
-  for(let k=fark;k>=0;k--){const d=new Date(n.getFullYear(),n.getMonth()-k,1);aylar.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"short"}),t:0})}
+  for(let k=fark;k>=0;k--){const d=new Date(n.getFullYear(),n.getMonth()-k,1);aylar.push({a:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,ad:d.toLocaleDateString("tr-TR",{month:"long"}),t:0})}
   const sonK=aylar.length-1;
   tum.forEach(o=>{const a=aylar.find(x=>o.tarih.startsWith(x.a));if(a)a.t+=oTL(o)});
   const mx=Math.max(...aylar.map(a=>a.t),1),topTL=tum.reduce((a,o)=>a+oTL(o),0);
@@ -995,7 +995,7 @@ function gBekleyen(){
     </button>`};
   const n=new Date(),buAy=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`,kova=[{ad:"Gecikmiş",gec:1,t:0}],ayK={};let tarihsiz=0;
   l.forEach(i=>{const a=(i.teslim||"").slice(0,7),v=kalanTL(i);if(!a)tarihsiz+=v;else if(a<buAy)kova[0].t+=v;else ayK[a]=(ayK[a]||0)+v});
-  Object.keys(ayK).sort().forEach(a=>kova.push({a,ad:new Date(a+"-01T00:00").toLocaleDateString("tr-TR",{month:"short"})+(a.slice(0,4)!==buAy.slice(0,4)?" ’"+a.slice(2,4):""),bu:a===buAy,t:ayK[a]}));
+  Object.keys(ayK).sort().forEach(a=>kova.push({a,ad:new Date(a+"-01T00:00").toLocaleDateString("tr-TR",{month:"long"})+(a.slice(0,4)!==buAy.slice(0,4)?" ’"+a.slice(2,4):""),bu:a===buAy,t:ayK[a]}));
   if(tarihsiz)kova.push({ad:"Tarihsiz",t:tarihsiz});
   const mx=Math.max(...kova.map(k=>k.t),1);
   return`<section class="kart blok" style="margin-top:16px">
