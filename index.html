@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=97"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=98"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -526,6 +526,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .fazla-uyari{background:#fdecea;color:#b3261e;border-radius:12px;padding:10px 12px;font-weight:700;font-size:15px}
 .yeni-odeme .tur-sec{scroll-margin-top:72px}.yeni-odeme{scroll-margin-top:76px}
 .cz-sil{display:block;margin:6px 0 0 auto;border:1.5px solid var(--line);background:var(--card);color:#b3261e;font:inherit;font-size:.78rem;font-weight:800;border-radius:9px;padding:4px 10px;cursor:pointer}.cz-sil.emin{background:#b3261e;color:#fff;border-color:#b3261e}
+
+/* Açılışta veri yokken */
+.yukleniyor{position:fixed;inset:0;z-index:40;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(3px);display:grid;place-items:center}
+.yukleniyor>div{background:var(--card);border-radius:20px;padding:22px 26px;box-shadow:0 10px 30px rgba(0,0,0,.12);display:flex;flex-direction:column;align-items:center;gap:6px}
+.yukleniyor i{width:34px;height:34px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--accent);animation:dondur .8s linear infinite;margin-bottom:6px}
+.yukleniyor small{color:var(--muted);font-weight:600}
+@keyframes dondur{to{transform:rotate(360deg)}}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -560,6 +567,7 @@ window.addEventListener("error",function(e){try{var g=document.getElementById("g
 </nav>
 <div class="ekran" id="ekran" hidden></div>
 <div class="toast" id="toast" hidden></div>
+<div class="yukleniyor" id="yukleniyor" hidden><div><i></i><b>Kayıtlar yükleniyor…</b><small>Google E-Tablo’dan alınıyor</small></div></div>
 
 <script>
 /* ===== sabitler ===== */
@@ -702,7 +710,12 @@ const WA_URL="https:"+"/"+"/wa.me/";
 /* ===== kayıt (Google E-Tablo) ===== */
 const LS_I="tez-defteri-v1",LS_L="tez-defteri-log-v1";
 const lsOku=k=>{try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}};
-const lsYaz=()=>{try{localStorage.setItem(LS_I,JSON.stringify(isler));localStorage.setItem(LS_L,JSON.stringify(loglar))}catch(e){}};
+const lsYaz=()=>{try{localStorage.setItem(LS_I,JSON.stringify(isler));localStorage.setItem(LS_L,JSON.stringify(loglar))}catch(e){}
+  clearTimeout(lsYaz.z);lsYaz.z=setTimeout(()=>idbYaz("veri",{isler,loglar,t:Date.now()}),800)};
+/* Kayıtların yedek kopyası IndexedDB'de: telefon tarayıcı hafızasını temizlese de açılışta boş sayfa gelmesin */
+function idbAc(){return new Promise((ok,no)=>{try{const r=indexedDB.open("drtez",1);r.onupgradeneeded=()=>r.result.createObjectStore("k");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}})}
+function idbYaz(k,v){idbAc().then(db=>{try{db.transaction("k","readwrite").objectStore("k").put(v,k)}catch(_){}}).catch(()=>{})}
+function idbOku(k){return new Promise(ok=>{idbAc().then(db=>{try{const q=db.transaction("k").objectStore("k").get(k);q.onsuccess=()=>ok(q.result||null);q.onerror=()=>ok(null)}catch(_){ok(null)}}).catch(()=>ok(null));setTimeout(()=>ok(null),1500)})}
 let bekleyen=0;
 const API=window.TEZ_API||"";
 function sifreAl(){try{return localStorage.getItem("tez-sifre")||SIFRE_BELLEK||""}catch(_){return SIFRE_BELLEK||""}}
@@ -1453,7 +1466,9 @@ document.addEventListener("submit",async e=>{
 });
 
 /* ===== başlat ===== */
-isler=lsOku(LS_I);loglar=lsOku(LS_L);ciz();
+isler=lsOku(LS_I);loglar=lsOku(LS_L);let VERI_GELDI=isler.length>0;ciz();
+if(!VERI_GELDI){$("#yukleniyor").hidden=false;   // önbellek boşsa: önce yedekten dene, yoksa sunucu gelene kadar "yükleniyor" göster
+  idbOku("veri").then(v=>{if(!VERI_GELDI&&v&&Array.isArray(v.isler)&&v.isler.length){isler=v.isler;loglar=v.loglar||[];VERI_GELDI=true;$("#yukleniyor").hidden=true;try{localStorage.setItem(LS_I,JSON.stringify(isler));localStorage.setItem(LS_L,JSON.stringify(loglar))}catch(_){}ciz()}})}
 function kullaniciYaziyor(){const a=document.activeElement;return !!(a&&a.closest&&a.closest("#ekran")&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||ODZ!==null}
 let ertelenen=false;
 function yenile(zorla){
@@ -1466,9 +1481,9 @@ function yenile(zorla){
     if(d.surum)SON_SURUM=d.surum;
     isler=d.isler||[];loglar=d.loglar||[];KURLAR=d.kurlar||{};
     if(d.kur&&d.kur.usd){KUR=d.kur;try{localStorage.setItem("tez-defteri-kur",JSON.stringify(KUR))}catch(_){}}
-    lsYaz();if(ekranTur!=="form")ciz();gocEt();
+    VERI_GELDI=true;$("#yukleniyor").hidden=true;lsYaz();if(ekranTur!=="form")ciz();gocEt();
     $("#depo").textContent="Kayıtlar Google E-Tablonda · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})+" itibarıyla güncel";
-  }).catch(e=>{$("#depo").textContent="Sunucuya ulaşılamadı"+(API?" (…"+API.slice(-14,-5)+")":"")+": "+(e&&e.message||e)});
+  }).catch(e=>{$("#yukleniyor").hidden=true;if(!VERI_GELDI)toast("Sunucuya ulaşılamadı · internetini kontrol et");$("#depo").textContent="Sunucuya ulaşılamadı"+(API?" (…"+API.slice(-14,-5)+")":"")+": "+(e&&e.message||e)});
 }
 document.addEventListener("submit",async e=>{if(e.target.id!=="kilitForm")return;e.preventDefault();const v=$("#kilitSifre").value.trim();if(!v)return;
   const b=$("#kilitBtn");b.disabled=true;b.textContent="Kontrol ediliyor…";kilitDurum("Kontrol ediliyor…","bekle");sifreYaz(v);
@@ -1484,7 +1499,7 @@ const SIFRE_SURUM="3";
     if(y&&y.s&&y.v===SIFRE_SURUM){s=y.s;try{localStorage.setItem("tez-sifre",s);localStorage.setItem("tez-sifre-v",SIFRE_SURUM)}catch(_){}SIFRE_BELLEK=s;sv=SIFRE_SURUM}}
   if(sv!==SIFRE_SURUM){sifreYaz("");s=""}
   else if(s&&!yedekCerez())yedekYaz({s,v:SIFRE_SURUM});   // mevcut girişleri de yedeğe al
-  if(!s)sifreEkrani(false);else{yenile();setTimeout(cihazAdGuncelle,3000)}
+  if(!s){$("#yukleniyor").hidden=true;sifreEkrani(false)}else{yenile();setTimeout(cihazAdGuncelle,3000)}
 })();
 /* 5 dakikada bir canlı kuru tazele (kayıtları değil) */
 /* kur 5 dakikadan eskiyse (ör. uygulama arka plandan dönünce) hemen tazele */
