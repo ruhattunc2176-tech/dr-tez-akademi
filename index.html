@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=103"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=104"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -564,6 +564,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .gd-od{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}.gd-od i{font-style:normal;background:var(--para-s);color:var(--para);border-radius:999px;padding:1px 8px;font-size:.74rem;font-weight:800}
 .gd-tah{font-style:normal;font-size:.72rem;font-weight:800;color:var(--muted);background:var(--card);border-radius:999px;padding:1px 6px;margin-left:4px}
 .gd-odl{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gd-lb small{font-weight:600}
+
+/* Giderler sade (A) */
+.gd-buyuk{background:var(--gider);color:#fff;border-radius:18px;padding:16px}.gd-buyuk small{display:block;color:#e6defe;font-weight:700;font-size:.85rem}
+.gd-buyuk b{display:block;font-size:2rem;margin:2px 0;font-variant-numeric:tabular-nums}.gd-buyuk .alt{display:flex;flex-wrap:wrap;gap:4px 16px;font-weight:700;font-size:.88rem;color:#f1ecff}
+.gd-liste{margin-top:6px}
+.gd-k{display:flex;align-items:center;gap:12px;width:100%;border:0;border-top:1px solid var(--line);background:none;padding:12px 2px;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.gd-liste .gd-k:first-child{border-top:0}
+.gd-d{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.9rem;flex:none}.gd-d.ok{background:var(--para-s);color:var(--para)}.gd-d.bk{background:#fff1d6;color:#b26a00}
+.gd-k .gd-o b{font-weight:800}.gd-k .gd-t{font-weight:800;white-space:nowrap}
+.gd-sonraki{display:flex;justify-content:space-between;width:100%;border:0;background:var(--gider-s);color:var(--gider);border-radius:14px;padding:13px 14px;font:inherit;font-weight:800;margin-top:8px;cursor:pointer}
+.gd-g{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-top:1px solid var(--line);background:none;padding:12px 2px;font:inherit;color:inherit;text-align:left;font-weight:700;cursor:pointer}
+.gd-g b{font-weight:800}.gd-g small{color:var(--muted);font-weight:600}.gd-g>span:last-child{white-space:nowrap;font-weight:800}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -1031,32 +1043,29 @@ function giderCekimler(g,bas,son){const out=[];
 function giderSonraki(g){const b=bugun(),l=giderCekimler(g,b,ayEkle(b,40));return l.find(x=>x.t)||l[0]||null}
 function ekstreAraligi(ref){const [y,m,d]=ref.split("-").map(Number);const ay=d>EKSTRE_KESIM?new Date(y,m,1):new Date(y,m-1,1);
   const son=iso(new Date(ay.getFullYear(),ay.getMonth(),EKSTRE_KESIM)),bas=iso(new Date(ay.getFullYear(),ay.getMonth()-1,EKSTRE_KESIM+1));return{bas,son,ay:son.slice(0,7)}}
-function gGider(){const L=giderler(),b=bugun(),buAy=b.slice(0,7),ayBas=buAy+"-01",aySon=iso(new Date(+buAy.slice(0,4),+buAy.slice(5,7),0));
-  const buAyGider=L.reduce((t,g)=>t+giderCekimler(g,ayBas,aySon).reduce((a,c)=>a+gTL(g,c.ay),0),0);
-  const sabit=L.filter(g=>g.tip==="aylik").reduce((t,g)=>t+gTL(g),0);
-  const kalanT=L.filter(g=>g.tip==="taksit").map(g=>({g,k:giderCekimler(g,iso(new Date(Date.now()+864e5)),"2099-12-31").length}));
-  const kalanTL=kalanT.reduce((t,x)=>t+x.k*gTL(x.g),0),kalanSay=kalanT.reduce((t,x)=>t+x.k,0);
-  const alinanAy=isler.flatMap(i=>i.odemeler||[]).filter(o=>(o.tarih||"").startsWith(buAy)).reduce((t,o)=>t+oTL(o),0);
-  const E=ekstreAraligi(b),eks=L.flatMap(g=>giderCekimler(g,E.bas,E.son).filter(c=>c.t||c.ay===E.ay).map(c=>({g,c}))).sort((x,y)=>(x.c.t||"9").localeCompare(y.c.t||"9"));
-  const eksTop=eks.reduce((t,x)=>t+gTL(x.g,x.c.ay),0);
-  const satir=g=>{const s=giderSonraki(g),eksik=[];if(!(+g.tutar>0))eksik.push("Tutar eksik");if(g.tip==="aylik"&&!g.gun)eksik.push("Çekim günü eksik");
-    const alt=g.tip==="aylik"?`Her ay${g.gun?` · ayın ${g.gun}'${gunEk(g.gun)}`:""}`
-      :g.tip==="taksit"?`${g.taksit} taksit · ${Math.min(+g.taksit,giderCekimler(g,"2000-01-01",b).length)}/${g.taksit} ödendi`:`Tek sefer · ${tarih(g.bas,1)}`;
-    const ilerle=g.tip==="taksit"?`<div class="gd-bar"><i style="width:${Math.min(100,giderCekimler(g,"2000-01-01",b).length/(+g.taksit||1)*100)}%"></i></div>`:"";
-    return`<button type="button" class="gd-sat" data-gduz="${esc(g.id)}"><span class="gd-ik">${esc((g.ad||"?").trim().charAt(0).toLocaleUpperCase("tr"))}</span>
-      <span class="gd-o"><b>${esc(g.ad)}</b><small>${alt}</small>${ilerle}${odenenler(g)}${eksik.map(x=>`<em class="gd-eksik">${x}</em>`).join("")}</span>
-      <span class="gd-t">${+g.tutar>0?para(+g.tutar,g.pb):"—"}<small>${s?(s.t?(g.tip==="taksit"?`${s.no}. taksit: `:"Sonraki: ")+tarih(s.t,1):`${ayAd(s.ay)} · gün yok`):"Bitti"}</small></span></button>`};
+let EKS_SONRAKI=false;
+const gunIy=n=>{n=+n;const d=n%10;if(d===0)return n===20?"si":"u";return["","i","si","ü","ü","i","sı","si","i","u"][d]};
+function gGider(){const L=giderler(),b=bugun();
+  const ekstre=ref=>{const E=ekstreAraligi(ref);const k=L.flatMap(g=>giderCekimler(g,E.bas,E.son).filter(c=>c.t||c.ay===E.ay).map(c=>({g,c,tl:gTL(g,c.ay),ok:!!(c.t&&c.t<=b)})))
+      .sort((x,y)=>(x.c.t||"9").localeCompare(y.c.t||"9"));return{E,k,top:k.reduce((t,x)=>t+x.tl,0),ok:k.filter(x=>x.ok).reduce((t,x)=>t+x.tl,0)}};
+  const S=ekstre(b),N=ekstre(ayEkle(S.E.son,1));
+  const kalem=x=>`<button type="button" class="gd-k" data-gduz="${esc(x.g.id)}"><span class="gd-d ${x.ok?"ok":"bk"}">${x.ok?"✓":"⏳"}</span>
+      <span class="gd-o"><b>${esc(x.g.ad)}${x.c.no?` (${x.c.no}/${x.c.n})`:""}</b><small>${x.c.t?tarih(x.c.t,1):"gün girilmedi"}${!x.ok&&x.g.tip==="aylik"&&!(x.g.odenen&&x.g.odenen[x.c.ay])?" · tahmini":""}</small></span>
+      <span class="gd-t">${x.tl>0?tl(x.tl):"—"}</span></button>`;
+  const ozet=g=>{if(g.tip==="aylik")return g.gun?`her ay ${g.gun}'${gunIy(g.gun)}`:"her ay";
+    if(g.tip==="taksit"){const k=giderCekimler(g,iso(new Date(Date.now()+864e5)),"2099-12-31").length;return k?`${k} taksit kaldı`:"taksitler bitti"}
+    return`tek sefer · ${tarih(g.bas,1)}`};
+  const usdVar=L.some(g=>g.pb==="USD");
   return`<section class="kart blok" style="margin-top:16px">
-    <div class="gb-ust mor"><div class="ana"><span>Bu ayki gider</span><b>${tl(buAyGider)}</b></div><div><span>Aylık sabit</span><b>${tl(sabit)}</b></div><div><span>Kalan taksit</span><b>${kalanSay?tl(kalanTL):"—"}</b></div></div>
+    <div class="gd-buyuk"><small>${ayAd(S.E.ay)} ekstresi · 18–20 ${ayAd(S.E.ay)}</small><b>${tl(S.top)}</b>
+      <div class="alt"><span>✓ Çekildi ${tl(S.ok)}</span><span>⏳ Bekliyor ${tl(S.top-S.ok)}</span></div></div>
+    <div class="gd-liste">${S.k.length?S.k.map(kalem).join(""):`<p class="ipucu" style="margin:10px 2px">Bu ekstreye düşen gider yok.</p>`}</div>
+    <button type="button" class="gd-sonraki" data-gsonraki aria-expanded="${EKS_SONRAKI}"><span>${ayAd(N.E.ay)} ekstresi (tahmini)</span><span>${tl(N.top)} ${EKS_SONRAKI?"▴":"›"}</span></button>
+    ${EKS_SONRAKI?`<div class="gd-liste">${N.k.map(x=>kalem({...x,ok:false})).join("")||`<p class="ipucu" style="margin:10px 2px">Gider yok.</p>`}</div>`:""}
+    <div class="gd-bas"><h3 style="margin:0">Giderlerim</h3>${GF?"":`<button type="button" class="gd-ekle" data-gyeni>+ Ekle</button>`}</div>
     ${GF?gFormGider():""}
-    <div class="gd-bas"><h3 style="margin:0">Ortak giderler</h3>${GF?"":`<button type="button" class="gd-ekle" data-gyeni>+ Gider ekle</button>`}</div>
-    ${L.length?L.map(satir).join(""):`<p class="ipucu" style="margin:6px 0 0">Henüz gider yok. "+ Gider ekle" ile ekle.</p>`}
-    <div class="gd-eks"><b>${ayAd(E.ay)} ekstresi · kesim 18–20 ${ayAd(E.ay)}</b>
-      ${eks.length?eks.map(x=>`<div class="s"><span>${esc(x.g.ad)}${x.c.no?` ${x.c.no}/${x.c.n}`:""} · ${x.c.t?tarih(x.c.t,1):"gün yok"}</span><span>${gTL(x.g,x.c.ay)>0?tl(gTL(x.g,x.c.ay)):"tutar yok"}${x.c.t&&x.c.t>b?` <em class="gd-tah">tahmini</em>`:x.g.odenen&&x.g.odenen[x.c.ay]?" ✓":""}</span></div>`).join(""):`<div class="s"><span>Bu ekstreye düşen gider yok</span></div>`}
-      <div class="s top"><span>Toplam</span><span>${tl(eksTop)}</span></div>
-      <small>${tarih(E.bas,1)} – ${tarih(E.son,1)} arası çekimler. 18–20 arasındaki çekimler bir sonraki ekstreye de kayabilir.</small></div>
-    <div class="gd-net"><span>${ayAd(buAy)}: alınan − gider</span><b>${tl(alinanAy-buAyGider)}</b></div>
-    <p class="ipucu" style="margin:10px 0 0">Dolar giderler bugünkü kurla (1 $ = ${nf(KUR.usd,2)} ₺) TL'ye çevrilir.</p></section>`}
+    ${L.map(g=>`<button type="button" class="gd-g" data-gduz="${esc(g.id)}"><span><b>${esc(g.ad)}</b> <small>· ${ozet(g)}</small>${!(+g.tutar>0)?` <em class="gd-eksik">tutar eksik</em>`:g.tip==="aylik"&&!g.gun?` <em class="gd-eksik">gün eksik</em>`:""}</span><span>${+g.tutar>0?para(+g.tutar,g.pb):"—"}</span></button>`).join("")||`<p class="ipucu" style="margin:6px 0 0">Henüz gider yok.</p>`}
+    ${usdVar?`<p class="ipucu" style="margin:10px 0 0">Dolar giderler bugünkü kurla (1 $ = ${nf(KUR.usd,2)} ₺) çevrilir.</p>`:""}</section>`}
 function odenenler(g){const o=g.odenen||{},k=Object.keys(o).filter(a=>+o[a]>0).sort();if(!k.length)return"";
   return`<span class="gd-od">${k.map(a=>`<i>${ayAd(a)} ${para(+o[a],g.pb)} ✓</i>`).join("")}</span>`}
 function gFormGider(){const f=GF,tip=f.tip;
@@ -1102,7 +1111,8 @@ function giderTohum(){if(loglar.some(l=>l.id==="gider-tohum"))return giderDuzelt
   loglar=loglar.concat(yeni,[isaret]);lsYaz();ciz();arkada(...yeni.map(g=>yazSr("logEkle",g)),yazSr("logEkle",isaret));giderDuzelt()}
 document.addEventListener("input",e=>{if(e.target.closest&&e.target.closest("#giderForm"))gfOku()});
 document.addEventListener("submit",e=>{if(e.target.id!=="giderForm")return;e.preventDefault();giderKaydet()});
-document.addEventListener("click",e=>{const t=e.target.closest("[data-gyeni],[data-gduz],[data-gkapat],[data-gtip],[data-gpb],[data-gsil]");if(!t)return;const ds=t.dataset;
+document.addEventListener("click",e=>{const t=e.target.closest("[data-gyeni],[data-gduz],[data-gkapat],[data-gtip],[data-gpb],[data-gsil],[data-gsonraki]");if(!t)return;const ds=t.dataset;
+  if(ds.gsonraki!==undefined){EKS_SONRAKI=!EKS_SONRAKI;ciz();return}
   if(ds.gyeni!==undefined){GF={id:null,ad:"",tip:"aylik",tutar:"",pb:"TRY",gun:"",bas:bugun(),taksit:""};ciz();setTimeout(()=>{$("#gf-ad")?.focus();ustaHizala?.($("#giderForm"))},30);return}
   if(ds.gduz){const g=loglar.find(l=>l.id===ds.gduz);if(!g)return;GF={id:g.id,ad:g.ad,tip:g.tip,tutar:g.tutar?nf(g.tutar,g.tutar%1?2:0):"",pb:g.pb||"TRY",gun:g.gun||"",bas:g.bas||bugun(),taksit:g.taksit||"",odenen:Object.fromEntries(Object.entries(g.odenen||{}).map(([a,v])=>[a,nf(v,v%1?2:0)]))};ciz();
     setTimeout(()=>{const el=$("#giderForm");el&&el.scrollIntoView({behavior:"smooth",block:"start"});const bos=!(+g.tutar>0)?"#gf-tutar":g.tip==="aylik"&&!g.gun?"#gf-gun":null;if(bos)$(bos)?.focus()},30);return}
