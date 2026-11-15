@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=105"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=106"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -1057,7 +1057,7 @@ function gGider(){const L=giderler(),b=bugun();
   const ilk=L.reduce((m,g)=>{const a=ekstreAraligi(g.bas||b).ay;return a<m?a:m},S0.ay),enAz=Math.min(0,ayFark(S0.ay,ilk)),enCok=6;
   EKS_KAY=Math.max(enAz,Math.min(enCok,EKS_KAY));const S=ekstre(ayEkle(S0.son,EKS_KAY)),buEks=EKS_KAY===0;
   const kalem=x=>`<button type="button" class="gd-k" data-gduz="${esc(x.g.id)}"><span class="gd-d ${x.ok?"ok":"bk"}">${x.ok?"✓":"⏳"}</span>
-      <span class="gd-o"><b>${esc(x.g.ad)}${x.c.no?` (${x.c.no}/${x.c.n})`:""}</b><small>${x.c.t?tarih(x.c.t,1):"gün girilmedi"}${!x.ok&&x.g.tip==="aylik"&&!(x.g.odenen&&x.g.odenen[x.c.ay])?" · tahmini":""}</small></span>
+      <span class="gd-o"><b>${esc(x.g.ad)}${x.c.no?` (${x.c.no}/${x.c.n})`:""}</b><small>${x.c.t?tarih(x.c.t,1):"gün girilmedi"}${x.c.t&&+x.c.t.slice(8)>=18&&+x.c.t.slice(8)<=20?" · kesim günü, sonraki ekstreye kayabilir":""}${!x.ok&&x.g.tip==="aylik"&&!(x.g.odenen&&x.g.odenen[x.c.ay])?" · tahmini":""}</small></span>
       <span class="gd-t">${x.tl>0?tl(x.tl):"—"}</span></button>`;
   const ozet=g=>{if(g.tip==="aylik")return g.gun?`her ay ${g.gun}'${gunIy(g.gun)}`:"her ay";
     if(g.tip==="taksit"){const k=giderCekimler(g,iso(new Date(Date.now()+864e5)),"2099-12-31").length;return k?`${k} taksit kaldı`:"taksitler bitti"}
@@ -1065,7 +1065,7 @@ function gGider(){const L=giderler(),b=bugun();
   const usdVar=L.some(g=>g.pb==="USD");
   return`<section class="kart blok" style="margin-top:16px">
     <div class="gd-buyuk"><div class="gd-nav"><button type="button" data-geks="-1" aria-label="Önceki ekstre" ${EKS_KAY<=enAz?"disabled":""}>‹</button>
-        <div><span>${ayAd(S.E.ay)} ekstresi${buEks?" · bu ay":""}</span><small>${tarih(S.E.bas,1)} – ${tarih(S.E.son,1)}</small></div>
+        <div><span>${ayAd(S.E.ay)} ekstresi${buEks?" · bu ay":""}</span><small>Hesap kesim: 18–20 ${ayAd(S.E.ay)}</small></div>
         <button type="button" data-geks="1" aria-label="Sonraki ekstre" ${EKS_KAY>=enCok?"disabled":""}>›</button></div>
       <b>${tl(S.top)}</b>
       <div class="alt">${!S.k.length?"<span>Gider yok</span>":S.ok>=S.top-0.5?"<span>✓ Tamamı çekildi</span>":!S.ok?`<span>⏳ Henüz çekilmedi${S.E.son>b?" · tahmini":""}</span>`:`<span>✓ Çekildi ${tl(S.ok)}</span><span>⏳ Bekliyor ${tl(S.top-S.ok)}</span>`}</div>
