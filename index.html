@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=111"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=112"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -608,7 +608,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .gd-kk .gd-ana{padding:6px}.gd-lg{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-weight:900;color:#fff;flex:none;font-size:1.05rem}
 .gd-kk .gd-o b{display:block;font-weight:800}.gd-kk .gd-o small{color:var(--muted);font-weight:600;font-size:.8rem}.gd-kk .gd-o small.uy{color:#b26a00}
 .gd-r{display:flex;flex-direction:column;align-items:flex-end;gap:5px}.gd-r b{font-size:1rem;white-space:nowrap;font-variant-numeric:tabular-nums}
-.gd-chip{border:0;border-radius:999px;padding:5px 12px;font:inherit;font-size:.76rem;font-weight:800;background:var(--gider);color:#fff;cursor:pointer;white-space:nowrap}.gd-chip.al{background:var(--para-s);color:var(--para)}
+.gd-chip{border:0;border-radius:999px;padding:5px 12px;font:inherit;font-size:.76rem;font-weight:800;background:var(--gider);color:#fff;cursor:pointer;white-space:nowrap}.gd-chip.al{background:var(--para-s);color:var(--para)}.gd-chip.sonra{background:#fff1d6;color:#b26a00}
 .gd-bos{background:var(--card);border-radius:18px;padding:16px;text-align:center;color:var(--muted);font-weight:600;box-shadow:var(--shadow)}
 .gd-kart-f{background:var(--card);border-radius:18px;padding:4px;box-shadow:var(--shadow)}.gd-kart-f .gd-form{margin-top:0}
 .gd-modern .gd-ekle-alt{margin-top:2px}
@@ -742,7 +742,7 @@ const tarih=(s,kisa)=>s?new Date(s+"T00:00").toLocaleDateString("tr-TR",kisa?{da
 const fark=s=>s?Math.round((new Date(s+"T00:00")-new Date(bugun()+"T00:00"))/864e5):null;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const aktif=i=>!["Teslim edildi","İptal",ADAY,"Görüşme"].includes(i.durum);
-const SURUM_ZAMANI="2026-11-15T17:11:00+03:00";   // her yayında güncellenir
+const SURUM_ZAMANI="2026-11-15T17:58:00+03:00";   // her yayında güncellenir
 const yeniId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const saat=z=>new Date(z).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
 const gunAdi=z=>{const f=fark(iso(new Date(z)));return f===0?"Bugün":f===-1?"Dün":new Date(z).toLocaleDateString("tr-TR",{day:"numeric",month:"long",weekday:"long"})};
@@ -1110,6 +1110,8 @@ document.addEventListener("click",e=>{const t=e.target.closest("[data-gtdz],[dat
   if(ds.tshz){$("#ts-tarih").value=ds.tshz;return}
   if(ds.tskay!==undefined){const v=$("#ts-tarih").value;if(!v){toast("Tarih seç");return}tsYaz(v);return}
   if(ds.tsgeri!==undefined){if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";return}tsYaz(null)}});
+const AY_EK={"Ocak":["ta","a","tan"],"Şubat":["ta","a","tan"],"Mart":["ta","a","tan"],"Nisan":["da","a","dan"],"Mayıs":["ta","a","tan"],"Haziran":["da","a","dan"],"Temmuz":["da","a","dan"],"Ağustos":["ta","a","tan"],"Eylül":["de","e","den"],"Ekim":["de","e","den"],"Kasım":["da","a","dan"],"Aralık":["ta","a","tan"]};
+const ayEk=(a,k)=>{const ad=ayAd(a),e=AY_EK[ad.charAt(0).toLocaleUpperCase("tr")+ad.slice(1)];return ad+"'"+(e?e[k]:"")};   // k: 0 -de, 1 -e, 2 -den
 const gunIy=n=>{n=+n;const d=n%10;if(d===0)return n===20?"si":"u";return["","i","si","ü","ü","i","sı","si","i","u"][d]};
 function gGider(){const L=giderler(),b=bugun();
   /* takvim ayına göre: o ayın 1'i – son günü arasındaki çekimler */
@@ -1119,14 +1121,21 @@ function gGider(){const L=giderler(),b=bugun();
   const buAy=b.slice(0,7),ayFark=(a,c)=>(+c.slice(0,4)-+a.slice(0,4))*12+(+c.slice(5,7)-+a.slice(5,7));
   const ilk=L.reduce((m,g)=>{const a=(g.bas||b).slice(0,7);return a<m?a:m},buAy),enAz=Math.min(0,ayFark(buAy,ilk)),enCok=6;
   EKS_KAY=Math.max(enAz,Math.min(enCok,EKS_KAY));const S=ekstre(ayEkle(buAy+"-01",EKS_KAY).slice(0,7)),buEks=EKS_KAY===0;
-  const D=buEks?L.flatMap(g=>giderCekimler(g,"2000-01-01",iso(new Date(+buAy.slice(0,4),+buAy.slice(5,7)-1,0))).map(c=>({g,c,tl:gTL(g,c.ay)}))).filter(x=>{const al=(x.g.tahsil||{})[x.c.t||x.c.ay];return !al||al.slice(0,7)===buAy}):[];   // alınmayanlar + bu ay alınanlar
-  const hepsi=D.concat(S.k),topT=hepsi.reduce((t,x)=>t+x.tl,0),alT=hepsi.filter(x=>(x.g.tahsil||{})[x.c.t||x.c.ay]).reduce((t,x)=>t+x.tl,0);
+  /* Tahsil, alındığı aya yazılır: ay M'de "alındı" = tahsil tarihi M içinde olanlar. Sonraki ayda alınan, M'de devretti görünür. */
+  const M=S.E.ay,Mbas=M+"-01",gecmisMi=M<=buAy;
+  const D=gecmisMi?L.flatMap(g=>giderCekimler(g,"2000-01-01",iso(new Date(+M.slice(0,4),+M.slice(5,7)-1,0))).map(c=>({g,c,tl:gTL(g,c.ay)})))
+      .filter(x=>{const al=(x.g.tahsil||{})[x.c.t||x.c.ay];return !al||al>=Mbas}):[];   // M'ye gelmeden alınmamış olanlar
+  const alAy=x=>{const al=(x.g.tahsil||{})[x.c.t||x.c.ay];return al?al.slice(0,7):null};
+  const hepsi=D.concat(S.k),topT=hepsi.reduce((t,x)=>t+x.tl,0),alT=hepsi.filter(x=>alAy(x)===M).reduce((t,x)=>t+x.tl,0);
     const tKey=x=>x.c.t||x.c.ay,tAl=x=>(x.g.tahsil||{})[tKey(x)];
-    const kalem=(x,devir)=>{const al=tAl(x),durum=devir?`<small class="uy">${x.c.t?tarih(x.c.t,1):""} · ${ayAd(x.c.ay)}'den kaldı</small>`
-        :`<small>${x.c.t?tarih(x.c.t,1):"gün girilmedi"}${x.c.t&&x.c.t>b?(x.g.tip==="aylik"&&!(x.g.odenen&&x.g.odenen[x.c.ay])?" · tahmini":""):" · çekildi"}</small>`;
+    const kalem=(x,devir)=>{const al=tAl(x),aa=al&&al.slice(0,7),buAyda=aa===M,sonra=aa&&aa>M,ilerde=!al&&M<buAy;
+      const durum=`<small${devir||sonra||ilerde?' class="uy"':""}>${x.c.t?tarih(x.c.t,1):"gün girilmedi"}${devir?` · ${ayEk(x.c.ay,2)} kaldı`:sonra?` · ${ayEk(aa,0)} alındı`:ilerde?" · alınmadı, devretti":x.c.t&&x.c.t>b?(x.g.tip==="aylik"&&!(x.g.odenen&&x.g.odenen[x.c.ay])?" · tahmini":""):" · çekildi"}</small>`;
+      const chip=buAyda?`<button type="button" class="gd-chip al" data-gtdz="${esc(x.g.id)}|${tKey(x)}" aria-label="Tahsil tarihini değiştir">✓ ${tarih(al,1)} ✎</button>`
+        :sonra?`<button type="button" class="gd-chip sonra" data-gtdz="${esc(x.g.id)}|${tKey(x)}" aria-label="Tahsil tarihini değiştir">Bu ay alınmadı ✎</button>`
+        :`<button type="button" class="gd-chip" data-gtahsil="${esc(x.g.id)}|${tKey(x)}">Tahsil et</button>`;
       return`<div class="gd-kk${devir?" devir":""}"><button type="button" class="gd-ana" data-gduz="${esc(x.g.id)}"><span class="gd-lg" style="background:${gRenk(x.g)}">${esc((x.g.ad||"?").trim().charAt(0).toLocaleUpperCase("tr"))}</span>
         <span class="gd-o"><b>${esc(x.g.ad)}${x.c.no?` · ${x.c.no}/${x.c.n}`:""}</b>${durum}</span></button>
-        <span class="gd-r"><b>${x.tl>0?tl(x.tl):"—"}</b>${al?`<button type="button" class="gd-chip al" data-gtdz="${esc(x.g.id)}|${tKey(x)}" aria-label="Tahsil tarihini değiştir">✓ ${tarih(al,1)} ✎</button>`:`<button type="button" class="gd-chip" data-gtahsil="${esc(x.g.id)}|${tKey(x)}">Tahsil et</button>`}</span></div>`};
+        <span class="gd-r"><b>${x.tl>0?tl(x.tl):"—"}</b>${chip}</span></div>`};
   const ozet=g=>{if(g.tip==="aylik")return g.gun?`her ay ${g.gun}'${gunIy(g.gun)}`:"her ay";
     if(g.tip==="taksit"){const n=+g.taksit||1,od=Math.min(n,giderCekimler(g,"2000-01-01",b).length),sn=giderSonraki(g);return od>=n?`${n}/${n} ödendi · bitti`:`${od}/${n} ödendi · sonraki ${tarih(sn.t,1)}`}
     return`tek sefer · ${tarih(g.bas,1)}`};
@@ -1135,7 +1144,7 @@ function gGider(){const L=giderler(),b=bugun();
     <div class="gd-ayb"><button type="button" data-geks="-1" aria-label="Önceki ay" ${EKS_KAY<=enAz?"disabled":""}>‹</button>
       <div><b>${ayAd(S.E.ay)} ${S.E.ay.slice(0,4)}</b><small>${buEks?"bu ay":EKS_KAY<0?"geçmiş ay":"gelecek ay · tahmini"}</small></div>
       <button type="button" data-geks="1" aria-label="Sonraki ay" ${EKS_KAY>=enCok?"disabled":""}>›</button></div>
-    <div class="gd-ozet"><div class="ana"><span>Tahsil edilecek</span><b>${tl(topT)}</b></div><div><span>Alındı</span><b class="yesil">${tl(alT)}</b></div><div><span>Kalan</span><b class="turuncu">${tl(topT-alT)}</b></div></div>
+    <div class="gd-ozet"><div class="ana"><span>Tahsil edilecek</span><b>${tl(topT)}</b></div><div><span>Alındı</span><b class="yesil">${tl(alT)}</b></div><div><span>${M<buAy?"Devretti":"Kalan"}</span><b class="turuncu">${tl(topT-alT)}</b></div></div>
     ${topT>0?`<div class="gd-ilerle" role="img" aria-label="Yüzde ${Math.round(alT/topT*100)} alındı"><i style="width:${Math.min(100,alT/topT*100)}%"></i></div>`:""}
     ${D.length?`<div class="gd-ara">Devreden</div>${D.map(x=>kalem(x,true)).join("")}<div class="gd-ara">${ayAd(S.E.ay)}</div>`:""}
     ${S.k.length?S.k.map(x=>kalem(x)).join(""):`<div class="gd-bos">Bu ay gider yok.</div>`}
