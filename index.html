@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=106"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=107"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -581,6 +581,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .gd-nav button{width:38px;height:38px;border:0;border-radius:12px;background:rgba(255,255,255,.18);color:#fff;font:inherit;font-size:1.3rem;font-weight:900;cursor:pointer;flex:none}.gd-nav button:disabled{opacity:.3;cursor:default}
 .gd-buyuk>b{text-align:center}.gd-buyuk .alt{justify-content:center}
 .gd-nok{display:flex;justify-content:center;gap:5px;margin-top:10px}.gd-nok i{width:7px;height:7px;border-radius:5px;background:rgba(255,255,255,.35)}.gd-nok i.bu{background:rgba(255,255,255,.6)}.gd-nok i.on{width:20px;background:#fff}
+.son-gun{display:block;margin-top:4px;color:var(--muted);font-weight:600;font-size:.8rem}
 </style>
 </head><body>
 <div id="kilit" hidden><form id="kilitForm" class="kilit-kart" autocomplete="on">
@@ -701,6 +702,7 @@ const tarih=(s,kisa)=>s?new Date(s+"T00:00").toLocaleDateString("tr-TR",kisa?{da
 const fark=s=>s?Math.round((new Date(s+"T00:00")-new Date(bugun()+"T00:00"))/864e5):null;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const aktif=i=>!["Teslim edildi","İptal",ADAY,"Görüşme"].includes(i.durum);
+const SURUM_ZAMANI="2026-11-15T16:47:00+03:00";   // her yayında güncellenir
 const yeniId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const saat=z=>new Date(z).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
 const gunAdi=z=>{const f=fark(iso(new Date(z)));return f===0?"Bugün":f===-1?"Dün":new Date(z).toLocaleDateString("tr-TR",{day:"numeric",month:"long",weekday:"long"})};
@@ -879,7 +881,7 @@ function ciz(){
 function hero(){
   const s=new Date().getHours(),sel=s<6?"İyi geceler":s<12?"Günaydın":s<18?"İyi günler":"İyi akşamlar";
   return`<header class="ust-bar">
-    <div><p>${sel.toLocaleUpperCase("tr")} · ${new Date().toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"})}</p><div class="baslik-sat"><h1>Dr Tez Akademi</h1></div></div>
+    <div><p>${sel.toLocaleUpperCase("tr")} · ${new Date().toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"})}</p><div class="baslik-sat"><h1>Dr Tez Akademi</h1></div><small class="son-gun">Son güncelleme: ${new Date(SURUM_ZAMANI).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"})} · ${new Date(SURUM_ZAMANI).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}</small></div>
     <div class="kur2" aria-label="Dolar kuru"><small>${esc(KUR.kaynak||"Kur")} · ${tarih(KUR.tarih,1)}${KUR.zaman&&KUR.tarih===bugun()?" "+new Date(KUR.zaman).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}):""}</small><b>1 $ = ${nf(KUR.usd,2)} ₺</b></div>
   </header>
   ${kurDuzen?`<form class="kur-form2" id="kurForm"><input id="kur-deger" name="usd" type="text" inputmode="decimal" autocomplete="off" value="${KUR.usd}" required aria-label="1 dolar kaç TL"><button class="btn ana" type="submit">Kaydet</button>
