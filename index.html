@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=113"></script><base target="_top">
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Dr Tez Akademi</title><meta name="theme-color" content="#0b6e4c"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png?v=2"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=2"><meta name="apple-mobile-web-app-capable" content="yes"><script src="ayar.js?v=114"></script><base target="_top">
 <style>.kirilim{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kirilim span{display:flex;align-items:baseline;gap:6px;background:rgba(255,255,255,.12);border-radius:12px;padding:7px 11px}
 .kirilim small{font-size:13px;font-weight:700;color:#c9f2dd}.kirilim b{font-size:17px;font-weight:800;color:#fff}.kirilim em{font-style:normal;font-size:13px;font-weight:700;color:#c9f2dd}
@@ -742,7 +742,7 @@ const tarih=(s,kisa)=>s?new Date(s+"T00:00").toLocaleDateString("tr-TR",kisa?{da
 const fark=s=>s?Math.round((new Date(s+"T00:00")-new Date(bugun()+"T00:00"))/864e5):null;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const aktif=i=>!["Teslim edildi","İptal",ADAY,"Görüşme"].includes(i.durum);
-const SURUM_ZAMANI="2026-11-15T17:59:00+03:00";   // her yayında güncellenir
+const SURUM_ZAMANI="2026-11-15T18:00:00+03:00";   // her yayında güncellenir
 const yeniId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const saat=z=>new Date(z).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
 const gunAdi=z=>{const f=fark(iso(new Date(z)));return f===0?"Bugün":f===-1?"Dün":new Date(z).toLocaleDateString("tr-TR",{day:"numeric",month:"long",weekday:"long"})};
@@ -1063,7 +1063,7 @@ function oBitir(o,s){if(!o.a.isConnected){if(odemeSekme!==SEKMELER[s]){odemeSekm
   o.ps.forEach((x,k)=>{x.style.transform=x.style.opacity=x.style.transition=x.style.visibility=x.style.zIndex=x.style.boxShadow="";x.classList.toggle("aktif",k===s);x.classList.toggle("taban",k===s)});
   o.ind.style.transform=o.ind.style.transition="";const yeni=SEKMELER[s];if(yeni!==odemeSekme){odemeSekme=yeni;navDegistir()}}
 function oGit(s,o=oParca(),sonra){if(!o)return;const bas=+o.a.dataset.s;if(s===bas){sonra&&sonra();return}
-  if(Math.abs(s-bas)>1){oGit(bas+Math.sign(s-bas),o,()=>oGit(s,oParca(),sonra));return}
+  if(Math.abs(s-bas)>1){oAtla(o,bas,s,sonra);return}
   o.ps.forEach((x,k)=>x.classList.toggle("taban",k===bas));
   oGecis(o,false);oCiz(o,bas);void o.a.offsetWidth;oGecis(o,true);requestAnimationFrame(()=>{oCiz(o,s);
   let bitti=false;const son=()=>{if(bitti)return;bitti=true;oBitir(o,s);sonra&&sonra()};setTimeout(son,480)})}
@@ -1212,6 +1212,16 @@ document.addEventListener("click",e=>{const t=e.target.closest("[data-gyeni],[da
   if(ds.gpb){gfOku();GF.pb=ds.gpb;ciz();return}
   if(ds.gsil){if(!t.classList.contains("emin")){t.classList.add("emin");t.textContent="Emin misin? Tekrar dokun";setTimeout(()=>{if(t.isConnected){t.classList.remove("emin");t.textContent="Gideri sil"}},4000);return}
     GF=null;logSil(ds.gsil);toast("Gider silindi")}});
+/* Aradaki sekmeyi göstermeden doğrudan geçiş (ör. Alınan → Giderler) */
+function oAtla(o,bas,s,sonra){const W=o.a.clientWidth,ileri=s>bas,ust=ileri?o.ps[s]:o.ps[bas],alt=ileri?o.ps[bas]:o.ps[s];
+  o.ps.forEach((x,k)=>x.classList.toggle("taban",k===bas));oGecis(o,false);o.a.classList.add("kayiyor");
+  o.ps.forEach((x,k)=>{if(k!==bas&&k!==s){x.style.visibility="hidden"}});ust.style.zIndex=5;alt.style.zIndex=4;ust.style.visibility=alt.style.visibility="";
+  const geri=el=>{el.style.transform=`translateX(${-W*.18}px) scale(.92)`;el.style.opacity=".5"},on=el=>{el.style.transform="";el.style.opacity="1"};
+  if(ileri){ust.style.transform=`translateX(${W+30}px)`;ust.style.boxShadow="-14px 0 30px rgba(0,0,0,.16)";on(alt)}else{on(ust);ust.style.boxShadow="-14px 0 30px rgba(0,0,0,.16)";geri(alt)}
+  void o.a.offsetWidth;oGecis(o,true);o.sek.dataset.s=s;o.ind.style.transform=`translateX(calc(${s*100}% + ${s*6}px))`;
+  o.sek.querySelectorAll("button").forEach((b,k)=>b.setAttribute("aria-selected",String(k===s)));
+  requestAnimationFrame(()=>{if(ileri){ust.style.transform="";geri(alt)}else{ust.style.transform=`translateX(${W+30}px)`;on(alt)}
+    setTimeout(()=>{oBitir(o,s);sonra&&sonra()},480)})}
 let oKay=null;
 document.addEventListener("touchstart",e=>{const a=e.target.closest(".osa");if(!a||e.touches.length!==1||e.target.closest("input,select,textarea")){oKay=null;return}
   const t=e.touches[0];oKay={x:t.clientX,y:t.clientY,yon:null,s:+a.dataset.s,p:+a.dataset.s,iz:[{x:t.clientX,t:e.timeStamp}]}},{passive:true});
